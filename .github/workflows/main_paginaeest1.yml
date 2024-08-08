@@ -24,6 +24,9 @@ jobs:
       - name: dotnet publish
         run: dotnet publish AplicacionWEB-EEST1/AplicacionWEB-EEST1.csproj -c Release -o ${{ github.workspace }}/myapp
 
+      - name: List files in myapp directory
+        run: dir ${{ github.workspace }}/myapp
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
@@ -44,7 +47,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-      
+
+      - name: List files in the artifact directory
+        run: dir ${{ github.workspace }}/myapp
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
