@@ -1,16 +1,12 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+    <header class="navbar-header">
+        <NavBarMenu />
+    </header>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
+    <main class="main-content">
+        <article class="content">
             @Body
         </article>
     </main>
@@ -21,3 +17,30 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+<style>
+    .page {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+    }
+
+    .navbar-header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        background-color: #A1C0DC;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .main-content {
+        flex-grow: 1;
+        padding-top: 64px; /* Ajusta este valor según la altura de tu navbar */
+        overflow-y: auto;
+    }
+
+    .content {
+        padding: 1rem;
+    }
+</style>
