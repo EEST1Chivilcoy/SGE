@@ -1,15 +1,10 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <header class="navbar-header">
+<div>
+    <header>
         <NavBarMenu />
     </header>
-
-    <main class="main-content">
-        <article class="content">
-            @Body
-        </article>
-    </main>
+    @Body
 </div>
 
 <div id="blazor-error-ui">
@@ -19,14 +14,8 @@
 </div>
 
 <style>
-    .page {
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-    }
 
     .navbar-header {
-        position: fixed;
         top: 0;
         width: 100%;
         z-index: 1000;
@@ -36,7 +25,6 @@
 
     .main-content {
         flex-grow: 1;
-        padding-top: 64px; /* Ajusta este valor según la altura de tu navbar */
         overflow-y: auto;
     }
 
