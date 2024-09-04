@@ -37,11 +37,20 @@
     color: white;
     font-size: 100%;
 }
-.links .iniciar-sesion {
-    background-color: #C0CEDD;
-    border-radius: 0.2vw;
+
+.iniciar-sesion {
+    background-color: none;
+    color: white;
+    border-radius: 0.5vw;
     position: absolute;
+    top: 5%;
     right: 1%;
+    text-decoration: none;
+    border: 2px solid white;
+}
+.iniciar-sesion:hover{
+    background-color: white;
+    color: black;
 }
 
 @media (min-width: 641px) {
