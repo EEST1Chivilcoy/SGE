@@ -16,6 +16,10 @@
   </ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Data\Models\Entidades\" />
+	  <Folder Include="Data\Models\Formularios\" />
+	  <Folder Include="Data\Migrations\" />
+	  <Folder Include="Data\ViewModels\" />
 	  <Folder Include="wwwroot\Imagenes\" />
 	  <Folder Include="wwwroot\css\" />
 	  <Folder Include="wwwroot\js\" />
