@@ -5,3 +5,12 @@ footer {
     bottom: 0;
     width: 100%;
 }
+
+h5{
+    color: white;
+    text-decoration-line: underline;
+}
+
+p{
+    color: white;
+}
