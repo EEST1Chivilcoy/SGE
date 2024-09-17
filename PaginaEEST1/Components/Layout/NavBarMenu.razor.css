@@ -1,4 +1,4 @@
-.imagen-logo{
+﻿.imagen-logo {
     width: 7%;
     height: 7%;
 }
@@ -48,10 +48,11 @@
     text-decoration: none;
     border: 2px solid white;
 }
-.iniciar-sesion:hover{
-    background-color: white;
-    color: black;
-}
+
+    .iniciar-sesion:hover {
+        background-color: white;
+        color: black;
+    }
 
 @media (min-width: 641px) {
     .navbar-toggler {

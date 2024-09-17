@@ -1,4 +1,4 @@
-footer {
+﻿footer {
     color: white;
     background-color: #A2C1DD;
     position: absolute;
@@ -6,11 +6,11 @@ footer {
     width: 100%;
 }
 
-h5{
+h5 {
     color: white;
     text-decoration-line: underline;
 }
 
-p{
+p {
     color: white;
 }

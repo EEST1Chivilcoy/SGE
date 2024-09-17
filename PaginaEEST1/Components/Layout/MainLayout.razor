@@ -1,6 +1,17 @@
 ﻿@inherits LayoutComponentBase
 
-<div>
+<style>
+    .main-content {
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+
+    .content {
+        padding: 1rem;
+    }
+</style>
+
+<div class="page">
     <header>
         <NavBarMenu />
     </header>
@@ -13,14 +24,3 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
-
-<style>
-    .main-content {
-        flex-grow: 1;
-        overflow-y: auto;
-    }
-
-    .content {
-        padding: 1rem;
-    }
-</style>
