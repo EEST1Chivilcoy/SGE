@@ -1,20 +1,10 @@
 ﻿@inherits LayoutComponentBase
 
-<style>
-    .main-content {
-        flex-grow: 1;
-        overflow-y: auto;
-    }
-
-    .content {
-        padding: 1rem;
-    }
-</style>
+<header>
+    <NavBarMenu/>
+</header>
 
 <div class="page">
-    <header>
-        <NavBarMenu />
-    </header>
     @Body
     <FooterPage />
 </div>

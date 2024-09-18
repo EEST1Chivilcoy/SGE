@@ -3,6 +3,15 @@
     flex-direction: column;
 }
 
+.main-content {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.content {
+    padding: 1rem;
+}
+
 main {
     flex: 1;
 }

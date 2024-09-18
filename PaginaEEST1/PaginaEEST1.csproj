@@ -19,6 +19,8 @@
 
   <ItemGroup>
     <Folder Include="Data\Models\Objetos Fisicos\Componentes\" />
+    <Folder Include="wwwroot\bootstrap\" />
+    <Folder Include="wwwroot\Imagenes\" />
   </ItemGroup>
 
 </Project>
