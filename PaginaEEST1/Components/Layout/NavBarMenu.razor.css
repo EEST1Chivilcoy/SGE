@@ -1,4 +1,9 @@
-﻿.imagen-logo {
+﻿/* Estilo general */
+.navbar {
+    background-color: #A2C1DD;
+}
+
+.imagen-logo {
     width: 7%;
     height: auto;
 }
@@ -46,15 +51,21 @@
         color: black;
     }
 
+/* Media query para pantallas pequeñas */
 @media (max-width: 640px) {
     .imagen-logo {
         width: 15%;
     }
 }
 
+/* Media query para pantallas grandes */
 @media (min-width: 641px) {
     .navbar-toggler {
-        display: none;
+        display: none; /* Oculta el botón de alternancia en pantallas grandes */
+    }
+
+    .navbar-collapse {
+        display: flex !important; /* Asegura que el contenido del menú se muestre */
     }
 
     .nav-scrollable {
