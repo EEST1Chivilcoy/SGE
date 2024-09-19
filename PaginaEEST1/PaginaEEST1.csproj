@@ -1,26 +1,31 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>5b40f5ef-7190-4b30-a307-dd249f4707d8</UserSecretsId>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>5b40f5ef-7190-4b30-a307-dd249f4707d8</UserSecretsId>
+		<WebProject_DirectoryAccessLevelKey>0</WebProject_DirectoryAccessLevelKey>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AntDesign" Version="0.20.4.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AntDesign" Version="0.20.4.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" NoWarn="NU1605" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.8" NoWarn="NU1605" />
+		<PackageReference Include="Microsoft.Identity.Web" Version="3.1.0" />
+		<PackageReference Include="Microsoft.Identity.Web.UI" Version="3.1.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\Models\Objetos Fisicos\Componentes\" />
-    <Folder Include="wwwroot\bootstrap\" />
-    <Folder Include="wwwroot\Imagenes\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Data\Models\Objetos Fisicos\Componentes\" />
+		<Folder Include="wwwroot\bootstrap\" />
+		<Folder Include="wwwroot\Imagenes\" />
+	</ItemGroup>
 
 </Project>

@@ -2,6 +2,14 @@ using PaginaEEST1.Data;
 using PaginaEEST1.Services;
 using Microsoft.EntityFrameworkCore;
 using PaginaEEST1.Components;
+//Entra ID
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.Identity.Web;
+using Microsoft.Identity.Web.UI;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace PaginaEEST1
 {
@@ -20,6 +28,18 @@ namespace PaginaEEST1
                        .EnableSensitiveDataLogging() // Muestra datos sensibles en los logs (solo para desarrollo)
                        .EnableDetailedErrors()       // Detalla los errores en los logs
             );
+
+            // Entra ID
+            builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
+            builder.Services.AddControllersWithViews()
+                .AddMicrosoftIdentityUI();
+
+            builder.Services.AddAuthorization(options =>
+            {
+                // By default, all incoming requests will be authorized according to the default policy
+                options.FallbackPolicy = options.DefaultPolicy;
+            });
 
             // Add services to the container.
             builder.Services.AddRazorComponents()
@@ -40,6 +60,9 @@ namespace PaginaEEST1
 
             app.UseStaticFiles();
             app.UseAntiforgery();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
