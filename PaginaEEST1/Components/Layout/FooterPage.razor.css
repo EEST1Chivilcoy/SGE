@@ -1,16 +1,56 @@
-﻿footer {
-    color: white;
-    background-color: #A2C1DD;
-    position: absolute;
+﻿.footer {
+    background-color: #A2C1DD; /* Color de fondo */
+    color: white; /* Color del texto */
+    position: relative;
     bottom: 0;
     width: 100%;
 }
 
-h5 {
-    color: white;
-    text-decoration-line: underline;
+.footer h5 {
+    font-weight: bold;
+    color: white; /* Asegurando que los títulos sean blancos */
 }
 
-p {
+.footer p {
+    margin-bottom: 0;
+}
+
+.footer a {
     color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+    .footer a:hover {
+        color: #E0E0E0;
+    }
+
+.footer i {
+    color: white;
+}
+
+.footer ul {
+    padding-left: 0;
+}
+
+    .footer ul li {
+        margin-bottom: 0.5rem;
+    }
+
+.footer .d-flex {
+    display: flex;
+    align-items: center;
+}
+
+.footer .fs-3 {
+    font-size: 1.5rem;
+}
+
+.text-light {
+    color: #f8f9fa !important;
+}
+
+/* Margen superior para separar el contenido del footer */
+.mt-5 {
+    margin-top: 3rem; /* Ajusta según lo necesites */
 }
