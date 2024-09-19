@@ -45,6 +45,7 @@ namespace PaginaEEST1
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
             builder.Services.AddHostedService<InitData>();
+            builder.Services.AddAntDesign();
 
             var app = builder.Build();
 
