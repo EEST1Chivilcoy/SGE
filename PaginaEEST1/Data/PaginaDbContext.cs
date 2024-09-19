@@ -50,16 +50,18 @@ namespace PaginaEEST1.Data
                 .HasConversion<string>()
                 .HasMaxLength(255);
 
-
-            // Discriminadores
-
             modelBuilder.Entity<Persona>()
                 .Property(p => p.TipoPersona)
                 .HasConversion<int>();
 
+            modelBuilder.Entity<Computadora>()
+                .Property(c => c.TipoComputadora)
+                .HasConversion<int>();
+
+            // Discriminadores
+
             modelBuilder.Entity<Persona>()
                 .HasDiscriminator(p => p.TipoPersona)
-                .IsComplete(true)
                 .HasValue<Directivo>(TipoPersona.Directivo)
                 .HasValue<EMATP>(TipoPersona.EMATP)
                 .HasValue<Paniol>(TipoPersona.Paniol)
@@ -68,9 +70,9 @@ namespace PaginaEEST1.Data
 
             modelBuilder
                 .Entity<Computadora>()
-                .HasDiscriminator<int>(nameof(Computadora.TipoComputadora))
-                .HasValue<Computadora>((int)TipoComputadora.Computadora)
-                .HasValue<Netbook>((int)TipoComputadora.Netbook);
+                .HasDiscriminator(c => c.TipoComputadora)
+                .HasValue<Computadora>(TipoComputadora.Computadora)
+                .HasValue<Netbook>(TipoComputadora.Netbook);
 
             // Llaves Foraneas
 
