@@ -4,10 +4,11 @@ using PaginaEEST1.Data.Enums;
 
 namespace PaginaEEST1.Data.Models.Personal
 {
-    public class Persona
+    public abstract class Persona
     {
         public int PersonaId { get; set; }
         public TipoPersona TipoPersona { get; set; }
+        public int TipoPersonaId { get; set; }
         public DateTime? FechaNacimiento { get; set; }
         public TipoSexo Sexo { get; set; }
         [Required, StringLength(255)]
