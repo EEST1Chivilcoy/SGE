@@ -1,6 +1,6 @@
 ﻿.imagen-logo {
     width: 7%;
-    height: 7%;
+    height: auto;
 }
 
     .imagen-logo img {
@@ -13,6 +13,7 @@
 .enlace-animado {
     position: relative;
     text-decoration: none;
+    color: white;
 }
 
     .enlace-animado::after {
@@ -33,20 +34,11 @@
         transform-origin: bottom left;
     }
 
-.links a {
-    color: white;
-    font-size: 100%;
-}
-
 .iniciar-sesion {
-    background-color: none;
-    color: white;
     border-radius: 0.5vw;
-    position: absolute;
-    top: 5%;
-    right: 1%;
     text-decoration: none;
     border: 2px solid white;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
     .iniciar-sesion:hover {
@@ -54,15 +46,19 @@
         color: black;
     }
 
+@media (max-width: 640px) {
+    .imagen-logo {
+        width: 15%;
+    }
+}
+
 @media (min-width: 641px) {
     .navbar-toggler {
         display: none;
     }
 
     .nav-scrollable {
-        /* Never collapse the sidebar for wide screens */
         display: block;
-        /* Allow sidebar to scroll for tall menus */
         height: calc(100vh - 3.5rem);
         overflow-y: auto;
     }

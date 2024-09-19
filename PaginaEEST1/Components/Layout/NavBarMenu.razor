@@ -1,13 +1,24 @@
-﻿<div style="background-color: #A2C1DD;" class="navbar navbar-expand-lg">
-    <div class="container" style="margin: 0; margin-left: 1%;">
-        <a class="imagen-logo" href="#">
-            <img src="Imagenes/logo-Escuela.png" />
+﻿<nav class="navbar navbar-expand-lg" style="background-color: #A2C1DD;">
+    <div class="container-fluid">
+        <a class="navbar-brand imagen-logo ms-2" href="#">
+            <img src="Imagenes/logo-Escuela.png" alt="Logo Escuela" />
         </a>
-        <div class="links">
-            <a href="#" class="enlace-animado"> Inscripciones </a>
-            <a href="#" class="enlace-animado"> Contactos </a>
-            <a href="#" class="enlace-animado"> Noticias </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 links">
+                <li class="nav-item">
+                    <a class="nav-link enlace-animado" href="#">Inscripción</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link enlace-animado" href="#">Contactos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link enlace-animado" href="#">Noticias</a>
+                </li>
+            </ul>
+            <a href="#" class="btn btn-outline-light iniciar-sesion">Iniciar Sesión</a>
         </div>
-        <a href="#" class="iniciar-sesion">Iniciar Sesión</a>
     </div>
-</div>
+</nav>
