@@ -7,6 +7,7 @@ namespace PaginaEEST1.Data.Models.Personal
     public class Persona
     {
         public int PersonaId { get; set; }
+        public TipoPersona TipoPersona { get; set; }
         public DateTime? FechaNacimiento { get; set; }
         public TipoSexo Sexo { get; set; }
         [Required, StringLength(255)]
@@ -17,9 +18,5 @@ namespace PaginaEEST1.Data.Models.Personal
         public string? Direccion { get; set; }
         [StringLength(255)]
         public string? Documento { get; set; }
-        [StringLength(255)]
-        public string? Titulo { get; set; }
-        [StringLength(255)]
-        public NivelDeEstudio NivelEstudios { get; set; }
     }
 }
