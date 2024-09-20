@@ -1,4 +1,7 @@
-﻿<nav class="navbar navbar-expand-lg" style="background-color: #A2C1DD;">
+﻿@inject NavigationManager NavigationManager
+@inject IConfiguration Configuration
+
+<nav class="navbar navbar-expand-lg" style="background-color: #A2C1DD;">
     <div class="container-fluid">
         <a class="navbar-brand imagen-logo ms-2" href="#">
             <img src="Imagenes/logo-Escuela.png" alt="Logo Escuela" />
@@ -18,7 +21,26 @@
                     <a class="nav-link enlace-animado" href="#">Noticias</a>
                 </li>
             </ul>
-            <a href="#" class="btn btn-outline-light iniciar-sesion">Iniciar Sesión</a>
+            <AuthorizeView>
+                <NotAuthorized>
+                    <Button class="btn btn-outline-light iniciar-sesion" OnClick="Login">Iniciar Sesión</Button>
+                </NotAuthorized>
+                <Authorized>
+                    <Button class="btn btn-outline-light iniciar-sesion" OnClick="Logout">Cerrar Sesión</Button>
+                </Authorized>
+            </AuthorizeView>
         </div>
     </div>
 </nav>
+
+@code {
+    private void Login()
+    {
+        NavigationManager.NavigateTo("/Auth/Login", true);
+    }
+
+    private void Logout()
+    {
+        NavigationManager.NavigateTo("/Auth/Logout", true);
+    }
+}
