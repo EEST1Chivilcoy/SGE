@@ -1,0 +1,31 @@
+﻿@using PaginaEEST1.Services
+@using PaginaEEST1.Data.ViewModels
+@inject IOrdenadorService Ordenador_Service
+@page "/Computadora_VistaQR_{ID_Computadora:int}"
+
+@* Pagina sin terminar - actualmente iniciando su creacion, Trabajo en progreso
+
+Unicamente se implemento el service por prueba
+*@
+
+<html lang="es-ES">
+    <head><title>Computadora @ID_Computadora</title></head>
+    <body>
+        @if(Computadora != null){
+            <h1>Nombre: @Computadora.Nombre</h1>
+        }
+    </body>
+</html>
+
+@code {
+    [Parameter]
+    public int ID_Computadora { get; set; }
+    private ComputadoraVM? Computadora { get; set; }
+
+    // Init
+    protected override async Task OnInitializedAsync()
+    {
+        Computadora = await Ordenador_Service.GetComputadora(ID_Computadora);
+        StateHasChanged();
+    }
+}

@@ -1,9 +1,14 @@
-﻿namespace PaginaEEST1.Data.Enums
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PaginaEEST1.Data.Enums
 {
     public enum Turno
     {
-        Mañana,
+        [Display(Name = "Mañana")]
+        Maniana,
+        [Display(Name = "Tarde")]
         Tarde,
+        [Display(Name = "Nocturno")]
         Nocturno
     }
 }

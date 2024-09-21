@@ -44,6 +44,9 @@ namespace PaginaEEST1
             builder.Services.AddHostedService<InitData>();
             builder.Services.AddAntDesign();
 
+            // Servicios
+            builder.Services.AddScoped<IOrdenadorService, OrdenadorService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

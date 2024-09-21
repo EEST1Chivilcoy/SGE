@@ -15,6 +15,7 @@ namespace PaginaEEST1.Data
         //Computadoras
         public DbSet<Computadora> Computadoras { get; set; }
         public DbSet<Netbook> Netbooks { get; set; }
+
         // Personas
         public DbSet<Persona> Personas { get; set; }
         public DbSet<Directivo> Directivos { get; set; }
@@ -54,8 +55,8 @@ namespace PaginaEEST1.Data
                 .Property(p => p.TipoPersona)
                 .HasConversion<int>();
 
-            modelBuilder.Entity<Computadora>()
-                .Property(c => c.TipoComputadora)
+            modelBuilder.Entity<Ordenador>()
+                .Property(c => c.TipoOrdenador)
                 .HasConversion<int>();
 
             // Discriminadores
@@ -69,28 +70,14 @@ namespace PaginaEEST1.Data
                 .HasValue<Alumno>(TipoPersona.Alumno);
 
             modelBuilder
-                .Entity<Computadora>()
-                .HasDiscriminator(c => c.TipoComputadora)
-                .HasValue<Computadora>(TipoComputadora.Computadora)
-                .HasValue<Netbook>(TipoComputadora.Netbook);
+                .Entity<Ordenador>()
+                .HasDiscriminator(c => c.TipoOrdenador)
+                .HasValue<Computadora>(TipoOrdenador.Computadora)
+                .HasValue<Netbook>(TipoOrdenador.Netbook);
 
             // Llaves Foraneas
 
-            modelBuilder
-                .Entity<Netbook>()
-                .HasOne(i => i.Profesor)
-                .WithOne(v => v.Netbook)
-                .HasForeignKey<Netbook>(i => i.ProfesorId)
-                .OnDelete(DeleteBehavior.SetNull)
-                .IsRequired(false);
 
-            modelBuilder
-                .Entity<Netbook>()
-                .HasOne(i => i.Alumno)
-                .WithOne(v => v.Netbook)
-                .HasForeignKey<Netbook>(i => i.AlumnoId)
-                .OnDelete(DeleteBehavior.SetNull)
-                .IsRequired(false);
 
         }
     }

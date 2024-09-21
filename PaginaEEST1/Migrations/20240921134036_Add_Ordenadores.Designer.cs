@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PaginaEEST1.Data;
 
@@ -11,9 +12,11 @@ using PaginaEEST1.Data;
 namespace PaginaEEST1.Migrations
 {
     [DbContext(typeof(PaginaDbContext))]
-    partial class PaginaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240921134036_Add_Ordenadores")]
+    partial class Add_Ordenadores
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +56,7 @@ namespace PaginaEEST1.Migrations
 
                     b.HasKey("OrdenadorId");
 
-                    b.ToTable("Ordenador", (string)null);
+                    b.ToTable("Ordenador");
 
                     b.HasDiscriminator<int>("TipoOrdenador");
 
@@ -99,7 +102,7 @@ namespace PaginaEEST1.Migrations
 
                     b.HasKey("PersonaId");
 
-                    b.ToTable("Personas", (string)null);
+                    b.ToTable("Personas");
 
                     b.HasDiscriminator<int>("TipoPersona");
 
@@ -185,7 +188,7 @@ namespace PaginaEEST1.Migrations
 
                     b.HasIndex("NetbookOrdenadorId");
 
-                    b.ToTable("Personas", null, t =>
+                    b.ToTable("Personas", t =>
                         {
                             t.Property("NetbookOrdenadorId")
                                 .HasColumnName("Profesor_NetbookOrdenadorId");

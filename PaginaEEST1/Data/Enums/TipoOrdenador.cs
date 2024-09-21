@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace PaginaEEST1.Data.Enums
 {
-    public enum TipoComputadora
+    public enum TipoOrdenador
     {
         [Description("Computadora")]
         Computadora = 1,
