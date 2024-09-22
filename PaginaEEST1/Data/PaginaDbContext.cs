@@ -25,6 +25,11 @@ namespace PaginaEEST1.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Enums
+            modelBuilder
+            .Entity<Ordenador>()
+                .Property(o => o.tipoAlmacenamiento)
+                .HasConversion<string>()
+                .HasMaxLength(255);
 
             modelBuilder
             .Entity<Persona>()
