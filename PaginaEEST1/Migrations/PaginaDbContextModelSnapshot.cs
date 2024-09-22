@@ -39,6 +39,9 @@ namespace PaginaEEST1.Migrations
                     b.Property<string>("Nombre")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("NombreOrdenador")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Procesador")
                         .HasColumnType("longtext");
 
@@ -51,9 +54,12 @@ namespace PaginaEEST1.Migrations
                     b.Property<int>("TipoOrdenador")
                         .HasColumnType("int");
 
+                    b.Property<int>("tipoAlmacenamiento")
+                        .HasColumnType("int");
+
                     b.HasKey("OrdenadorId");
 
-                    b.ToTable("Ordenador", (string)null);
+                    b.ToTable("Ordenadores");
 
                     b.HasDiscriminator<int>("TipoOrdenador");
 
@@ -99,7 +105,7 @@ namespace PaginaEEST1.Migrations
 
                     b.HasKey("PersonaId");
 
-                    b.ToTable("Personas", (string)null);
+                    b.ToTable("Personas");
 
                     b.HasDiscriminator<int>("TipoPersona");
 
@@ -185,7 +191,7 @@ namespace PaginaEEST1.Migrations
 
                     b.HasIndex("NetbookOrdenadorId");
 
-                    b.ToTable("Personas", null, t =>
+                    b.ToTable("Personas", t =>
                         {
                             t.Property("NetbookOrdenadorId")
                                 .HasColumnName("Profesor_NetbookOrdenadorId");

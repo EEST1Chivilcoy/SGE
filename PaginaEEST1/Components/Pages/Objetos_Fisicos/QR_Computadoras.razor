@@ -25,7 +25,7 @@ Unicamente se implemento el service por prueba
     // Init
     protected override async Task OnInitializedAsync()
     {
-        Computadora = await Ordenador_Service.GetComputadora(ID_Computadora);
+        Computadora = await Ordenador_Service.GetComputer(ID_Computadora);
         StateHasChanged();
     }
 }

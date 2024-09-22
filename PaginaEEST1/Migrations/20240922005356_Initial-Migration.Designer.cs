@@ -12,8 +12,8 @@ using PaginaEEST1.Data;
 namespace PaginaEEST1.Migrations
 {
     [DbContext(typeof(PaginaDbContext))]
-    [Migration("20240919081217_Fix-Discriminadores")]
-    partial class FixDiscriminadores
+    [Migration("20240922005356_Initial-Migration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,37 +25,46 @@ namespace PaginaEEST1.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Computadora", b =>
+            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Ordenador", b =>
                 {
-                    b.Property<int>("ComputadoraId")
+                    b.Property<int>("OrdenadorId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("ComputadoraId"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("OrdenadorId"));
 
-                    b.Property<string>("Estado")
-                        .HasColumnType("longtext");
+                    b.Property<int?>("Almacenamiento")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("FechaAdquisicion")
-                        .HasColumnType("datetime(6)");
+                    b.Property<int>("Estado")
+                        .HasColumnType("int");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("SistemaOperativo")
+                    b.Property<string>("NombreOrdenador")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("TipoComputadora")
+                    b.Property<string>("Procesador")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("RAM")
                         .HasColumnType("int");
 
-                    b.Property<string>("Ubicacion")
+                    b.Property<string>("Sistema_Operativo")
                         .HasColumnType("longtext");
 
-                    b.HasKey("ComputadoraId");
+                    b.Property<int>("TipoOrdenador")
+                        .HasColumnType("int");
 
-                    b.ToTable("Computadoras");
+                    b.Property<int>("tipoAlmacenamiento")
+                        .HasColumnType("int");
 
-                    b.HasDiscriminator<int>("TipoComputadora").HasValue(1);
+                    b.HasKey("OrdenadorId");
+
+                    b.ToTable("Ordenadores");
+
+                    b.HasDiscriminator<int>("TipoOrdenador");
 
                     b.UseTphMappingStrategy();
                 });
@@ -106,21 +115,25 @@ namespace PaginaEEST1.Migrations
                     b.UseTphMappingStrategy();
                 });
 
+            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Computadora", b =>
+                {
+                    b.HasBaseType("PaginaEEST1.Data.Models.Objetos_Fisicos.Ordenador");
+
+                    b.Property<string>("Ubicacion")
+                        .HasColumnType("longtext");
+
+                    b.HasDiscriminator().HasValue(1);
+                });
+
             modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Netbook", b =>
                 {
-                    b.HasBaseType("PaginaEEST1.Data.Models.Objetos_Fisicos.Computadora");
+                    b.HasBaseType("PaginaEEST1.Data.Models.Objetos_Fisicos.Ordenador");
 
-                    b.Property<int?>("AlumnoId")
-                        .HasColumnType("int");
+                    b.Property<string>("Modelo")
+                        .HasColumnType("longtext");
 
-                    b.Property<int?>("ProfesorId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("AlumnoId")
-                        .IsUnique();
-
-                    b.HasIndex("ProfesorId")
-                        .IsUnique();
+                    b.Property<bool>("Prestamo")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasDiscriminator().HasValue(2);
                 });
@@ -129,10 +142,15 @@ namespace PaginaEEST1.Migrations
                 {
                     b.HasBaseType("PaginaEEST1.Data.Models.Personal.Persona");
 
+                    b.Property<int?>("NetbookOrdenadorId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Turno_Cursada")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
+
+                    b.HasIndex("NetbookOrdenadorId");
 
                     b.HasDiscriminator().HasValue(5);
                 });
@@ -162,6 +180,9 @@ namespace PaginaEEST1.Migrations
                 {
                     b.HasBaseType("PaginaEEST1.Data.Models.Personal.Persona");
 
+                    b.Property<int?>("NetbookOrdenadorId")
+                        .HasColumnType("int");
+
                     b.Property<string>("NivelEstudios")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -171,33 +192,32 @@ namespace PaginaEEST1.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
+                    b.HasIndex("NetbookOrdenadorId");
+
+                    b.ToTable("Personas", t =>
+                        {
+                            t.Property("NetbookOrdenadorId")
+                                .HasColumnName("Profesor_NetbookOrdenadorId");
+                        });
+
                     b.HasDiscriminator().HasValue(4);
-                });
-
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Netbook", b =>
-                {
-                    b.HasOne("PaginaEEST1.Data.Models.Personal.Alumno", "Alumno")
-                        .WithOne("Netbook")
-                        .HasForeignKey("PaginaEEST1.Data.Models.Objetos_Fisicos.Netbook", "AlumnoId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("PaginaEEST1.Data.Models.Personal.Profesor", "Profesor")
-                        .WithOne("Netbook")
-                        .HasForeignKey("PaginaEEST1.Data.Models.Objetos_Fisicos.Netbook", "ProfesorId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Alumno");
-
-                    b.Navigation("Profesor");
                 });
 
             modelBuilder.Entity("PaginaEEST1.Data.Models.Personal.Alumno", b =>
                 {
+                    b.HasOne("PaginaEEST1.Data.Models.Objetos_Fisicos.Netbook", "Netbook")
+                        .WithMany()
+                        .HasForeignKey("NetbookOrdenadorId");
+
                     b.Navigation("Netbook");
                 });
 
             modelBuilder.Entity("PaginaEEST1.Data.Models.Personal.Profesor", b =>
                 {
+                    b.HasOne("PaginaEEST1.Data.Models.Objetos_Fisicos.Netbook", "Netbook")
+                        .WithMany()
+                        .HasForeignKey("NetbookOrdenadorId");
+
                     b.Navigation("Netbook");
                 });
 #pragma warning restore 612, 618

@@ -1,24 +1,25 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace PaginaEEST1.Data.Enums
 {
     public enum NivelDeEstudio
     {
-        [Description("Primario Incompleto")]
+        [Display(Name = "Primario Incompleto")]
         PrimarioIncompleto,
-        [Description("Primario Completo")]
+        [Display(Name = "Primario Completo")]
         PrimarioCompleto,
-        [Description("Secundario Incompleto")]
+        [Display(Name = "Secundario Incompleto")]
         SecundarioIncompleto,
-        [Description("Secundario Completo")]
+        [Display(Name = "Secundario Completo")]
         SecundarioCompleto,
-        [Description("Terciario Incompleto")]
+        [Display(Name = "Terciario Incompleto")]
         TerciarioIncompleto,
-        [Description("Terciario Completo")]
+        [Display(Name = "Terciario Completo")]
         TerciarioCompleto,
-        [Description("Universitario Incompleto")]
+        [Display(Name = "Universitario Incompleto")]
         UniversitarioIncompleto,
-        [Description("Universitario Completo")]
+        [Display(Name = "Universitario Completo")]
         UniversitarioCompleto
     }
 }

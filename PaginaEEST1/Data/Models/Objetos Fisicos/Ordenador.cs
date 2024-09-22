@@ -5,10 +5,11 @@ namespace PaginaEEST1.Data.Models.Objetos_Fisicos
     public abstract class Ordenador
     {
         public int OrdenadorId { get; set; }
+        public string? NombreOrdenador { get; set; }
         public TipoOrdenador TipoOrdenador { get; set; }
 
         // Datos
-        public Estado_Ordenador Estado { get; set; }
+        public EstadoOrdenador Estado { get; set; }
 
         // Datos no obligatorios
         public string? Nombre { get; set; }
@@ -16,6 +17,7 @@ namespace PaginaEEST1.Data.Models.Objetos_Fisicos
         public string? Procesador { get; set; }
         public int? RAM { get; set; }
         public int? Almacenamiento { get; set; }
+        public TipoAlmacenamiento tipoAlmacenamiento { get; set; }
 
         /* Para consultar, posibles:
          

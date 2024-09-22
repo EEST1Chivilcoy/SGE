@@ -12,17 +12,10 @@ namespace PaginaEEST1.Data
 {
     public class PaginaDbContext : DbContext
     {
-        //Computadoras
-        public DbSet<Computadora> Computadoras { get; set; }
-        public DbSet<Netbook> Netbooks { get; set; }
+        public DbSet<Ordenador> Ordenadores  { get; set; }
 
         // Personas
         public DbSet<Persona> Personas { get; set; }
-        public DbSet<Directivo> Directivos { get; set; }
-        public DbSet<EMATP> EMATP { get; set; }
-        public DbSet<Paniol> Paniol { get; set; }
-        public DbSet<Profesor> Profesores { get; set; }
-        public DbSet<Alumno> Alumnos { get; set; }
 
         public PaginaDbContext(DbContextOptions<PaginaDbContext> options) : base(options)
         {
@@ -51,6 +44,8 @@ namespace PaginaEEST1.Data
                 .HasConversion<string>()
                 .HasMaxLength(255);
 
+            //Enums Discriminadores
+
             modelBuilder.Entity<Persona>()
                 .Property(p => p.TipoPersona)
                 .HasConversion<int>();
@@ -74,10 +69,6 @@ namespace PaginaEEST1.Data
                 .HasDiscriminator(c => c.TipoOrdenador)
                 .HasValue<Computadora>(TipoOrdenador.Computadora)
                 .HasValue<Netbook>(TipoOrdenador.Netbook);
-
-            // Llaves Foraneas
-
-
 
         }
     }

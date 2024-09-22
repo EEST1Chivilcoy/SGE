@@ -8,7 +8,7 @@ namespace PaginaEEST1.Services
 {
     public interface IOrdenadorService
     {
-        Task<ComputadoraVM> GetComputadora(int ID);
+        Task<ComputadoraVM?> GetComputer(int ID);
     }
     public class OrdenadorService : IOrdenadorService
     {
@@ -17,26 +17,30 @@ namespace PaginaEEST1.Services
         {
             _context = context;
         }
-        public async Task<ComputadoraVM> GetComputadora(int ID)
+        public async Task<ComputadoraVM?> GetComputer(int ID)
         {
-            Computadora? computadora = await _context.Computadoras.Where(i => i.OrdenadorId == ID).SingleOrDefaultAsync();
-            if (computadora == null)
+            var ordenador = await _context.Ordenadores.Where(i => i.OrdenadorId == ID).SingleOrDefaultAsync();
+
+            if (ordenador == null)
             {
                 throw new InvalidOperationException("No se encontro la Computadora.");
             }
 
-            ComputadoraVM computadora_VM = new ComputadoraVM()
+            if (ordenador is Computadora computadora) 
             {
-                Estado = computadora.Estado,
-                Nombre = computadora.Nombre,
-                Sistema_Operativo = computadora.Sistema_Operativo,
-                Procesador = computadora.Procesador,
-                RAM = computadora.RAM,
-                Almacenamiento = computadora.Almacenamiento,
-                Ubicacion = computadora.Ubicacion
-    };
-
-            return computadora_VM;
+                ComputadoraVM computadora_VM = new ComputadoraVM()
+                {
+                    Estado = computadora.Estado,
+                    Nombre = computadora.Nombre,
+                    Sistema_Operativo = computadora.Sistema_Operativo,
+                    Procesador = computadora.Procesador,
+                    RAM = computadora.RAM,
+                    Almacenamiento = computadora.Almacenamiento,
+                    Ubicacion = computadora.Ubicacion
+                };
+                return computadora_VM;
+            }
+            return null;
         }
     }
 }
