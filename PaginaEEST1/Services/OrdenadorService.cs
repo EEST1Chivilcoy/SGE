@@ -2,6 +2,7 @@
 using PaginaEEST1.Data;
 using Microsoft.EntityFrameworkCore;
 using PaginaEEST1.Data.ViewModels;
+using QRCoder;
 using PaginaEEST1.Data.Enums;
 using AntDesign;
 
@@ -11,6 +12,8 @@ namespace PaginaEEST1.Services
     {
         Task<ComputadoraVM?> GetDesktop(int ID);
         Task<Ordenador> SaveComputer<T>(T ordenador) where T : Ordenador;
+        Task<Computadora> GuardarComputadora(ComputadoraVM computadora);
+        Task<string> GenerarQR(int ID); // Posiblemente esta funcion no deberia pertenecer al Service
     }
 
     public class OrdenadorService : IOrdenadorService
@@ -20,6 +23,33 @@ namespace PaginaEEST1.Services
         {
             _context = context;
         }
+        public async Task<Computadora> GuardarComputadora(ComputadoraVM computadora){
+            
+            Computadora Guardar = new Computadora(){
+                Estado = computadora.Estado,
+                NombreOrdenador = computadora.NombreOrdenador,
+                SistemaOperativo = computadora.SistemaOperativo,
+                Procesador = computadora.Procesador,
+                RAM = computadora.RAM,
+                Almacenamiento = computadora.Almacenamiento,
+                Ubicacion = computadora.Ubicacion
+            };
+            _context.Ordenadores.Add(Guardar as Ordenador);
+            await _context.SaveChangesAsync();
+            return Guardar;
+        }
+        public async Task<string> GenerarQR(int ID)
+        {
+            return await Task.Run(() => {
+                QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                // Tal vez haya que referirse a la pagina de otra forma en vez de poner la url completa:
+                QRCodeData qrCodeData = qrGenerator.CreateQrCode($"https://paginaeest1.azurewebsites.net/Computadora_VistaQR_{ID}", QRCodeGenerator.ECCLevel.Q);
+                PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
+                byte[] qrCodeAsPngByteArr = qrCode.GetGraphic(20);
+                return $"data:image/png;base64,{Convert.ToBase64String(qrCodeAsPngByteArr)}";
+            });
+        }
+        // Cree la funcion GuardarComputadora ya que utilizo el ViewModel de Computadora
         public async Task<Ordenador> SaveComputer<T>(T ordenador) where T : Ordenador
         {
             try
@@ -53,8 +83,8 @@ namespace PaginaEEST1.Services
                 ComputadoraVM computadora_VM = new ComputadoraVM()
                 {
                     Estado = computadora.Estado,
-                    Nombre = computadora.NombreOrdenador,
-                    Sistema_Operativo = computadora.SistemaOperativo,
+                    NombreOrdenador = computadora.NombreOrdenador,
+                    SistemaOperativo = computadora.SistemaOperativo,
                     Procesador = computadora.Procesador,
                     RAM = computadora.RAM,
                     Almacenamiento = computadora.Almacenamiento,

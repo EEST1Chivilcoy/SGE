@@ -10,9 +10,17 @@ Unicamente se implemento el service por prueba
 
 <html lang="es-ES">
     <head><title>Computadora @ID_Computadora</title></head>
+    <h3>Vista temporal para verificar su funcionamiento de ver los datos de una Computadora a travez de un QR.</h3>
     <body>
         @if(Computadora != null){
-            <h1>Nombre: @Computadora.Nombre</h1>
+            <div style="background-color: #ececec; border-radius: 1vw;;">
+                <p><b>Estado</b>: @Computadora.Estado</p>
+                <p><b>Nombre</b>: @Computadora.NombreOrdenador</p>
+                <p><b>Sistema Operativo</b>: @Computadora.SistemaOperativo</p>
+                <p><b>Procesador</b>: @Computadora.Procesador</p>
+                <p><b>RAM</b>: @Computadora.RAM</p>
+                <p><b>Ubicacion</b>: @Computadora.Ubicacion</p>
+            </div>
         }
     </body>
 </html>

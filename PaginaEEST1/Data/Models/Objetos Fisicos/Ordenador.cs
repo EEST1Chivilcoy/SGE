@@ -5,7 +5,7 @@ namespace PaginaEEST1.Data.Models.Objetos_Fisicos
     public abstract class Ordenador
     {
         public int OrdenadorId { get; set; }
-        public string NombreOrdenador { get; set; } = null!;
+        public string? NombreOrdenador { get; set; }
         public TipoOrdenador TipoOrdenador { get; set; }
 
         // Datos
