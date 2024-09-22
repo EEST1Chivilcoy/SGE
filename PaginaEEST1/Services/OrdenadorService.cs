@@ -3,13 +3,16 @@ using PaginaEEST1.Data;
 using Microsoft.EntityFrameworkCore;
 using PaginaEEST1.Data.ViewModels;
 using PaginaEEST1.Data.Enums;
+using AntDesign;
 
 namespace PaginaEEST1.Services
 {
     public interface IOrdenadorService
     {
-        Task<ComputadoraVM?> GetComputer(int ID);
+        Task<ComputadoraVM?> GetDesktop(int ID);
+        Task<Ordenador> SaveComputer<T>(T ordenador) where T : Ordenador;
     }
+
     public class OrdenadorService : IOrdenadorService
     {
         private readonly PaginaDbContext _context;
@@ -17,7 +20,26 @@ namespace PaginaEEST1.Services
         {
             _context = context;
         }
-        public async Task<ComputadoraVM?> GetComputer(int ID)
+        public async Task<Ordenador> SaveComputer<T>(T ordenador) where T : Ordenador
+        {
+            try
+            {
+                _context.Ordenadores.Add(ordenador);
+                await _context.SaveChangesAsync();
+                return ordenador;
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine($"ERROR: Error al cargar el Ordenador. {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR: Ocurrió un error inesperado. {ex.Message}");
+                throw;
+            }
+        }
+        public async Task<ComputadoraVM?> GetDesktop(int ID)
         {
             var ordenador = await _context.Ordenadores.Where(i => i.OrdenadorId == ID).SingleOrDefaultAsync();
 
@@ -26,7 +48,7 @@ namespace PaginaEEST1.Services
                 throw new InvalidOperationException("No se encontro la Computadora.");
             }
 
-            if (ordenador is Computadora computadora) 
+            if (ordenador is Computadora computadora)
             {
                 ComputadoraVM computadora_VM = new ComputadoraVM()
                 {
