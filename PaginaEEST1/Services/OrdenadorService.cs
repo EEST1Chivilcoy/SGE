@@ -53,8 +53,8 @@ namespace PaginaEEST1.Services
                 ComputadoraVM computadora_VM = new ComputadoraVM()
                 {
                     Estado = computadora.Estado,
-                    Nombre = computadora.Nombre,
-                    Sistema_Operativo = computadora.Sistema_Operativo,
+                    Nombre = computadora.NombreOrdenador,
+                    Sistema_Operativo = computadora.SistemaOperativo,
                     Procesador = computadora.Procesador,
                     RAM = computadora.RAM,
                     Almacenamiento = computadora.Almacenamiento,
