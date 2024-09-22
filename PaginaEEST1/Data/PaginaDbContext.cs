@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PaginaEEST1.Data.Enums;
 using PaginaEEST1.Data.Models.Objetos_Fisicos;
+using PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes;
 using PaginaEEST1.Data.Models.Personal;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,10 @@ namespace PaginaEEST1.Data
 {
     public class PaginaDbContext : DbContext
     {
+        // Tablas
         public DbSet<Ordenador> Ordenadores  { get; set; }
-
-        // Personas
         public DbSet<Persona> Personas { get; set; }
+        public DbSet<ReservaNetbook> ReservasDeNetbooks { get; set; }
 
         public PaginaDbContext(DbContextOptions<PaginaDbContext> options) : base(options)
         {
