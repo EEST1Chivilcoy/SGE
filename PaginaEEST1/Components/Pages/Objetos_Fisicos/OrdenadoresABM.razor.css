@@ -1,0 +1,14 @@
+﻿.flex-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.template {
+    margin-top: 20px;
+    width: 100%;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 1vw;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

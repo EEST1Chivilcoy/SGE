@@ -1,56 +1,59 @@
-﻿@* Esto es una pagina temporal para realizar pruebas
-Cuenta con las funciones para ingresar una computadora de escritorio y generar su QR
-Hasta que se decida el diseño final de como va a ser el ingreso de los ordenadores*@
-
-@using PaginaEEST1.Services
+﻿@using PaginaEEST1.Services
 @using PaginaEEST1.Data.Models.Objetos_Fisicos
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
 @inject IMessageService message
 @inject IOrdenadorService OrdenadorService
-@page "/temp/Agregar_Computadora"
 
 <div clas="container">
     <Form Model="@computadoraView" OnFinish="OnFinish">
         <div clas="form-grid">
-            <h3>Vista temporal de pruebas para ingresar una Computadora de escritorio y generar su QR.</h3>
-            <FormItem Label="Estado de la Computadora:">
+            <FormItem Label="Estado de la Computadora">
                 <EnumSelect TEnum="EstadoOrdenador" @bind-Value="@computadoraView.Estado" />
             </FormItem>
-            <FormItem Label="Nombre de la Computadora:">
-                <Input @bind-Value="@computadoraView.NombreOrdenador" />
+            <FormItem Label="Nombre o Codigo">
+                <Input @bind-Value="@computadoraView.NombreOCodigoDispositivo" />
             </FormItem>
-            <FormItem Label="Sistema Operativo:">
+            <FormItem Label="Sistema Operativo">
                 <Input @bind-Value="@computadoraView.SistemaOperativo" />
             </FormItem>
-            <FormItem Label="Procesador:">
+            <FormItem Label="Procesador">
                 <Input @bind-Value="@computadoraView.Procesador" />
             </FormItem>
-            <FormItem Label="RAM:">
+            <FormItem Label="RAM">
                 <Input @bind-Value="@computadoraView.RAM" />
             </FormItem>
-            <FormItem Label="Almacenamiento:">
+            <FormItem Label="Almacenamiento">
                 <Input @bind-Value="@computadoraView.Almacenamiento" />
             </FormItem>
-            <FormItem Label="Ubicación dentro de la Institución:">
+            <FormItem Label="Tipo de almacenamiento">
+                <EnumSelect TEnum="TipoAlmacenamiento" @bind-Value="@computadoraView.tipoAlmacenamiento" />
+            </FormItem>
+            <FormItem Label="Ubicación dentro de la Institució">
                 <Input @bind-Value="@computadoraView.Ubicacion" />
             </FormItem>
             <FormItem>
                 <Button Type="primary" HtmlType="submit">Guardar</Button>
+                <Button OnClick="HandleClose">Cerrar</Button>
             </FormItem>
         </div>
     </Form>
-    <div class="form-grid">
-        @if(ImagenQR != null)
-        {
-            <img src="@ImagenQR" alt="Código QR" />
-        }
-    </div>
 </div>
 
 @code {
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+
+    //Variables
     private ComputadoraVM computadoraView = new();
     private string? ImagenQR;
+
+    // Funciones
+    private async Task HandleClose()
+    {
+        await OnClose.InvokeAsync(false);
+    }
+
     private async Task OnFinish()
     {
         try
@@ -59,6 +62,7 @@ Hasta que se decida el diseño final de como va a ser el ingreso de los ordenado
             message.Success("Se guardo la Computadora con exito");
             ImagenQR = await OrdenadorService.GenerarQR(guardado.Id);
             computadoraView = new();
+            await OnClose.InvokeAsync(true);
             StateHasChanged();
         }
         catch

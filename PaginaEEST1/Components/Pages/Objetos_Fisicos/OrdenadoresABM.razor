@@ -1,0 +1,106 @@
+﻿@using PaginaEEST1.Services
+@using PaginaEEST1.Data.Models.Objetos_Fisicos
+@using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Enums
+@inject IMessageService message
+@inject IOrdenadorService OrdenadorService
+@page "/Gestion_Ordenadores"
+
+<Flex Class="flex-container" Justify="center" Align="center">
+    <div class="template">
+        <Table 
+            TItem="ComputadoraVM"
+            DataSource="@computadoras"
+            PageIndex="1"
+            PageSize="6"
+            Responsive
+        >
+
+            <TitleTemplate>
+                <Space>
+                    <SpaceItem>
+                        <Button Type="primary"
+                                OnClick="() => {visAgregar = true;}">
+                            <Icon Type="plus" /> Agregar
+                        </Button>
+                    </SpaceItem>
+                </Space>
+            </TitleTemplate>
+
+            <ColumnDefinitions>
+                @* Datos *@
+                <PropertyColumn 
+                    Title="Nombre del Ordenador"
+                    Property="@(v => v.NombreOCodigoDispositivo)"
+                    Sortable
+                />
+                <PropertyColumn
+                    Title="Ubicación"
+                    Property="@(v => v.Ubicacion)"
+                    Sortable
+                />
+                <PropertyColumn
+                    Title="Sistema Operativo"
+                    Property="@(v => v.SistemaOperativo)"
+                    Sortable
+                />
+                <PropertyColumn
+                    Title="Estado"
+                    Property="@(v => v.Estado)"
+                    Sortable
+                />
+                @* Acciones *@
+                <ActionColumn Title="Acciones" Align="ColumnAlign.Center">
+                    <Space>
+                        <SpaceItem>
+                            <Button Type="primary" OnClick="()=>{}">
+                                <Icon Type="desktop"/> Detalles
+                            </Button>
+                            <Button Danger OnClick="()=>{}">
+                                <Icon Type="down" /> Remover
+                            </Button>
+                        </SpaceItem>
+                    </Space>
+                </ActionColumn>
+                @* Logo del Ordenador. Va a haber uno diferente si es una Computadora o Netbook *@
+                <Column TData="ComputadoraVM" Width="100">
+                    <Image Src="@context.Logo_PC" />
+                </Column>
+            </ColumnDefinitions>
+        </Table>
+    </div>
+</Flex>
+
+@if(visAgregar == true)
+{
+    <Modal Visible="visAgregar" Footer="null" OnCancel="() => closeAgregar(false)">
+        <CargarOrdenador OnClose="closeAgregar" />
+    </Modal>
+}
+
+@code {
+    // Variables
+    private ComputadoraVM computadoraView = new();
+    List<ComputadoraVM?> computadoras = new();
+    private string? ImagenQR;
+
+    // Visibles y Funciones
+    private bool visAgregar = false;
+
+    private void closeAgregar(bool success)
+    {
+        visAgregar = false;
+        if (success == true)
+        {
+            OnInitializedAsync();
+        }
+        StateHasChanged();
+    }
+
+    // Init
+    protected override async Task OnInitializedAsync()
+    {
+        computadoras = await OrdenadorService.GetListDesktopDevices();
+        StateHasChanged();
+    }
+}

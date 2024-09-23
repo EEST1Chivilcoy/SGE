@@ -13,7 +13,9 @@ namespace PaginaEEST1.Services
         Task<ComputadoraVM?> GetDesktop(int ID);
         Task<DispositivoComputacional> SaveComputer<T>(T ordenador) where T : DispositivoComputacional;
         Task<ComputadoraDeEscritorio> GuardarComputadora(ComputadoraVM computadora);
+
         Task<string> GenerarQR(int ID); // Posiblemente esta funcion no deberia pertenecer al Service
+        Task<List<ComputadoraVM?>> GetListDesktopDevices();
     }
 
     public class OrdenadorService : IOrdenadorService
@@ -27,7 +29,7 @@ namespace PaginaEEST1.Services
             
             ComputadoraDeEscritorio Guardar = new ComputadoraDeEscritorio(){
                 Estado = computadora.Estado,
-                NombreOCodigoDispositivo = computadora.NombreOrdenador,
+                NombreOCodigoDispositivo = computadora.NombreOCodigoDispositivo,
                 SistemaOperativo = computadora.SistemaOperativo,
                 Procesador = computadora.Procesador,
                 RAM = computadora.RAM,
@@ -83,16 +85,29 @@ namespace PaginaEEST1.Services
                 ComputadoraVM computadora_VM = new ComputadoraVM()
                 {
                     Estado = computadora.Estado,
-                    NombreOrdenador = computadora.NombreOCodigoDispositivo,
+                    NombreOCodigoDispositivo = computadora.NombreOCodigoDispositivo,
                     SistemaOperativo = computadora.SistemaOperativo,
                     Procesador = computadora.Procesador,
                     RAM = computadora.RAM,
                     Almacenamiento = computadora.Almacenamiento,
+                    tipoAlmacenamiento = computadora.tipoAlmacenamiento,
                     Ubicacion = computadora.Ubicacion
                 };
                 return computadora_VM;
             }
             return null;
+        }
+        public async Task<List<ComputadoraVM?>> GetListDesktopDevices(){
+            List<ComputadoraVM?> computadoras = new();
+
+            foreach(ComputadoraDeEscritorio i in await _context.DispositivosComputacionales.ToListAsync())
+            {
+                if (i is ComputadoraDeEscritorio)
+                {
+                    computadoras.Add(await GetDesktop(i.Id));
+                }
+            }
+            return computadoras;
         }
     }
 }
