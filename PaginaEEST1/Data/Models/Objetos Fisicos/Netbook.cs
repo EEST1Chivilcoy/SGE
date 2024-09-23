@@ -8,7 +8,6 @@ namespace PaginaEEST1.Data.Models.Objetos_Fisicos
     public class Netbook : DispositivoComputacional
     {
         public string? Modelo { get; set; }
-
         public bool Prestamo { get; set; }
     }
 }
