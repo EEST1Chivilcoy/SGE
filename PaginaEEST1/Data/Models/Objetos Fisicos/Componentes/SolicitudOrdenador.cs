@@ -13,7 +13,7 @@ namespace PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes
         //Relaciones [Profesor - Ordenador]
         public int OrdenadorId { get; set; }
         [ForeignKey(nameof(OrdenadorId))]
-        public Ordenador ordenador { get; set; } = null!;
+        public DispositivoComputacional ordenador { get; set; } = null!;
         public int ProfesorId { get; set; }
         [ForeignKey(nameof(ProfesorId))]
         public Profesor ProfesorSolicitante { get; set; } = null!;

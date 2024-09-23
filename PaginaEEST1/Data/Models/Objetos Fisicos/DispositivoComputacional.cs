@@ -2,11 +2,11 @@
 
 namespace PaginaEEST1.Data.Models.Objetos_Fisicos
 {
-    public abstract class Ordenador
+    public abstract class DispositivoComputacional
     {
-        public int OrdenadorId { get; set; }
-        public string? NombreOrdenador { get; set; }
-        public TipoOrdenador TipoOrdenador { get; set; }
+        public int Id { get; set; }
+        public string? NombreOCodigoDispositivo { get; set; }
+        public TipoDispositivoComputacional TipoOrdenador { get; set; }
 
         // Datos
         public EstadoOrdenador Estado { get; set; }

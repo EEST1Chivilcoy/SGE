@@ -14,7 +14,7 @@ namespace PaginaEEST1.Data
     public class PaginaDbContext : DbContext
     {
         // Tablas (Entidades)
-        public DbSet<Ordenador> Ordenadores  { get; set; }
+        public DbSet<DispositivoComputacional> DispositivosComputacionales  { get; set; }
         public DbSet<Persona> Personas { get; set; }
         // Tablas (Reportes / Planillas)
         public DbSet<ReservaNetbook> ReservasDeNetbooks { get; set; }
@@ -29,7 +29,7 @@ namespace PaginaEEST1.Data
         {
             // Enums
             modelBuilder
-            .Entity<Ordenador>()
+            .Entity<DispositivoComputacional>()
                 .Property(o => o.tipoAlmacenamiento)
                 .HasConversion<string>()
                 .HasMaxLength(255);
@@ -58,7 +58,7 @@ namespace PaginaEEST1.Data
                 .Property(p => p.TipoPersona)
                 .HasConversion<int>();
 
-            modelBuilder.Entity<Ordenador>()
+            modelBuilder.Entity<DispositivoComputacional>()
                 .Property(c => c.TipoOrdenador)
                 .HasConversion<int>();
 
@@ -68,8 +68,8 @@ namespace PaginaEEST1.Data
 
             // Unique
 
-            modelBuilder.Entity<Ordenador>()
-                .HasIndex(o => o.NombreOrdenador)
+            modelBuilder.Entity<DispositivoComputacional>()
+                .HasIndex(o => o.NombreOCodigoDispositivo)
                 .IsUnique();
 
             // Discriminadores
@@ -83,10 +83,10 @@ namespace PaginaEEST1.Data
                 .HasValue<Alumno>(TipoPersona.Alumno);
 
             modelBuilder
-                .Entity<Ordenador>()
+                .Entity<DispositivoComputacional>()
                 .HasDiscriminator(c => c.TipoOrdenador)
-                .HasValue<Computadora>(TipoOrdenador.Computadora)
-                .HasValue<Netbook>(TipoOrdenador.Netbook);
+                .HasValue<ComputadoraDeEscritorio>(TipoDispositivoComputacional.Computadora)
+                .HasValue<Netbook>(TipoDispositivoComputacional.Netbook);
 
             modelBuilder
                 .Entity<SolicitudOrdenador>()

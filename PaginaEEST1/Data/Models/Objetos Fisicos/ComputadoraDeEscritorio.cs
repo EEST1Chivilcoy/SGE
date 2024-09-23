@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PaginaEEST1.Data.Models.Objetos_Fisicos
 {
-    public class Computadora : Ordenador
+    public class ComputadoraDeEscritorio : DispositivoComputacional
     {
         public string? Ubicacion { get; set; }
     }

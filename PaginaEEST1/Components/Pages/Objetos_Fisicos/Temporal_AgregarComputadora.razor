@@ -55,9 +55,9 @@ Hasta que se decida el diseño final de como va a ser el ingreso de los ordenado
     {
         try
         {
-            Computadora guardado = await OrdenadorService.GuardarComputadora(computadoraView);
+            ComputadoraDeEscritorio guardado = await OrdenadorService.GuardarComputadora(computadoraView);
             message.Success("Se guardo la Computadora con exito");
-            ImagenQR = await OrdenadorService.GenerarQR(guardado.OrdenadorId);
+            ImagenQR = await OrdenadorService.GenerarQR(guardado.Id);
             computadoraView = new();
             StateHasChanged();
         }
