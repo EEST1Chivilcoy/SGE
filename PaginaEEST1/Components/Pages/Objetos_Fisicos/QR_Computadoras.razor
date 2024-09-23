@@ -3,26 +3,32 @@
 @inject IOrdenadorService Ordenador_Service
 @page "/Computadora_VistaQR_{ID_Computadora:int}"
 
-@* Pagina sin terminar - actualmente iniciando su creacion, Trabajo en progreso
-
-Unicamente se implemento el service por prueba
-*@
-
 <html lang="es-ES">
-    <head><title>Computadora @ID_Computadora</title></head>
-    <h3>Vista temporal para verificar su funcionamiento de ver los datos de una Computadora a travez de un QR.</h3>
-    <body>
-        @if(Computadora != null){
-            <div style="background-color: #ececec; border-radius: 1vw;;">
-                <p><b>Estado</b>: @Computadora.Estado</p>
-                <p><b>Nombre</b>: @Computadora.NombreOrdenador</p>
-                <p><b>Sistema Operativo</b>: @Computadora.SistemaOperativo</p>
-                <p><b>Procesador</b>: @Computadora.Procesador</p>
-                <p><b>RAM</b>: @Computadora.RAM</p>
-                <p><b>Ubicacion</b>: @Computadora.Ubicacion</p>
+
+<head>
+    <title>Computadora @ID_Computadora</title>
+</head>
+
+<body>
+    @if (Computadora != null)
+    {
+        <div class="pc-container">
+            <div class="pc-info">
+                <h1>@Computadora.NombreOrdenador</h1>
+                <ul>
+                    <li><b>Estado: </b> @Computadora.Estado</li>
+                    <li><b>Sistema Operativo: </b> @Computadora.SistemaOperativo</li>
+                    <li><b>Procesador: </b> @Computadora.Procesador</li>
+                    <li><b>Memoria RAM: </b> @Computadora.RAM</li>
+                    <li><b>Almacenamiento: </b> @Computadora.Almacenamiento</li>
+                    <li><b>Ubicación: </b> @Computadora.Ubicacion</li>
+                </ul>
             </div>
-        }
-    </body>
+            <img class="pc-logo" src="Imagenes/PC_Escritorio.png" alt="Computadora de Escritorio" />
+        </div>
+    }
+</body>
+
 </html>
 
 @code {
