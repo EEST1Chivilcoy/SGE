@@ -1,7 +1,7 @@
 <img align="right" width="100" height="100" src="https://i.imgur.com/3Rpkk1F.jpeg">
 
 ### Sistema de Gestión Escolar (SGE) 🏫
-###### Institución: Escuela Técnica N°1 Chivilcoy</h6>
+###### Institución: Escuela de Educación Secundaria Técnica Nº1 "Mariano Moreno" de Chivilcoy
 
 ---
 
