@@ -10,13 +10,11 @@
 
 <Flex Class="flex-container" Justify="center" Align="center">
     <div class="template">
-        <Table 
-            TItem="DesktopViewModel"
-            DataSource="@computadoras"
-            PageIndex="1"
-            PageSize="6"
-            Responsive
-        >
+        <Table TItem="DesktopViewModel"
+               DataSource="@computadoras"
+               PageIndex="1"
+               PageSize="6"
+               Responsive>
 
             <TitleTemplate>
                 <Space>
@@ -31,32 +29,24 @@
 
             <ColumnDefinitions>
                 @* Datos *@
-                <PropertyColumn 
-                    Title="Nombre del Ordenador"
-                    Property="@(v => v.DeviceName)"
-                    Sortable
-                />
-                <PropertyColumn
-                    Title="Ubicación"
-                    Property="@(v => v.Location)"
-                    Sortable
-                />
-                <PropertyColumn
-                    Title="Sistema Operativo"
-                    Property="@(v => v.OperatingSystem)"
-                    Sortable
-                />
-                <PropertyColumn
-                    Title="Estado"
-                    Property="@(v => v.Status)"
-                    Sortable
-                />
+                <PropertyColumn Title="Nombre del Ordenador"
+                                Property="@(v => v.DeviceName)"
+                                Sortable />
+                <PropertyColumn Title="Ubicación"
+                                Property="@(v => v.Location)"
+                                Sortable />
+                <PropertyColumn Title="Sistema Operativo"
+                                Property="@(v => v.OperatingSystem)"
+                                Sortable />
+                <PropertyColumn Title="Estado"
+                                Property="@(v => v.Status)"
+                                Sortable />
                 @* Acciones *@
                 <ActionColumn Title="Acciones" Align="ColumnAlign.Center">
                     <Space>
                         <SpaceItem>
                             <Button Type="primary" OnClick="() => openDetalles(context.ID)">
-                                <Icon Type="desktop"/> Detalles
+                                <Icon Type="desktop" /> Detalles
                             </Button>
                             <Button Danger OnClick="()=>{}">
                                 <Icon Type="down" /> Remover
@@ -104,12 +94,12 @@
         visDetalle = true;
     }
 
-    private void closeAgregar(bool success)
+    private async Task closeAgregar(bool success)
     {
         visAgregar = false;
         if (success == true)
         {
-            OnInitializedAsync();
+            await OnInitializedAsync();
         }
         StateHasChanged();
     }

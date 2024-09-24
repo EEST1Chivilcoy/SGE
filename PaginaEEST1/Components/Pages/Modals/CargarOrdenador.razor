@@ -59,7 +59,7 @@
         try
         {
             Desktop guardado = await OrdenadorService.SaveDesktop(computadoraView);
-            message.Success("Se guardo la Computadora con exito");
+            await message.Success("Se guardo la Computadora con exito");
             ImagenQR = await OrdenadorService.GenerarQR(guardado.Id);
             computadoraView = new();
             await OnClose.InvokeAsync(true);
@@ -67,7 +67,7 @@
         }
         catch
         {
-            message.Error("Error inesperado al guardar una Computadora");
+            await message.Error("Error inesperado al guardar una Computadora");
         }
     }
 }
