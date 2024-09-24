@@ -3,7 +3,6 @@
 @using PaginaEEST1.Components.Pages.Modals
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
-@inject IMessageService message
 @inject IComputerService ComputerService
 @page "/Gestion_Ordenadores"
 @attribute [Authorize]
@@ -48,7 +47,7 @@
                             <Button Type="primary" OnClick="() => openDetails(context.ID)">
                                 <Icon Type="desktop" /> Detalles
                             </Button>
-                            <Button OnClick="() => {}">
+                            <Button OnClick="() => openEdit(context.ID)">
                                 <Icon Type="edit" /> Editar
                             </Button>
                             <Popconfirm Title="¿Está seguro de remover este Ordenador?"
@@ -75,14 +74,20 @@
 
 @if (visAdd == true)
 {
-    <Modal Visible="visAdd" Footer="null" OnCancel="() => closeAdd(false)">
-        <AddComputer OnClose="closeAdd" />
+    <Modal Visible="visAdd" Footer="null" OnCancel="() => closeModals(false)">
+        <AddComputer OnClose="closeModals" />
+    </Modal>
+}
+@if (visEdit == true)
+{
+    <Modal Visible="visEdit" Footer="null" OnCancel="() => closeModals(false)">
+        <EditComputer OnClose="closeModals" ID="detID" />
     </Modal>
 }
 @if (visDetails == true)
 {
     <Modal Visible="visDetails" Footer="null" OnCancel="() => {visDetails = false;}">
-        <DesktopDetails ID="detID" />
+        <DetailsComputer ID="detID" />
     </Modal>
 }
 
@@ -95,16 +100,22 @@
     private int detID { get; set; }
     private bool visAdd = false;
     private bool visDetails = false;
+    private bool visEdit = false;
 
     private void openDetails(int ID)
     {
         detID = ID;
         visDetails = true;
     }
-
-    private async Task closeAdd(bool success)
+    private void openEdit(int ID)
+    {
+        detID = ID;
+        visEdit = true;
+    }
+    private async Task closeModals(bool success)
     {
         visAdd = false;
+        visEdit = false;
         if (success == true)
         {
             await OnInitializedAsync();

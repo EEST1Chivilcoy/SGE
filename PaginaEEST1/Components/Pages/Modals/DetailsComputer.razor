@@ -3,6 +3,7 @@
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
 @inject IComputerService ComputerService
+@inject IQRService QRService
 @inject IJSRuntime JSRuntime
 
 <style>
@@ -35,7 +36,14 @@
             else
             {
                 <p><b>Modelo de la Netbook</b>: @computer.Model</p>
-                <p><b>Disponibilidad</b>: @computer.IsAvailable</p>
+                <p><b>Disponibilidad</b>: 
+                @if(computer.IsAvailable == true){
+                    <text>Disponible</text>
+                }
+                else{
+                    <text>En uso</text>
+                }
+                </p>
             }
             <div class="_QRCode">
                 <Image Src="@QRCode" alt="QR" Style="width: 100px; height: 100px;" />
@@ -70,8 +78,7 @@
     // Init
     protected override async Task OnInitializedAsync()
     {
-        QRCode = await ComputerService.LoadQR(ID);
         computer = await ComputerService.GetComputer(ID);
+        QRCode = await QRService.LoadQR($"https://paginaeest1.azurewebsites.net/Computadora_VistaQR_{ID}");
     }
 }
-

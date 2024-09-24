@@ -4,6 +4,7 @@
 @using PaginaEEST1.Data.Enums
 @inject IMessageService message
 @inject IComputerService ComputerService
+@inject IMessageService message
 
 <div clas="container">
     <Form Model="@computerVM" OnFinish="OnFinish">
@@ -29,19 +30,6 @@
             <FormItem Label="Tipo de almacenamiento">
                 <EnumSelect TEnum="TypeStorage" @bind-Value="@computerVM.StorageType" />
             </FormItem>
-            @* Selección del tipo del dispositivo: Computadora / Netbook *@
-            <FormItem Label="Tipo de Dispositivo">
-                <div class="device-type-selector">
-                    <div class="device-option @(computerVM.Type == TypeComputer.Computadora ? "selected" : "")" @onclick="() => SelectDeviceType(TypeComputer.Computadora)">
-                        <img src="/Images/Logo_Desktop.png" alt="Computadora" />
-                        <span>Computadora</span>
-                    </div>
-                    <div class="device-option @(computerVM.Type == TypeComputer.Netbook ? "selected" : "")" @onclick="() => SelectDeviceType(TypeComputer.Netbook)">
-                        <img src="/Images/Logo_Netbook.png" alt="Netbook" />
-                        <span>Netbook</span>
-                    </div>
-                </div>
-            </FormItem>
             @if(computerVM.Type == TypeComputer.Computadora){
                 <FormItem Label="Ubicación dentro de la Institución">
                     <Input @bind-Value="@computerVM.Location" />
@@ -56,7 +44,7 @@
                 </FormItem>
             }
             <FormItem>
-                <Button Type="primary" HtmlType="submit">Guardar</Button>
+                <Button Type="primary" HtmlType="submit">Editar</Button>
                 <Button OnClick="HandleClose">Cerrar</Button>
             </FormItem>
         </div>
@@ -66,24 +54,30 @@
 @code {
     [Parameter]
     public EventCallback<bool> OnClose { get; set; }
-    //Variables
-    private ComputerViewModel computerVM = new(){Type = TypeComputer.Computadora};
+    [Parameter]
+    public int ID { get; set; }
+    private ComputerViewModel computerVM = new();
 
     // Funciones
     private async Task HandleClose()
     {
         await OnClose.InvokeAsync(false);
     }
-    private void SelectDeviceType(TypeComputer PCType)
-    {
-        computerVM.Type = PCType;
-        StateHasChanged();
-    }
     private async Task OnFinish()
     {
-            await ComputerService.SaveComputer(computerVM);
+        try{
+            await ComputerService.EditComputer(computerVM);
             computerVM = new();
             await OnClose.InvokeAsync(true);
+            message.Success("Ordenador editado con exito");
             StateHasChanged();
+        }
+        catch{
+            message.Warning("Error inesperado al editar el Ordenador.");
+        }
+    }
+    protected override async Task OnInitializedAsync(){
+        computerVM = await ComputerService.GetComputer(ID);
+        StateHasChanged();
     }
 }

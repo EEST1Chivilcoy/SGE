@@ -13,8 +13,8 @@ namespace PaginaEEST1.Services
     {
         Task<ComputerViewModel?> GetComputer(int ID);
         Task<bool> SaveComputer(ComputerViewModel computer);
+        Task<Computer?> EditComputer(ComputerViewModel NewPC);
         Task DelComputer(int ID);
-        Task<string> LoadQR(int ID);
         Task<List<ComputerViewModel?>> GetListComputerDevices();
     }
 
@@ -79,18 +79,6 @@ namespace PaginaEEST1.Services
                 throw new InvalidOperationException("No se encontró la Computadora.");
             }
         }
-        public async Task<string> LoadQR(int ID)
-        {
-            return await Task.Run(() =>
-            {
-                QRCodeGenerator qrGenerator = new QRCodeGenerator();
-                // Tal vez haya que referirse a la pagina de otra forma en vez de poner la url completa:
-                QRCodeData qrCodeData = qrGenerator.CreateQrCode($"https://paginaeest1.azurewebsites.net/Computadora_VistaQR_{ID}", QRCodeGenerator.ECCLevel.Q);
-                PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
-                byte[] qrCodeAsPngByteArr = qrCode.GetGraphic(20);
-                return $"data:image/png;base64,{Convert.ToBase64String(qrCodeAsPngByteArr)}";
-            });
-        }
         public async Task<ComputerViewModel?> GetComputer(int ID)
         {
             Computer? computer = await _context.Computers.Where(i => i.Id == ID).SingleOrDefaultAsync();
@@ -125,6 +113,25 @@ namespace PaginaEEST1.Services
             }
 
             return computerVM;
+        }
+        public async Task<Computer?> EditComputer(ComputerViewModel newpc){
+            Computer? edit = await _context.Computers.Where(v => v.Id == newpc.ID).SingleOrDefaultAsync();
+            try{
+                foreach(var i in newpc.GetType().GetProperties()){
+                    var propNombre = i.Name;
+                    var propValor = i.GetValue(newpc);
+                    var editarProp = edit.GetType().GetProperty(propNombre);
+                    if (editarProp != null && editarProp.CanWrite && propValor != null)
+                    {
+                        editarProp.SetValue(edit, propValor);
+                    }
+                }
+                await _context.SaveChangesAsync();
+            }
+            catch{
+                throw new InvalidOperationException("Error inesperado al editar el Ordenador.");
+            }
+            return edit;
         }
         public async Task<List<ComputerViewModel?>> GetListComputerDevices()
         {
