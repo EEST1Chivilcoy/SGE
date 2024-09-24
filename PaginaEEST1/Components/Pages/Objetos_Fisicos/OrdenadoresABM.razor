@@ -11,7 +11,7 @@
 <Flex Class="flex-container" Justify="center" Align="center">
     <div class="template">
         <Table 
-            TItem="ComputadoraVM"
+            TItem="DesktopViewModel"
             DataSource="@computadoras"
             PageIndex="1"
             PageSize="6"
@@ -33,22 +33,22 @@
                 @* Datos *@
                 <PropertyColumn 
                     Title="Nombre del Ordenador"
-                    Property="@(v => v.NombreOCodigoDispositivo)"
+                    Property="@(v => v.DeviceName)"
                     Sortable
                 />
                 <PropertyColumn
                     Title="Ubicación"
-                    Property="@(v => v.Ubicacion)"
+                    Property="@(v => v.Location)"
                     Sortable
                 />
                 <PropertyColumn
                     Title="Sistema Operativo"
-                    Property="@(v => v.SistemaOperativo)"
+                    Property="@(v => v.OperatingSystem)"
                     Sortable
                 />
                 <PropertyColumn
                     Title="Estado"
-                    Property="@(v => v.Estado)"
+                    Property="@(v => v.Status)"
                     Sortable
                 />
                 @* Acciones *@
@@ -65,7 +65,7 @@
                     </Space>
                 </ActionColumn>
                 @* Logo del Ordenador. Va a haber uno diferente si es una Computadora o Netbook *@
-                <Column TData="ComputadoraVM" Width="100">
+                <Column TData="DesktopViewModel" Width="100">
                     <Image Src="@context.Logo_PC" />
                 </Column>
             </ColumnDefinitions>
@@ -89,8 +89,8 @@
 
 @code {
     // Variables
-    private ComputadoraVM computadoraView = new();
-    List<ComputadoraVM?> computadoras = new();
+    private DesktopViewModel computadoraView = new();
+    List<DesktopViewModel?> computadoras = new();
     private string? ImagenQR;
 
     // Visibles y Funciones - Modals

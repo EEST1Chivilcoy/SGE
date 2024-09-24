@@ -18,8 +18,8 @@ namespace PaginaEEST1.Data
         public DbSet<Person> People { get; set; }
 
         // Tablas (Reportes / Planillas)
-        public DbSet<NetbookLoan> ReservasDeNetbooks { get; set; }
-        public DbSet<RequestComputer> SolicitudesOrdenador { get; set; }
+        public DbSet<NetbookLoan> NetbookLoans { get; set; }
+        public DbSet<RequestComputer> ComputerRequests { get; set; }
 
         public PaginaDbContext(DbContextOptions<PaginaDbContext> options) : base(options)
         {
@@ -60,7 +60,7 @@ namespace PaginaEEST1.Data
                 .HasConversion<int>();
 
             modelBuilder.Entity<Computer>()
-                .Property(c => c.typeComputer)
+                .Property(c => c.Type)
                 .HasConversion<int>();
 
             modelBuilder.Entity<RequestComputer>()
@@ -85,15 +85,15 @@ namespace PaginaEEST1.Data
 
             modelBuilder
                 .Entity<Computer>()
-                .HasDiscriminator(c => c.typeComputer)
+                .HasDiscriminator(c => c.Type)
                 .HasValue<Desktop>(TypeComputer.Computadora)
                 .HasValue<Netbook>(TypeComputer.Netbook);
 
             modelBuilder
                 .Entity<RequestComputer>()
                 .HasDiscriminator(s => s.Type)
-                .HasValue<SolicitudInstalacion>(TypeRequest.Instalacion)
-                .HasValue<SolicitudFallo>(TypeRequest.ReporteFallo);
+                .HasValue<InstallationRequest>(TypeRequest.Instalacion)
+                .HasValue<FailureRequest>(TypeRequest.ReporteFallo);
         }
     }
 }

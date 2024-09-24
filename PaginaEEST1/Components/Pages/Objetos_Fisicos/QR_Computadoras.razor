@@ -14,18 +14,18 @@
     {
         <div class="pc-container">
             <div class="pc-info">
-                <h1>@Computadora.NombreOCodigoDispositivo</h1>
+                <h1>@Computadora.DeviceName</h1>
                 <ul>
-                    <li><b>Estado: </b> @Computadora.Estado</li>
-                    <li><b>Sistema Operativo: </b> @Computadora.SistemaOperativo</li>
-                    <li><b>Procesador: </b> @Computadora.Procesador</li>
+                    <li><b>Estado: </b> @Computadora.Status</li>
+                    <li><b>Sistema Operativo: </b> @Computadora.OperatingSystem</li>
+                    <li><b>Procesador: </b> @Computadora.Processor</li>
                     <li><b>Memoria RAM: </b> @Computadora.RAM</li>
-                    <li><b>Almacenamiento: </b> @Computadora.Almacenamiento</li>
-                    <li><b>Tipo de almacenamiento: </b> @Computadora.tipoAlmacenamiento</li>
-                    <li><b>Ubicación: </b> @Computadora.Ubicacion</li>
+                    <li><b>Almacenamiento: </b> @Computadora.Storage</li>
+                    <li><b>Tipo de almacenamiento: </b> @Computadora.StorageType</li>
+                    <li><b>Ubicación: </b> @Computadora.Location</li>
                 </ul>
             </div>
-            <img class="pc-logo" src="Imagenes/PC_Escritorio.png" alt="Computadora de Escritorio" />
+            <img class="pc-logo" src="Images/Desktop_PC.png" alt="Computadora de Escritorio" />
         </div>
     }
 </body>
@@ -35,7 +35,7 @@
 @code {
     [Parameter]
     public int ID_Computadora { get; set; }
-    private ComputadoraVM? Computadora { get; set; }
+    private DesktopViewModel? Computadora { get; set; }
 
     // Init
     protected override async Task OnInitializedAsync()

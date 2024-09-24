@@ -9,28 +9,28 @@
     <Form Model="@computadoraView" OnFinish="OnFinish">
         <div clas="form-grid">
             <FormItem Label="Estado de la Computadora">
-                <EnumSelect TEnum="ComputerStatus" @bind-Value="@computadoraView.Estado" />
+                <EnumSelect TEnum="ComputerStatus" @bind-Value="@computadoraView.Status" />
             </FormItem>
             <FormItem Label="Nombre o Codigo">
-                <Input @bind-Value="@computadoraView.NombreOCodigoDispositivo" />
+                <Input @bind-Value="@computadoraView.DeviceName" />
             </FormItem>
             <FormItem Label="Sistema Operativo">
-                <Input @bind-Value="@computadoraView.SistemaOperativo" />
+                <Input @bind-Value="@computadoraView.OperatingSystem" />
             </FormItem>
             <FormItem Label="Procesador">
-                <Input @bind-Value="@computadoraView.Procesador" />
+                <Input @bind-Value="@computadoraView.Processor" />
             </FormItem>
             <FormItem Label="RAM">
                 <Input @bind-Value="@computadoraView.RAM" />
             </FormItem>
             <FormItem Label="Almacenamiento">
-                <Input @bind-Value="@computadoraView.Almacenamiento" />
+                <Input @bind-Value="@computadoraView.Storage" />
             </FormItem>
             <FormItem Label="Tipo de almacenamiento">
-                <EnumSelect TEnum="TypeStorage" @bind-Value="@computadoraView.tipoAlmacenamiento" />
+                <EnumSelect TEnum="TypeStorage" @bind-Value="@computadoraView.StorageType" />
             </FormItem>
             <FormItem Label="Ubicación dentro de la Institució">
-                <Input @bind-Value="@computadoraView.Ubicacion" />
+                <Input @bind-Value="@computadoraView.Location" />
             </FormItem>
             <FormItem>
                 <Button Type="primary" HtmlType="submit">Guardar</Button>
@@ -45,7 +45,7 @@
     public EventCallback<bool> OnClose { get; set; }
 
     //Variables
-    private ComputadoraVM computadoraView = new();
+    private DesktopViewModel computadoraView = new();
     private string? ImagenQR;
 
     // Funciones

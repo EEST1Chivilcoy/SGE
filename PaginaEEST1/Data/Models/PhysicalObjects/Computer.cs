@@ -6,7 +6,7 @@ namespace PaginaEEST1.Data.Models.Objetos_Fisicos
     {
         public int Id { get; set; }
         public string? DeviceName { get; set; }
-        public TypeComputer typeComputer { get; set; }
+        public TypeComputer Type { get; set; }
 
         // Datos
         public ComputerStatus Status { get; set; }

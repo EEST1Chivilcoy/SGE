@@ -10,12 +10,12 @@ namespace PaginaEEST1.Services
 {
     public interface IOrdenadorService
     {
-        Task<ComputadoraVM?> GetDesktop(int ID);
+        Task<DesktopViewModel?> GetDesktop(int ID);
         Task<Computer> SaveComputer<T>(T ordenador) where T : Computer;
-        Task<Desktop> SaveDesktop(ComputadoraVM computadora);
+        Task<Desktop> SaveDesktop(DesktopViewModel computadora);
 
         Task<string> GenerarQR(int ID); // Posiblemente esta funcion no deberia pertenecer al Service
-        Task<List<ComputadoraVM?>> GetListDesktopDevices();
+        Task<List<DesktopViewModel?>> GetListDesktopDevices();
     }
 
     public class OrdenadorService : IOrdenadorService
@@ -25,16 +25,18 @@ namespace PaginaEEST1.Services
         {
             _context = context;
         }
-        public async Task<Desktop> SaveDesktop(ComputadoraVM computadora){
-            
-            Desktop Guardar = new Desktop(){
-                Status = computadora.Estado,
-                DeviceName = computadora.NombreOCodigoDispositivo,
-                OperatingSystem = computadora.SistemaOperativo,
-                Processor = computadora.Procesador,
+        public async Task<Desktop> SaveDesktop(DesktopViewModel computadora)
+        {
+
+            Desktop Guardar = new Desktop()
+            {
+                Status = computadora.Status,
+                DeviceName = computadora.DeviceName,
+                OperatingSystem = computadora.OperatingSystem,
+                Processor = computadora.Processor,
                 RAM = computadora.RAM,
-                Storage = computadora.Almacenamiento,
-                Location = computadora.Ubicacion
+                Storage = computadora.Storage,
+                Location = computadora.Location
             };
 
             await SaveComputer(Guardar);
@@ -42,7 +44,8 @@ namespace PaginaEEST1.Services
         }
         public async Task<string> GenerarQR(int ID)
         {
-            return await Task.Run(() => {
+            return await Task.Run(() =>
+            {
                 QRCodeGenerator qrGenerator = new QRCodeGenerator();
                 // Tal vez haya que referirse a la pagina de otra forma en vez de poner la url completa:
                 QRCodeData qrCodeData = qrGenerator.CreateQrCode($"https://paginaeest1.azurewebsites.net/Computadora_VistaQR_{ID}", QRCodeGenerator.ECCLevel.Q);
@@ -71,44 +74,45 @@ namespace PaginaEEST1.Services
                 throw;
             }
         }
-        public async Task<ComputadoraVM?> GetDesktop(int ID)
+        public async Task<DesktopViewModel?> GetDesktop(int ID)
         {
-            var ordenador = await _context.Computers.Where(i => i.Id == ID).SingleOrDefaultAsync();
-
-            if (ordenador == null)
-            {
-                throw new InvalidOperationException("No se encontro la Computadora.");
-            }
-
-            if (ordenador is Desktop computadora)
-            {
-                ComputadoraVM computadora_VM = new ComputadoraVM()
+            var desktopVM = await _context.Computers
+                .OfType<Desktop>()
+                .Where(i => i.Id == ID)
+                .Select(computadora => new DesktopViewModel
                 {
                     ID = computadora.Id,
-                    Estado = computadora.Status,
-                    NombreOCodigoDispositivo = computadora.DeviceName,
-                    SistemaOperativo = computadora.OperatingSystem,
-                    Procesador = computadora.Processor,
+                    Status = computadora.Status,
+                    DeviceName = computadora.DeviceName,
+                    OperatingSystem = computadora.OperatingSystem,
+                    Processor = computadora.Processor,
                     RAM = computadora.RAM,
-                    Almacenamiento = computadora.Storage,
-                    tipoAlmacenamiento = computadora.typeStorage,
-                    Ubicacion = computadora.Location
-                };
-                return computadora_VM;
-            }
-            return null;
-        }
-        public async Task<List<ComputadoraVM?>> GetListDesktopDevices(){
-            List<ComputadoraVM?> computadoras = new();
+                    Storage = computadora.Storage,
+                    StorageType = computadora.typeStorage,
+                    Location = computadora.Location
+                })
+                .SingleOrDefaultAsync();
 
-            foreach(Desktop i in await _context.Computers.ToListAsync())
+            if (desktopVM == null)
+            {
+                throw new InvalidOperationException("No se encontró la Computadora.");
+            }
+
+            return desktopVM;
+        }
+
+        public async Task<List<DesktopViewModel?>> GetListDesktopDevices()
+        {
+            List<DesktopViewModel?> Desktops = new();
+
+            foreach (Desktop i in await _context.Computers.ToListAsync())
             {
                 if (i is Desktop)
                 {
-                    computadoras.Add(await GetDesktop(i.Id));
+                    Desktops.Add(await GetDesktop(i.Id));
                 }
             }
-            return computadoras;
+            return Desktops;
         }
     }
 }

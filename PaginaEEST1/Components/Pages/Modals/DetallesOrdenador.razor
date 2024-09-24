@@ -15,19 +15,19 @@
     }
 </style>
 
-<img src="Imagenes/PC_Escritorio.png" class="pc-logo"/>
+<img src="Images/Desktop_PC.png" class="pc-logo"/>
 <Flex Align="left" Justify="left">
     <div class="pc-container">
         @if (desktop != null)
         {
-            <p><b>Nombre/Codigo del dispositivo</b>: @desktop.NombreOCodigoDispositivo</p>
-            <p><b>Estado</b>: @desktop.Estado</p>
-            <p><b>Sistema Operativo</b>: @desktop.SistemaOperativo</p>
-            <p><b>Procesador</b>: @desktop.Procesador</p>
+            <p><b>Nombre/Codigo del dispositivo</b>: @desktop.DeviceName</p>
+            <p><b>Estado</b>: @desktop.Status</p>
+            <p><b>Sistema Operativo</b>: @desktop.OperatingSystem</p>
+            <p><b>Procesador</b>: @desktop.Processor</p>
             <p><b>Memoria RAM</b>: @desktop.RAM</p>
-            <p><b>Almacenamiento</b>: @desktop.Almacenamiento</p>
-            <p><b>Tipo de Almacenamiento</b>: @desktop.tipoAlmacenamiento</p>
-            <p><b>Ubicación en la Institución</b>: @desktop.Ubicacion</p>
+            <p><b>Almacenamiento</b>: @desktop.Storage</p>
+            <p><b>Tipo de Almacenamiento</b>: @desktop.StorageType</p>
+            <p><b>Ubicación en la Institución</b>: @desktop.Location</p>
             <div class="_QRCode">
                 <Image Src="@QRCode" alt="QR" Style="width: 100px; height: 100px;" />
                 <Button>Imprimir</Button>
@@ -40,7 +40,7 @@
 @code {
     [Parameter]
     public int ID { get; set; }
-    private ComputadoraVM? desktop { get; set; }
+    private DesktopViewModel? desktop { get; set; }
     private string? QRCode { get; set; }
 
     // Init
