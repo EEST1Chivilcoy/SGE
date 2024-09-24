@@ -4,7 +4,7 @@ using PaginaEEST1.Data.Enums;
 
 namespace PaginaEEST1.Data.Models.Personal
 {
-    public class Paniol : Persona
+    public class Storeroom : Person
     {
         // Temporalmente vacio
     }

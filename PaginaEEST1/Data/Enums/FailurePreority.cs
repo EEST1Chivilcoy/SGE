@@ -2,7 +2,7 @@
 
 namespace PaginaEEST1.Data.Enums
 {
-    public enum PrioridadFallo
+    public enum FailurePreority
     {
         [Display(Name = "Fallo menor")]
         Baja,   // Fallo menor, no urgente

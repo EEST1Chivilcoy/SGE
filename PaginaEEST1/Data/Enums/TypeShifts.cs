@@ -2,7 +2,7 @@
 
 namespace PaginaEEST1.Data.Enums
 {
-    public enum Turno
+    public enum TypeShifts
     {
         [Display(Name = "Mañana")]
         Maniana,

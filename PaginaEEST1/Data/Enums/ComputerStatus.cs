@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PaginaEEST1.Data.Enums
 {
-    public enum EstadoOrdenador
+    public enum ComputerStatus
     {
         [Display(Name = "Operativo al 100%")]
         Operativo,

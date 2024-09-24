@@ -5,8 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PaginaEEST1.Data.Models.Objetos_Fisicos
 {
-    public class ComputadoraDeEscritorio : DispositivoComputacional
+    public class Desktop : Computer
     {
-        public string? Ubicacion { get; set; }
+        public string? Location { get; set; }
     }
 }

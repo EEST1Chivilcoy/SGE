@@ -2,7 +2,7 @@
 
 namespace PaginaEEST1.Data.Enums
 {
-    public enum TipoAlmacenamiento
+    public enum TypeStorage
     {
         [Display(Name = "Disco duro")]
         HDD,

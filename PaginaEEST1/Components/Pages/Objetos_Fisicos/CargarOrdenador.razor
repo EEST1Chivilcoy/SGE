@@ -9,7 +9,7 @@
     <Form Model="@computadoraView" OnFinish="OnFinish">
         <div clas="form-grid">
             <FormItem Label="Estado de la Computadora">
-                <EnumSelect TEnum="EstadoOrdenador" @bind-Value="@computadoraView.Estado" />
+                <EnumSelect TEnum="ComputerStatus" @bind-Value="@computadoraView.Estado" />
             </FormItem>
             <FormItem Label="Nombre o Codigo">
                 <Input @bind-Value="@computadoraView.NombreOCodigoDispositivo" />
@@ -27,7 +27,7 @@
                 <Input @bind-Value="@computadoraView.Almacenamiento" />
             </FormItem>
             <FormItem Label="Tipo de almacenamiento">
-                <EnumSelect TEnum="TipoAlmacenamiento" @bind-Value="@computadoraView.tipoAlmacenamiento" />
+                <EnumSelect TEnum="TypeStorage" @bind-Value="@computadoraView.tipoAlmacenamiento" />
             </FormItem>
             <FormItem Label="Ubicación dentro de la Institució">
                 <Input @bind-Value="@computadoraView.Ubicacion" />
@@ -58,7 +58,7 @@
     {
         try
         {
-            ComputadoraDeEscritorio guardado = await OrdenadorService.GuardarComputadora(computadoraView);
+            Desktop guardado = await OrdenadorService.SaveDesktop(computadoraView);
             message.Success("Se guardo la Computadora con exito");
             ImagenQR = await OrdenadorService.GenerarQR(guardado.Id);
             computadoraView = new();

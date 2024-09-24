@@ -11,8 +11,8 @@ namespace PaginaEEST1.Services
     public interface IOrdenadorService
     {
         Task<ComputadoraVM?> GetDesktop(int ID);
-        Task<DispositivoComputacional> SaveComputer<T>(T ordenador) where T : DispositivoComputacional;
-        Task<ComputadoraDeEscritorio> GuardarComputadora(ComputadoraVM computadora);
+        Task<Computer> SaveComputer<T>(T ordenador) where T : Computer;
+        Task<Desktop> SaveDesktop(ComputadoraVM computadora);
 
         Task<string> GenerarQR(int ID); // Posiblemente esta funcion no deberia pertenecer al Service
         Task<List<ComputadoraVM?>> GetListDesktopDevices();
@@ -25,19 +25,19 @@ namespace PaginaEEST1.Services
         {
             _context = context;
         }
-        public async Task<ComputadoraDeEscritorio> GuardarComputadora(ComputadoraVM computadora){
+        public async Task<Desktop> SaveDesktop(ComputadoraVM computadora){
             
-            ComputadoraDeEscritorio Guardar = new ComputadoraDeEscritorio(){
-                Estado = computadora.Estado,
-                NombreOCodigoDispositivo = computadora.NombreOCodigoDispositivo,
-                SistemaOperativo = computadora.SistemaOperativo,
-                Procesador = computadora.Procesador,
+            Desktop Guardar = new Desktop(){
+                Status = computadora.Estado,
+                DeviceName = computadora.NombreOCodigoDispositivo,
+                OperatingSystem = computadora.SistemaOperativo,
+                Processor = computadora.Procesador,
                 RAM = computadora.RAM,
-                Almacenamiento = computadora.Almacenamiento,
-                Ubicacion = computadora.Ubicacion
+                Storage = computadora.Almacenamiento,
+                Location = computadora.Ubicacion
             };
-            _context.DispositivosComputacionales.Add(Guardar as DispositivoComputacional);
-            await _context.SaveChangesAsync();
+
+            await SaveComputer(Guardar);
             return Guardar;
         }
         public async Task<string> GenerarQR(int ID)
@@ -52,11 +52,11 @@ namespace PaginaEEST1.Services
             });
         }
         // Cree la funcion GuardarComputadora ya que utilizo el ViewModel de Computadora
-        public async Task<DispositivoComputacional> SaveComputer<T>(T ordenador) where T : DispositivoComputacional
+        public async Task<Computer> SaveComputer<T>(T ordenador) where T : Computer
         {
             try
             {
-                _context.DispositivosComputacionales.Add(ordenador);
+                _context.Computers.Add(ordenador);
                 await _context.SaveChangesAsync();
                 return ordenador;
             }
@@ -73,25 +73,25 @@ namespace PaginaEEST1.Services
         }
         public async Task<ComputadoraVM?> GetDesktop(int ID)
         {
-            var ordenador = await _context.DispositivosComputacionales.Where(i => i.Id == ID).SingleOrDefaultAsync();
+            var ordenador = await _context.Computers.Where(i => i.Id == ID).SingleOrDefaultAsync();
 
             if (ordenador == null)
             {
                 throw new InvalidOperationException("No se encontro la Computadora.");
             }
 
-            if (ordenador is ComputadoraDeEscritorio computadora)
+            if (ordenador is Desktop computadora)
             {
                 ComputadoraVM computadora_VM = new ComputadoraVM()
                 {
-                    Estado = computadora.Estado,
-                    NombreOCodigoDispositivo = computadora.NombreOCodigoDispositivo,
-                    SistemaOperativo = computadora.SistemaOperativo,
-                    Procesador = computadora.Procesador,
+                    Estado = computadora.Status,
+                    NombreOCodigoDispositivo = computadora.DeviceName,
+                    SistemaOperativo = computadora.OperatingSystem,
+                    Procesador = computadora.Processor,
                     RAM = computadora.RAM,
-                    Almacenamiento = computadora.Almacenamiento,
-                    tipoAlmacenamiento = computadora.tipoAlmacenamiento,
-                    Ubicacion = computadora.Ubicacion
+                    Almacenamiento = computadora.Storage,
+                    tipoAlmacenamiento = computadora.typeStorage,
+                    Ubicacion = computadora.Location
                 };
                 return computadora_VM;
             }
@@ -100,9 +100,9 @@ namespace PaginaEEST1.Services
         public async Task<List<ComputadoraVM?>> GetListDesktopDevices(){
             List<ComputadoraVM?> computadoras = new();
 
-            foreach(ComputadoraDeEscritorio i in await _context.DispositivosComputacionales.ToListAsync())
+            foreach(Desktop i in await _context.Computers.ToListAsync())
             {
-                if (i is ComputadoraDeEscritorio)
+                if (i is Desktop)
                 {
                     computadoras.Add(await GetDesktop(i.Id));
                 }
