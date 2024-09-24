@@ -1,6 +1,6 @@
 ﻿@using PaginaEEST1.Services
 @using PaginaEEST1.Data.ViewModels
-@inject IOrdenadorService Ordenador_Service
+@inject IComputerService ComputerService
 @page "/Computadora_VistaQR_{ID_Computadora:int}"
 
 <html lang="es-ES">
@@ -35,12 +35,12 @@
 @code {
     [Parameter]
     public int ID_Computadora { get; set; }
-    private DesktopViewModel? Computadora { get; set; }
+    private ComputerViewModel? Computadora { get; set; }
 
     // Init
     protected override async Task OnInitializedAsync()
     {
-        Computadora = await Ordenador_Service.GetDesktop(ID_Computadora);
+        Computadora = await ComputerService.GetComputer(ID_Computadora);
         StateHasChanged();
     }
 }

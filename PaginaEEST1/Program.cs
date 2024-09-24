@@ -45,7 +45,7 @@ namespace PaginaEEST1
             builder.Services.AddAntDesign();
 
             // Servicios
-            builder.Services.AddScoped<IOrdenadorService, OrdenadorService>();
+            builder.Services.AddScoped<IComputerService, ComputerService>();
 
             var app = builder.Build();
 

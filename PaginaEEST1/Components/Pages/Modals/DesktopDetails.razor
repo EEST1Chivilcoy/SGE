@@ -1,0 +1,77 @@
+﻿@using PaginaEEST1.Services
+@using PaginaEEST1.Data.Models.Objetos_Fisicos
+@using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Enums
+@inject IComputerService ComputerService
+@inject IJSRuntime JSRuntime
+
+<style>
+    .pc-logo
+    {
+        width: 100px;
+        height: auto;
+        right: 3%;
+        bottom: 50%;
+        position: absolute;
+    }
+</style>
+
+<img src="@(computer?.Type == TypeComputer.Computadora ? "Images/Logo_Desktop.png" : "Images/Logo_Netbook.png")" class="pc-logo" />
+<Flex Align="left" Justify="left">
+    <div class="pc-container">
+        @if (computer != null)
+        {
+            <p><b>Nombre/Codigo del dispositivo</b>: @computer.DeviceName</p>
+            <p><b>Estado</b>: @computer.Status</p>
+            <p><b>Sistema Operativo</b>: @computer.OperatingSystem</p>
+            <p><b>Procesador</b>: @computer.Processor</p>
+            <p><b>Memoria RAM</b>: @computer.RAM</p>
+            <p><b>Almacenamiento</b>: @computer.Storage</p>
+            <p><b>Tipo de Almacenamiento</b>: @computer.StorageType</p>
+            @if (computer.Type == TypeComputer.Computadora)
+            {
+                <p><b>Ubicación en la Institución</b>: @computer.Location</p>
+            }
+            else
+            {
+                <p><b>Modelo de la Netbook</b>: @computer.Model</p>
+                <p><b>Disponibilidad</b>: @computer.IsAvailable</p>
+            }
+            <div class="_QRCode">
+                <Image Src="@QRCode" alt="QR" Style="width: 100px; height: 100px;" />
+                <Button OnClick="PrintQRCode">Imprimir</Button>
+                <Button OnClick="DownloadQRCode" >Descargar</Button>
+            </div>
+        }
+    </div>
+</Flex>
+
+@code {
+    [Parameter]
+    public int ID { get; set; }
+    private ComputerViewModel? computer { get; set; }
+    private string? QRCode { get; set; }
+
+    // Funciones
+
+    private async Task DownloadQRCode()
+    {
+        if (!string.IsNullOrEmpty(QRCode)){
+            await JSRuntime.InvokeVoidAsync("downloadImage", QRCode, "QRCode.png");
+        }
+    }
+    private async Task PrintQRCode()
+    {
+        if (!string.IsNullOrEmpty(QRCode)){
+            await JSRuntime.InvokeVoidAsync("printImage", QRCode);
+        }
+    }
+
+    // Init
+    protected override async Task OnInitializedAsync()
+    {
+        QRCode = await ComputerService.LoadQR(ID);
+        computer = await ComputerService.GetComputer(ID);
+    }
+}
+

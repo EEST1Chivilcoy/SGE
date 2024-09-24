@@ -1,0 +1,89 @@
+﻿@using PaginaEEST1.Services
+@using PaginaEEST1.Data.Models.Objetos_Fisicos
+@using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Enums
+@inject IMessageService message
+@inject IComputerService ComputerService
+
+<div clas="container">
+    <Form Model="@computerVM" OnFinish="OnFinish">
+        <div clas="form-grid">
+            <FormItem Label="Estado del Ordenador">
+                <EnumSelect TEnum="ComputerStatus" @bind-Value="@computerVM.Status" />
+            </FormItem>
+            <FormItem Label="Nombre o Codigo">
+                <Input @bind-Value="@computerVM.DeviceName" />
+            </FormItem>
+            <FormItem Label="Sistema Operativo">
+                <Input @bind-Value="@computerVM.OperatingSystem" />
+            </FormItem>
+            <FormItem Label="Procesador">
+                <Input @bind-Value="@computerVM.Processor" />
+            </FormItem>
+            <FormItem Label="RAM">
+                <Input @bind-Value="@computerVM.RAM" />
+            </FormItem>
+            <FormItem Label="Almacenamiento">
+                <Input @bind-Value="@computerVM.Storage" />
+            </FormItem>
+            <FormItem Label="Tipo de almacenamiento">
+                <EnumSelect TEnum="TypeStorage" @bind-Value="@computerVM.StorageType" />
+            </FormItem>
+            @* Selección del tipo del dispositivo: Computadora / Netbook *@
+            <FormItem Label="Tipo de Dispositivo">
+                <div class="device-type-selector">
+                    <div class="device-option @(computerVM.Type == TypeComputer.Computadora ? "selected" : "")" @onclick="() => SelectDeviceType(TypeComputer.Computadora)">
+                        <img src="/Images/Logo_Desktop.png" alt="Computadora" />
+                        <span>Computadora</span>
+                    </div>
+                    <div class="device-option @(computerVM.Type == TypeComputer.Netbook ? "selected" : "")" @onclick="() => SelectDeviceType(TypeComputer.Netbook)">
+                        <img src="/Images/Logo_Netbook.png" alt="Netbook" />
+                        <span>Netbook</span>
+                    </div>
+                </div>
+            </FormItem>
+            @if(computerVM.Type == TypeComputer.Computadora){
+                <FormItem Label="Ubicación dentro de la Institución">
+                    <Input @bind-Value="@computerVM.Location" />
+                </FormItem>
+            }
+            @if(computerVM.Type == TypeComputer.Netbook){
+                <FormItem Label="Modelo de la Netbook">
+                    <Input @bind-Value="@computerVM.Model" />
+                </FormItem>
+                <FormItem Label="Disponibilidad de la Netbook">
+                    <Input @bind-Value="@computerVM.IsAvailable" />
+                </FormItem>
+            }
+            <FormItem>
+                <Button Type="primary" HtmlType="submit">Guardar</Button>
+                <Button OnClick="HandleClose">Cerrar</Button>
+            </FormItem>
+        </div>
+    </Form>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+    //Variables
+    private ComputerViewModel computerVM = new(){Type = TypeComputer.Computadora};
+
+    // Funciones
+    private async Task HandleClose()
+    {
+        await OnClose.InvokeAsync(false);
+    }
+    private void SelectDeviceType(TypeComputer PCType)
+    {
+        computerVM.Type = PCType;
+        StateHasChanged();
+    }
+    private async Task OnFinish()
+    {
+            await ComputerService.SaveComputer(computerVM);
+            computerVM = new();
+            await OnClose.InvokeAsync(true);
+            StateHasChanged();
+    }
+}

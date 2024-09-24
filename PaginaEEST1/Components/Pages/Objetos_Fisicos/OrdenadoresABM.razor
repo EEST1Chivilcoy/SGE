@@ -4,14 +4,14 @@
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
 @inject IMessageService message
-@inject IOrdenadorService OrdenadorService
+@inject IComputerService ComputerService
 @page "/Gestion_Ordenadores"
 @attribute [Authorize]
 
-<Flex Class="flex-container" Justify="center" Align="center">
+<Flex Class="flex-container" Justify="center" Align="center" Style="height: 100%; width:100%;">
     <div class="template">
-        <Table TItem="DesktopViewModel"
-               DataSource="@computadoras"
+        <Table TItem="ComputerViewModel"
+               DataSource="@devices"
                PageIndex="1"
                PageSize="6"
                Responsive>
@@ -20,7 +20,7 @@
                 <Space>
                     <SpaceItem>
                         <Button Type="primary"
-                                OnClick="() => {visAgregar = true;}">
+                                OnClick="() => {visAdd = true;}">
                             <Icon Type="plus" /> Agregar
                         </Button>
                     </SpaceItem>
@@ -32,8 +32,8 @@
                 <PropertyColumn Title="Nombre del Ordenador"
                                 Property="@(v => v.DeviceName)"
                                 Sortable />
-                <PropertyColumn Title="Ubicación"
-                                Property="@(v => v.Location)"
+                <PropertyColumn Title="Tipo"
+                                Property="@(v => v.Type)"
                                 Sortable />
                 <PropertyColumn Title="Sistema Operativo"
                                 Property="@(v => v.OperatingSystem)"
@@ -45,18 +45,27 @@
                 <ActionColumn Title="Acciones" Align="ColumnAlign.Center">
                     <Space>
                         <SpaceItem>
-                            <Button Type="primary" OnClick="() => openDetalles(context.ID)">
+                            <Button Type="primary" OnClick="() => openDetails(context.ID)">
                                 <Icon Type="desktop" /> Detalles
                             </Button>
-                            <Button Danger OnClick="()=>{}">
-                                <Icon Type="down" /> Remover
+                            <Button OnClick="() => {}">
+                                <Icon Type="edit" /> Editar
                             </Button>
+                            <Popconfirm Title="¿Está seguro de remover este Ordenador?"
+                                    OnConfirm="() => delComputer(context.ID)"
+                                    OkText="si"
+                                    CancelText="no"
+                                >
+                                <Button Danger>
+                                    <Icon Type="down" /> Remover
+                                </Button>
+                            </Popconfirm>
                         </SpaceItem>
                     </Space>
                 </ActionColumn>
                 @* Logo del Ordenador. Va a haber uno diferente si es una Computadora o Netbook *@
-                <Column TData="DesktopViewModel" Width="100">
-                    <Image Src="@context.Logo_PC" />
+                <Column TData="ComputerViewModel" Width="100">
+                    <Image Src="@context.Logo" />
                 </Column>
             </ColumnDefinitions>
         </Table>
@@ -64,39 +73,38 @@
 </Flex>
 
 
-@if (visAgregar == true)
+@if (visAdd == true)
 {
-    <Modal Visible="visAgregar" Footer="null" OnCancel="() => closeAgregar(false)">
-        <CargarOrdenador OnClose="closeAgregar" />
+    <Modal Visible="visAdd" Footer="null" OnCancel="() => closeAdd(false)">
+        <AddComputer OnClose="closeAdd" />
     </Modal>
 }
-@if (visDetalle == true)
+@if (visDetails == true)
 {
-    <Modal Visible="visDetalle" Footer="null" OnCancel="() => {visDetalle = false;}">
-        <DetallesOrdenador ID="detID" />
+    <Modal Visible="visDetails" Footer="null" OnCancel="() => {visDetails = false;}">
+        <DesktopDetails ID="detID" />
     </Modal>
 }
 
 @code {
     // Variables
-    private DesktopViewModel computadoraView = new();
-    List<DesktopViewModel?> computadoras = new();
+    List<ComputerViewModel?> devices = new();
     private string? ImagenQR;
 
-    // Visibles y Funciones - Modals
+    // Handles Modals
     private int detID { get; set; }
-    private bool visAgregar = false;
-    private bool visDetalle = false;
+    private bool visAdd = false;
+    private bool visDetails = false;
 
-    private void openDetalles(int ID)
+    private void openDetails(int ID)
     {
         detID = ID;
-        visDetalle = true;
+        visDetails = true;
     }
 
-    private async Task closeAgregar(bool success)
+    private async Task closeAdd(bool success)
     {
-        visAgregar = false;
+        visAdd = false;
         if (success == true)
         {
             await OnInitializedAsync();
@@ -104,10 +112,18 @@
         StateHasChanged();
     }
 
+    // Funciones
+    
+    private async Task delComputer(int ID)
+    {
+        await ComputerService.DelComputer(ID);
+        await OnInitializedAsync();
+    }
+
     // Init
     protected override async Task OnInitializedAsync()
     {
-        computadoras = await OrdenadorService.GetListDesktopDevices();
+        devices = await ComputerService.GetListComputerDevices();
         StateHasChanged();
     }
 }

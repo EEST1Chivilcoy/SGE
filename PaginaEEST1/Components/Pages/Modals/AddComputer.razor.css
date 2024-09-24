@@ -1,0 +1,30 @@
+﻿.device-type-selector {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.device-option {
+    text-align: center;
+    cursor: pointer;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+    .device-option.selected {
+        border-color: #1890ff;
+        background-color: #e6f7ff;
+    }
+
+    .device-option img {
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+    }
+
+    .device-option span {
+        display: block;
+        margin-top: 5px;
+    }
