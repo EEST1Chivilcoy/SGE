@@ -4,6 +4,7 @@ namespace PaginaEEST1.Data.ViewModels
 {
     public class ComputadoraVM
     {
+        public int ID { get; set; }
         public EstadoOrdenador Estado { get; set; }
         public string? NombreOCodigoDispositivo { get; set; }
         public string? SistemaOperativo { get; set; }

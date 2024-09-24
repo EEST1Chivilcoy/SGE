@@ -1,10 +1,12 @@
 ﻿@using PaginaEEST1.Services
 @using PaginaEEST1.Data.Models.Objetos_Fisicos
+@using PaginaEEST1.Components.Pages.Modals
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
 @inject IMessageService message
 @inject IOrdenadorService OrdenadorService
 @page "/Gestion_Ordenadores"
+@attribute [Authorize]
 
 <Flex Class="flex-container" Justify="center" Align="center">
     <div class="template">
@@ -53,7 +55,7 @@
                 <ActionColumn Title="Acciones" Align="ColumnAlign.Center">
                     <Space>
                         <SpaceItem>
-                            <Button Type="primary" OnClick="()=>{}">
+                            <Button Type="primary" OnClick="() => openDetalles(context.ID)">
                                 <Icon Type="desktop"/> Detalles
                             </Button>
                             <Button Danger OnClick="()=>{}">
@@ -71,10 +73,17 @@
     </div>
 </Flex>
 
-@if(visAgregar == true)
+
+@if (visAgregar == true)
 {
     <Modal Visible="visAgregar" Footer="null" OnCancel="() => closeAgregar(false)">
         <CargarOrdenador OnClose="closeAgregar" />
+    </Modal>
+}
+@if (visDetalle == true)
+{
+    <Modal Visible="visDetalle" Footer="null" OnCancel="() => {visDetalle = false;}">
+        <DetallesOrdenador ID="detID" />
     </Modal>
 }
 
@@ -84,8 +93,16 @@
     List<ComputadoraVM?> computadoras = new();
     private string? ImagenQR;
 
-    // Visibles y Funciones
+    // Visibles y Funciones - Modals
+    private int detID { get; set; }
     private bool visAgregar = false;
+    private bool visDetalle = false;
+
+    private void openDetalles(int ID)
+    {
+        detID = ID;
+        visDetalle = true;
+    }
 
     private void closeAgregar(bool success)
     {

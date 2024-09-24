@@ -84,6 +84,7 @@ namespace PaginaEEST1.Services
             {
                 ComputadoraVM computadora_VM = new ComputadoraVM()
                 {
+                    ID = computadora.Id,
                     Estado = computadora.Estado,
                     NombreOCodigoDispositivo = computadora.NombreOCodigoDispositivo,
                     SistemaOperativo = computadora.SistemaOperativo,
