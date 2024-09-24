@@ -2,7 +2,7 @@
 
 namespace PaginaEEST1.Data.Enums
 {
-    public enum TipoSolicitud
+    public enum TypeRequest
     {
         [Display(Name = "Instalación de un Programa")]
         Instalacion = 1,  // Instalación de programa

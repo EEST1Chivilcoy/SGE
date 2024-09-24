@@ -6,8 +6,9 @@ using PaginaEEST1.Data.Models.Objetos_Fisicos;
 
 namespace PaginaEEST1.Data.Models.Personal
 {
-    public class Alumno : Persona
+    public class Professor : Person
     {
-        public Turno Turno_Cursada { get; set; }
+        [StringLength(255)]
+        public EducationLevels EducationLevel { get; set; }
     }
 }

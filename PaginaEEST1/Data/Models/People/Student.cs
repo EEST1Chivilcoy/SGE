@@ -6,11 +6,8 @@ using PaginaEEST1.Data.Models.Objetos_Fisicos;
 
 namespace PaginaEEST1.Data.Models.Personal
 {
-    public class Profesor : Persona
+    public class Student : Person
     {
-        [StringLength(255)]
-        public string? Titulo { get; set; }
-        [StringLength(255)]
-        public NivelDeEstudio NivelEstudios { get; set; }
+        public TypeShifts Shift { get; set; }
     }
 }

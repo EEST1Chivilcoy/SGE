@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PaginaEEST1.Data.Enums
 {
-    public enum NivelDeEstudio
+    public enum EducationLevels
     {
         [Display(Name = "Primario Incompleto")]
         PrimarioIncompleto,

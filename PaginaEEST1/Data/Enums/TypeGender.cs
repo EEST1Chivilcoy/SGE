@@ -2,7 +2,7 @@
 
 namespace PaginaEEST1.Data.Enums
 {
-    public enum TipoSexo
+    public enum TypeGender
     {
         [Display(Name = "Hombre")]
         Hombre,

@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PaginaEEST1.Data.Models.Objetos_Fisicos
 {
-    public class Netbook : DispositivoComputacional
+    public class Netbook : Computer
     {
-        public string? Modelo { get; set; }
-        public bool Prestamo { get; set; }
+        public string? Model { get; set; }
+        public bool IsAvailable { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace PaginaEEST1.Data.Enums
 {
-    public enum EstadoSolicitud
+    public enum RequestStatus
     {
         [Display(Name = "Pendiente")]
         Pendiente,  // La solicitud ha sido creada pero no atendida

@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace PaginaEEST1.Data.Enums
 {
-    public enum TipoPersona
+    public enum TypePerson
     {
         [Description("Directivo")]
         Directivo = 1,

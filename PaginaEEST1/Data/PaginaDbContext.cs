@@ -14,11 +14,12 @@ namespace PaginaEEST1.Data
     public class PaginaDbContext : DbContext
     {
         // Tablas (Entidades)
-        public DbSet<DispositivoComputacional> DispositivosComputacionales  { get; set; }
-        public DbSet<Persona> Personas { get; set; }
+        public DbSet<Computer> Computers  { get; set; }
+        public DbSet<Person> People { get; set; }
+
         // Tablas (Reportes / Planillas)
-        public DbSet<ReservaNetbook> ReservasDeNetbooks { get; set; }
-        public DbSet<SolicitudOrdenador> SolicitudesOrdenador { get; set; }
+        public DbSet<NetbookLoan> ReservasDeNetbooks { get; set; }
+        public DbSet<RequestComputer> SolicitudesOrdenador { get; set; }
 
         public PaginaDbContext(DbContextOptions<PaginaDbContext> options) : base(options)
         {
@@ -29,70 +30,70 @@ namespace PaginaEEST1.Data
         {
             // Enums
             modelBuilder
-            .Entity<DispositivoComputacional>()
-                .Property(o => o.tipoAlmacenamiento)
+            .Entity<Computer>()
+                .Property(o => o.typeStorage)
                 .HasConversion<string>()
                 .HasMaxLength(255);
 
             modelBuilder
-            .Entity<Persona>()
-                .Property(p => p.Sexo)
+            .Entity<Person>()
+                .Property(p => p.Gender)
                 .HasConversion<string>()
                 .HasMaxLength(255);
 
             modelBuilder
-            .Entity<Profesor>()
-                .Property(p => p.NivelEstudios)
+            .Entity<Professor>()
+                .Property(p => p.EducationLevel)
                 .HasConversion<string>()
                 .HasMaxLength(255);
 
             modelBuilder
-            .Entity<Alumno>()
-                .Property(p => p.Turno_Cursada)
+            .Entity<Student>()
+                .Property(p => p.Shift)
                 .HasConversion<string>()
                 .HasMaxLength(255);
 
             //Enums Discriminadores
 
-            modelBuilder.Entity<Persona>()
-                .Property(p => p.TipoPersona)
+            modelBuilder.Entity<Person>()
+                .Property(p => p.TypePerson)
                 .HasConversion<int>();
 
-            modelBuilder.Entity<DispositivoComputacional>()
-                .Property(c => c.TipoOrdenador)
+            modelBuilder.Entity<Computer>()
+                .Property(c => c.typeComputer)
                 .HasConversion<int>();
 
-            modelBuilder.Entity<SolicitudOrdenador>()
-                .Property(s => s.Tipo)
+            modelBuilder.Entity<RequestComputer>()
+                .Property(s => s.Type)
                 .HasConversion<int>();
 
             // Unique
 
-            modelBuilder.Entity<DispositivoComputacional>()
-                .HasIndex(o => o.NombreOCodigoDispositivo)
+            modelBuilder.Entity<Computer>()
+                .HasIndex(o => o.DeviceName)
                 .IsUnique();
 
             // Discriminadores
 
-            modelBuilder.Entity<Persona>()
-                .HasDiscriminator(p => p.TipoPersona)
-                .HasValue<Directivo>(TipoPersona.Directivo)
-                .HasValue<EMATP>(TipoPersona.EMATP)
-                .HasValue<Paniol>(TipoPersona.Paniol)
-                .HasValue<Profesor>(TipoPersona.Profesor)
-                .HasValue<Alumno>(TipoPersona.Alumno);
+            modelBuilder.Entity<Person>()
+                .HasDiscriminator(p => p.TypePerson)
+                .HasValue<SchoolPrincipal>(TypePerson.Directivo)
+                .HasValue<EMATP>(TypePerson.EMATP)
+                .HasValue<Storeroom>(TypePerson.Paniol)
+                .HasValue<Professor>(TypePerson.Profesor)
+                .HasValue<Student>(TypePerson.Alumno);
 
             modelBuilder
-                .Entity<DispositivoComputacional>()
-                .HasDiscriminator(c => c.TipoOrdenador)
-                .HasValue<ComputadoraDeEscritorio>(TipoDispositivoComputacional.Computadora)
-                .HasValue<Netbook>(TipoDispositivoComputacional.Netbook);
+                .Entity<Computer>()
+                .HasDiscriminator(c => c.typeComputer)
+                .HasValue<Desktop>(TypeComputer.Computadora)
+                .HasValue<Netbook>(TypeComputer.Netbook);
 
             modelBuilder
-                .Entity<SolicitudOrdenador>()
-                .HasDiscriminator(s => s.Tipo)
-                .HasValue<SolicitudInstalacion>(TipoSolicitud.Instalacion)
-                .HasValue<SolicitudFallo>(TipoSolicitud.ReporteFallo);
+                .Entity<RequestComputer>()
+                .HasDiscriminator(s => s.Type)
+                .HasValue<SolicitudInstalacion>(TypeRequest.Instalacion)
+                .HasValue<SolicitudFallo>(TypeRequest.ReporteFallo);
         }
     }
 }
