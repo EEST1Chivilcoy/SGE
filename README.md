@@ -5,13 +5,17 @@
 
 ---
 
+[![es](https://img.shields.io/badge/lang-es-red)](README.md)
+[![en](https://img.shields.io/badge/lang-en-red.svg)](README-en.md)
+
+---
+
 > ***Este proyecto está orientado a modernizar y automatizar la gestión escolar en la Escuela. Ofrece un sistema integral para la administración de la información de la escuela, incluyendo la gestión de herramientas, computadoras y otros recursos. Además, permite a los profesores informar sobre problemas con computadoras y solicitar la instalación de programas. La solución facilita una mejor organización y eficiencia en la gestión escolar, mejorando así el entorno educativo.***
 
 ---
 
 ### Estado del Proyecto
 ![Build Status](https://github.com/EEST1Chivilcoy/7B-2024-PDISC-G2/actions/workflows/main_paginaeest1.yml/badge.svg)
-![Web Status](https://img.shields.io/website-up-down-green-red/http/paginaeest1.azurewebsites.net)
 ![Issue Open](https://img.shields.io/github/issues/EEST1Chivilcoy/7B-2024-PDISC-G2.svg)
 
 ---
@@ -28,3 +32,5 @@
 ***Editores de Codigo y Visualizacion de Base de datos***
 - ![Visual Studio](https://img.shields.io/badge/Visual_Studio-5C2D91?style=for-the-badge&logo=visual%20studio&logoColor=white)
 - ![DBeaver](https://img.shields.io/badge/DBeaver-1f425f?style=for-the-badge&logo=dbeaver&logoColor=white)
+
+---
