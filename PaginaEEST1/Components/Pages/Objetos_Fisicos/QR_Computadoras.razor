@@ -1,5 +1,6 @@
 ﻿@using PaginaEEST1.Services
 @using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Enums
 @inject IComputerService ComputerService
 @page "/Computadora_VistaQR_{ID_Computadora:int}"
 
@@ -22,10 +23,24 @@
                     <li><b>Memoria RAM: </b> @Computadora.RAM</li>
                     <li><b>Almacenamiento: </b> @Computadora.Storage</li>
                     <li><b>Tipo de almacenamiento: </b> @Computadora.StorageType</li>
+                    @if(Computadora.Type == TypeComputer.Computadora){
                     <li><b>Ubicación: </b> @Computadora.Location</li>
+                    }
+                    @if(Computadora.Type == TypeComputer.Netbook){
+                        <li><b>Modelo: </b> @Computadora.Model</li>
+
+                        <li><b>Disponibilidad: </b>
+                        @if(Computadora.IsAvailable == true){
+                            <text>Disponible</text>
+                        }
+                        else{
+                            <text>En uso</text>
+                        }
+                        </li>
+                    }
                 </ul>
             </div>
-            <img class="pc-logo" src="Images/Desktop_PC.png" alt="Computadora de Escritorio" />
+            <img src="@(Computadora?.Type == TypeComputer.Computadora ? "Images/Logo_Desktop.png" : "Images/Logo_Netbook.png")" class="pc-logo" />
         </div>
     }
 </body>
