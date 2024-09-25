@@ -2,6 +2,8 @@
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
 @inject IComputerService ComputerService
+@inject IRequestService RequestService
+@inject IMessageService message
 @page "/Computadora_VistaQR_{ID_Computadora:int}"
 
 <html lang="es-ES">
@@ -42,13 +44,13 @@
                     <AuthorizeView>
                         <Authorized>
                             <div class="request-container">
-                                <Form Model="@RequestVM" OnFinish="() =>{}" Context="_reqcontext">
+                                <Form Model="@RequestVM" OnFinish="OnFinish" Context="_reqcontext">
                                     <div class="request-title">
                                         <h3>Reportar una solicitud</h3>
                                         <FormItem Label="Tipo" Class="bold-label">
                                             <EnumSelect TEnum="TypeRequest" @bind-Value="@RequestVM.Type" DefaultValue="@TypeRequest.Instalacion" />
                                         </FormItem>
-                                        <span><b>Fecha:</b> @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</span>
+                                        <span><b>Fecha:</b> @DateTime.Now.ToString("dd/MM/yyyy")</span>
                                     </div>
                                     <div class="form-grid">
                                         <FormItem Label="Descripción corta de la solicitud" Class="bold-label" LabelCol="new ColLayoutParam { Span = 24 }">
@@ -92,25 +94,29 @@
     [Parameter]
     public int ID_Computadora { get; set; }
     private ComputerViewModel? Computadora { get; set; }
-
-    /*
-        Actualmente el reporte de solicitudes no cuenta con una funcionaidad más que demostración visual.
-        Se creo temporalmente el View Model dentro de la misma pagina para demostración y prueba.
-        Se esta trabajando en la correcta implementación y funcionamiento de las solicitudes.
-    */
-    private class RequestViewModel()
-    {
-        public TypeRequest Type { get; set; }
-        public string? ShortDescription { get; set; }
-        public DateTime RequestDate { get; set; }
-        // Fallo
-        public string? FailureDescription { get; set; }
-        public FailurePreority Preority { get; set; }
-        // Instalacion
-        public string? NameProgram { get; set; }
-        public string? VersionProgram { get; set; }
-    };
     private RequestViewModel RequestVM = new();
+
+    private async Task OnFinish()
+    {
+        try{
+            RequestVM.ComputerId = ID_Computadora;
+            RequestVM.RequestDate = DateTime.Now;
+            bool saved = await RequestService.SaveRequest(RequestVM);
+            if (saved == true){
+                RequestVM = new();
+                message.Success("Se registro la solicitud con exito");
+                StateHasChanged();
+            }
+            else
+            {
+                message.Error("Error inesperado al guardar la solicitud");
+            }
+        }
+        catch
+        {
+            message.Error("Error inesperado al cargar la solicitud");
+        }
+    }
 
     // Init
     protected override async Task OnInitializedAsync()

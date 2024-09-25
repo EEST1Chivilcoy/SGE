@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PaginaEEST1.Data;
 
@@ -11,9 +12,11 @@ using PaginaEEST1.Data;
 namespace PaginaEEST1.Data.Migrations
 {
     [DbContext(typeof(PaginaDbContext))]
-    partial class PaginaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240925232912_Fix_Requests")]
+    partial class Fix_Requests
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,7 +48,7 @@ namespace PaginaEEST1.Data.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("NetbookLoans", (string)null);
+                    b.ToTable("NetbookLoans");
                 });
 
             modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.RequestComputer", b =>
@@ -82,7 +85,7 @@ namespace PaginaEEST1.Data.Migrations
 
                     b.HasIndex("ComputerId");
 
-                    b.ToTable("ComputerRequests", (string)null);
+                    b.ToTable("ComputerRequests");
 
                     b.HasDiscriminator<int>("Type");
 
@@ -128,7 +131,7 @@ namespace PaginaEEST1.Data.Migrations
                     b.HasIndex("DeviceName")
                         .IsUnique();
 
-                    b.ToTable("Computers", (string)null);
+                    b.ToTable("Computers");
 
                     b.HasDiscriminator<int>("Type");
 
@@ -174,7 +177,7 @@ namespace PaginaEEST1.Data.Migrations
 
                     b.HasKey("PersonId");
 
-                    b.ToTable("People", (string)null);
+                    b.ToTable("People");
 
                     b.HasDiscriminator<int>("TypePerson");
 

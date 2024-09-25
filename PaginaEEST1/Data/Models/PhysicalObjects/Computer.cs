@@ -1,4 +1,5 @@
 ﻿using PaginaEEST1.Data.Enums;
+using PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes;
 
 namespace PaginaEEST1.Data.Models.Objetos_Fisicos
 {
@@ -17,5 +18,6 @@ namespace PaginaEEST1.Data.Models.Objetos_Fisicos
         public int? RAM { get; set; }
         public int? Storage { get; set; }
         public TypeStorage typeStorage { get; set; }
+        public List<RequestComputer> Requests { get; set; } = new();
     }
 }
