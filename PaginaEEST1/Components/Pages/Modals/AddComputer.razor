@@ -52,7 +52,7 @@
                     <Input @bind-Value="@computerVM.Model" />
                 </FormItem>
                 <FormItem Label="Disponibilidad de la Netbook">
-                    <Switch @bind-bind-Value="@computerVM.IsAvailable" Value="true" />
+                    <Switch @bind-Value="@computerVM.IsAvailable" />
                 </FormItem>
             }
             <FormItem>
@@ -67,7 +67,7 @@
     [Parameter]
     public EventCallback<bool> OnClose { get; set; }
     //Variables
-    private ComputerViewModel computerVM = new(){Type = TypeComputer.Computadora};
+    private ComputerViewModel computerVM = new(){Type = TypeComputer.Computadora, IsAvailable = true};
 
     // Funciones
     private async Task HandleClose()

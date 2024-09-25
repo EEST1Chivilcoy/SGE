@@ -5,52 +5,112 @@
 @page "/Computadora_VistaQR_{ID_Computadora:int}"
 
 <html lang="es-ES">
-
-<head>
-    <title>Computadora @ID_Computadora</title>
-</head>
-
-<body>
+<head><title>Computadora @ID_Computadora</title></head>
+<Flex Justify="center" Align="center" Style="height: 100%; width:100%;">
     @if (Computadora != null)
     {
-        <div class="pc-container">
-            <div class="pc-info">
-                <h1>@Computadora.DeviceName</h1>
-                <ul>
-                    <li><b>Estado: </b> @Computadora.Status</li>
-                    <li><b>Sistema Operativo: </b> @Computadora.OperatingSystem</li>
-                    <li><b>Procesador: </b> @Computadora.Processor</li>
-                    <li><b>Memoria RAM: </b> @Computadora.RAM</li>
-                    <li><b>Almacenamiento: </b> @Computadora.Storage</li>
-                    <li><b>Tipo de almacenamiento: </b> @Computadora.StorageType</li>
-                    @if(Computadora.Type == TypeComputer.Computadora){
-                    <li><b>Ubicación: </b> @Computadora.Location</li>
+            <div class="pc-container">
+                <div class="pc-info">
+                    <h1>@Computadora.DeviceName</h1>
+                    <ul>
+                        <li><b>Estado: </b> @Computadora.Status</li>
+                        <li><b>Sistema Operativo: </b> @Computadora.OperatingSystem</li>
+                        <li><b>Procesador: </b> @Computadora.Processor</li>
+                        <li><b>Memoria RAM: </b> @Computadora.RAM</li>
+                        <li><b>Almacenamiento: </b> @Computadora.Storage</li>
+                        <li><b>Tipo de almacenamiento: </b> @Computadora.StorageType</li>
+                    @if (Computadora.Type == TypeComputer.Computadora)
+                    {
+                                <li><b>Ubicación: </b> @Computadora.Location</li>
                     }
-                    @if(Computadora.Type == TypeComputer.Netbook){
-                        <li><b>Modelo: </b> @Computadora.Model</li>
+                    @if (Computadora.Type == TypeComputer.Netbook)
+                    {
+                                <li><b>Modelo: </b> @Computadora.Model</li>
 
-                        <li><b>Disponibilidad: </b>
-                        @if(Computadora.IsAvailable == true){
-                            <text>Disponible</text>
-                        }
-                        else{
-                            <text>En uso</text>
-                        }
-                        </li>
+                                <li><b>Disponibilidad: </b>
+                            @if (Computadora.IsAvailable == true)
+                            {
+                                <text>Disponible</text>
+                            }
+                            else
+                            {
+                                <text>En uso</text>
+                            }
+                                </li>
                     }
-                </ul>
+                    </ul>
+                    <AuthorizeView>
+                        <Authorized>
+                            <div class="request-container">
+                                <Form Model="@RequestVM" OnFinish="() =>{}" Context="_reqcontext">
+                                    <div class="request-title">
+                                        <h3>Reportar una solicitud</h3>
+                                        <FormItem Label="Tipo" Class="bold-label">
+                                            <EnumSelect TEnum="TypeRequest" @bind-Value="@RequestVM.Type" DefaultValue="@TypeRequest.Instalacion" />
+                                        </FormItem>
+                                        <span><b>Fecha:</b> @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</span>
+                                    </div>
+                                    <div class="form-grid">
+                                        <FormItem Label="Descripción corta de la solicitud" Class="bold-label" LabelCol="new ColLayoutParam { Span = 24 }">
+                                            <Input @bind-Value="@RequestVM.ShortDescription" />
+                                        </FormItem>
+                                        @if(RequestVM.Type == TypeRequest.Instalacion){
+                                            <FormItem Label="Nombre del Programa" Class="bold-label" LabelCol="new ColLayoutParam { Span = 24 }">
+                                                <Input TValue="string" @bind-value="@RequestVM.NameProgram" />
+                                            </FormItem>
+                                            <FormItem Label="Versión del Programa" Class="bold-label" LabelCol="new ColLayoutParam { Span = 24 }">
+                                                <Input TValue="string" @bind-value="@RequestVM.VersionProgram" />
+                                            </FormItem>
+                                        }
+                                        @if(RequestVM.Type == TypeRequest.ReporteFallo){
+                                            <FormItem Label="Descripción del Fallo" Class="bold-label" LabelCol="new ColLayoutParam { Span = 24 }">
+                                                <Input TValue="string" @bind-value="@RequestVM.FailureDescription" />
+                                            </FormItem>
+                                            <FormItem Label="Nivel de Prioridad" Class="bold-label" LabelCol="new ColLayoutParam { Span = 24 }">
+                                                <EnumSelect TEnum="FailurePreority" @bind-Value="@RequestVM.Preority" DefaultValue="@FailurePreority.Baja" />
+                                            </FormItem>
+                                        }
+                                        <FormItem>
+                                            <Button Type="primary" HtmlType="submit">Reportar</Button>
+                                        </FormItem>
+                                    </div>
+                                </Form>
+                            </div>
+                        </Authorized>
+                        <NotAuthorized>
+                            <a clas="noc" href="/Auth/Login" style="color: grey; font-size: 14px;"> Inicia Sesión para reportar una solicitud. </a>
+                        </NotAuthorized>
+                    </AuthorizeView>
+                </div>
+                <img src="@(Computadora?.Type == TypeComputer.Computadora ? "Images/Logo_Desktop.png" : "Images/Logo_Netbook.png")" class="pc-logo" />
             </div>
-            <img src="@(Computadora?.Type == TypeComputer.Computadora ? "Images/Logo_Desktop.png" : "Images/Logo_Netbook.png")" class="pc-logo" />
-        </div>
     }
-</body>
-
+</Flex>
 </html>
 
 @code {
     [Parameter]
     public int ID_Computadora { get; set; }
     private ComputerViewModel? Computadora { get; set; }
+
+    /*
+        Actualmente el reporte de solicitudes no cuenta con una funcionaidad más que demostración visual.
+        Se creo temporalmente el View Model dentro de la misma pagina para demostración y prueba.
+        Se esta trabajando en la correcta implementación y funcionamiento de las solicitudes.
+    */
+    private class RequestViewModel()
+    {
+        public TypeRequest Type { get; set; }
+        public string? ShortDescription { get; set; }
+        public DateTime RequestDate { get; set; }
+        // Fallo
+        public string? FailureDescription { get; set; }
+        public FailurePreority Preority { get; set; }
+        // Instalacion
+        public string? NameProgram { get; set; }
+        public string? VersionProgram { get; set; }
+    };
+    private RequestViewModel RequestVM = new();
 
     // Init
     protected override async Task OnInitializedAsync()
