@@ -1,0 +1,172 @@
+@page "/Gestion_Solicitudes"
+@using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Services
+@inject IRequestService RequestService
+@inject MessageService message
+
+@* Este modulo esta sin terminar. Trabajo en progreso *@
+
+<style>
+    .drop-zone {
+        min-height: 200px;
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+    .draggable-card {
+        cursor: move;
+        margin-bottom: 10px;
+    }
+</style>
+
+@* Tablas *@
+<Row Style="height: 100%; width:100%; margin: 1vw; border-radius: 1vw;">
+    @foreach (var status in Enum.GetValues(typeof(RequestStatus)))
+    {
+        <AntDesign.Col Style="width: 33%; height: 100%;">
+            <Card Title="@GetStatusTitle((RequestStatus)status)">
+                <div @ondrop="@((e) => OnDrop(e, (RequestStatus)status))"
+                     @ondragover:preventDefault
+                     @ondragover="@((e) => {})"
+                     class="drop-zone">
+                    @foreach (var request in GetRequestsByStatus((RequestStatus)status))
+                    {
+                        <div @ondragstart="@((e) => OnDragStart(e, request))"
+                             @ondragend="@(() => RequestDrag = null)"
+                             @onclick="@(() => ShowDetails(request))"
+                             draggable="true"
+                             class="draggable-card">
+                            <Card Hoverable Style="font-size: 14px;">
+                                <b>@request.ShortDescription</b>
+                            </Card>
+                        </div>
+                    }
+                </div>
+            </Card>
+        </AntDesign.Col>
+    }
+</Row>
+
+@* Modals *@
+<Modal Title="@(RequestSelect?.ShortDescription)" Visible="@_DetailVisible"
+       OnCancel="@(() => _DetailVisible = false)" Footer="null">
+    <p><b>Tipo:</b> @RequestSelect?.Type</p>
+    <p><b>Estado:</b> @RequestSelect?.Status</p>
+    <p><b>Fecha reportado:</b> @RequestSelect?.RequestDate.ToShortDateString()</p>
+    @if (RequestSelect?.Type == TypeRequest.ReporteFallo)
+    {
+        <p><b>Descripción del Fallo:</b> @RequestSelect.FailureDescription</p>
+        <p><b>Nivel de Prioridad:</b> @RequestSelect.Preority</p>
+    }
+    else if (RequestSelect?.Type == TypeRequest.Instalacion)
+    {
+        <p><b>Nombre del Programa:</b> @RequestSelect.NameProgram</p>
+        <p><b>Versión del Programa:</b> @RequestSelect.VersionProgram</p>
+    }
+    <hr>
+    <h4>Datos de progreso:</h4>
+    <p><b>Fecha de inicio:</b>@RequestSelect?.RequestStartDate?.ToShortDateString()</p>
+    <p><b>Fecha estimada de terminación:</b>@RequestSelect?.EstimatedCompletionDate?.ToShortDateString()</p>
+</Modal>
+<Modal Title="Establezca una fecha estimada de terminación." Visible="@_DateVisible"
+       OnCancel="@(() => _DateVisible = false)"
+       Footer="null">
+    <DatePicker @bind-Value="@_estimatedCompletionDate" />
+    <br><br>
+    <Button Type="primary" OnClick="@HandleDateModalOk">Guardar</Button>
+</Modal>
+
+@code {
+    // Variables sobre solicitudes
+    private List<RequestViewModel?> _requests = new();
+    private DateTime? _estimatedCompletionDate;
+    // Variables sobre funcionalidad de arrastre
+    private RequestViewModel? RequestSelect;
+    private RequestViewModel? RequestDrag;
+    private RequestViewModel? RequestDateDrag;
+    //Variables sobre modals
+    private bool _DetailVisible = false;
+    private bool _DateVisible = false;
+
+    // Funciones de visibilidad de Modals
+    private void ShowDetails(RequestViewModel request)
+    {
+        RequestSelect = request;
+        _DetailVisible = true;
+    }
+    private string GetStatusTitle(RequestStatus status){
+        switch(status){
+            case RequestStatus.Pendiente:
+                return ("⏳ Pendientes");
+            case RequestStatus.EnProceso:
+                return ("🛠️ En proceso");
+            case RequestStatus.Completada:
+                return ("☑️ Completados");
+            default:
+                return ("Sin categoria");
+        }
+    }
+    private IEnumerable<RequestViewModel> GetRequestsByStatus(RequestStatus status)
+    {
+        return _requests.Where(r => r.Status == status);
+    }
+    private void OnDragStart(DragEventArgs e, RequestViewModel request)
+    {
+        RequestDrag = request;
+        e.DataTransfer.EffectAllowed = "move";
+    }
+
+    private async Task OnDrop(DragEventArgs e, RequestStatus newStatus)
+    {
+        if (RequestDrag != null && RequestDrag.Status != newStatus)
+        {
+            if (RequestDrag.Status == RequestStatus.Pendiente && newStatus == RequestStatus.EnProceso)
+            {
+                RequestDateDrag = RequestDrag;
+                _DateVisible = true;
+            }
+            else
+            {
+                await UpdateRequestStatus(RequestDrag, newStatus);
+            }
+        }
+        RequestDrag = null;
+    }
+
+    private async Task HandleDateModalOk()
+    {
+        if (RequestDateDrag != null && _estimatedCompletionDate.HasValue)
+        {
+            await RequestService.UpdateDate(RequestDateDrag.ID, _estimatedCompletionDate.Value);
+            await UpdateRequestStatus(RequestDateDrag, RequestStatus.EnProceso);
+            _DateVisible = false;
+            RequestDateDrag = null;
+            RequestDrag = null;
+            _estimatedCompletionDate = null;
+        }
+    }
+
+    private async Task UpdateRequestStatus(RequestViewModel request, RequestStatus newStatus)
+    {
+        bool success = await RequestService.UpdateStatus(request.ID, newStatus);
+        if (success)
+        {
+            request.Status = newStatus;
+            message.Success("Estado actualizado correctamente");
+            _requests = new();
+            await OnInitializedAsync();
+        }
+        else
+        {
+            message.Error("Error inesperado al actualizar el estado");
+        }
+        StateHasChanged();
+    }
+    // Init
+    protected override async Task OnInitializedAsync()
+    {
+        _requests = await RequestService.GetListRequests();
+    }
+}

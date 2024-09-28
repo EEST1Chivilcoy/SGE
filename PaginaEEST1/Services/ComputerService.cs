@@ -2,10 +2,7 @@
 using PaginaEEST1.Data;
 using Microsoft.EntityFrameworkCore;
 using PaginaEEST1.Data.ViewModels;
-using QRCoder;
 using PaginaEEST1.Data.Enums;
-using AntDesign;
-using System.Reflection;
 
 namespace PaginaEEST1.Services
 {
@@ -21,10 +18,12 @@ namespace PaginaEEST1.Services
     public class ComputerService : IComputerService
     {
         private readonly PaginaDbContext _context;
+
         public ComputerService(PaginaDbContext context)
         {
             _context = context;
         }
+
         public async Task<bool> SaveComputer(ComputerViewModel computer)
         {
             try
@@ -61,34 +60,80 @@ namespace PaginaEEST1.Services
                 await _context.SaveChangesAsync();
                 return true;
             }
-            catch
+            catch (DbUpdateException ex)
             {
+                Console.WriteLine(ex.Message);
                 return false;
             }
         }
+
         public async Task DelComputer(int ID)
         {
-            Computer? Delete = await _context.Computers.Where(v => v.Id == ID).SingleOrDefaultAsync();
-            if (Delete != null)
-            {
-                _context.Computers.Remove(Delete);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
+            Computer computer = await _context.Computers.FindAsync(ID);
+            if (computer == null)
                 throw new InvalidOperationException("No se encontró la Computadora.");
-            }
+
+            _context.Computers.Remove(computer);
+            await _context.SaveChangesAsync();
         }
+
         public async Task<ComputerViewModel?> GetComputer(int ID)
         {
-            Computer? computer = await _context.Computers.Where(i => i.Id == ID).SingleOrDefaultAsync();
-
+            Computer computer = await _context.Computers.FindAsync(ID);
+            
             if (computer == null)
-            {
                 throw new InvalidOperationException("No se encontró la Computadora.");
-            }
 
-            ComputerViewModel computerVM = new()
+            return GetComputerVM(computer);
+        }
+
+        public async Task<Computer?> EditComputer(ComputerViewModel newpc)
+        {
+            Computer computer = await _context.Computers.FindAsync(newpc.ID);
+            if (computer == null)
+                throw new InvalidOperationException("No se encontró la Computadora.");
+
+            try
+            {
+                foreach (var property in newpc.GetType().GetProperties())
+                {
+                    var newValue = property.GetValue(newpc);
+                    if (newValue != null)
+                    {
+                        var propToEdit = computer.GetType().GetProperty(property.Name);
+                        if (propToEdit != null && propToEdit.CanWrite)
+                        {
+                            propToEdit.SetValue(computer, newValue);
+                        }
+                    }
+                }
+                await _context.SaveChangesAsync();
+                return computer;
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new InvalidOperationException("Error inesperado al editar el Ordenador.");
+            }
+        }
+
+        public async Task<List<ComputerViewModel?>> GetListComputerDevices()
+        {
+            List<Computer> computers = await _context.Computers.ToListAsync();
+
+            return computers.Select(computer => new ComputerViewModel
+            {
+                ID = computer.Id,
+                Type = computer.Type,
+                Status = computer.Status,
+                DeviceName = computer.DeviceName,
+                OperatingSystem = computer.OperatingSystem,
+                Logo = computer.Type == TypeComputer.Computadora ? "Images/Logo_Desktop.png" : "Images/Logo_Netbook.png"
+            }).ToList();
+        }
+        private ComputerViewModel GetComputerVM(Computer computer){
+
+            ComputerViewModel computerVM = new ComputerViewModel
             {
                 ID = computer.Id,
                 Type = computer.Type,
@@ -101,47 +146,16 @@ namespace PaginaEEST1.Services
                 StorageType = computer.typeStorage,
                 Logo = computer.Type == TypeComputer.Computadora ? "Images/Logo_Desktop.png" : "Images/Logo_Netbook.png"
             };
+            if (computer is Desktop desktop)
+                computerVM.Location = desktop.Location;
 
-            if (computer.Type == TypeComputer.Computadora)
+            if (computer is Netbook netbook)
             {
-                computerVM.Location = (computer as Desktop).Location;
-            }
-            else
-            {
-                computerVM.Model = (computer as Netbook).Model;
-                computerVM.IsAvailable = (computer as Netbook).IsAvailable;
+                computerVM.Model = netbook.Model;
+                computerVM.IsAvailable = netbook.IsAvailable;
             }
 
             return computerVM;
-        }
-        public async Task<Computer?> EditComputer(ComputerViewModel newpc){
-            Computer? edit = await _context.Computers.Where(v => v.Id == newpc.ID).SingleOrDefaultAsync();
-            try{
-                foreach(var i in newpc.GetType().GetProperties()){
-                    var propNombre = i.Name;
-                    var propValor = i.GetValue(newpc);
-                    var editarProp = edit.GetType().GetProperty(propNombre);
-                    if (editarProp != null && editarProp.CanWrite && propValor != null)
-                    {
-                        editarProp.SetValue(edit, propValor);
-                    }
-                }
-                await _context.SaveChangesAsync();
-            }
-            catch{
-                throw new InvalidOperationException("Error inesperado al editar el Ordenador.");
-            }
-            return edit;
-        }
-        public async Task<List<ComputerViewModel?>> GetListComputerDevices()
-        {
-            List<ComputerViewModel?> devices = new();
-
-            foreach (Computer i in await _context.Computers.ToListAsync())
-            {
-                devices.Add(await GetComputer(i.Id));
-            }
-            return devices;
         }
     }
 }
