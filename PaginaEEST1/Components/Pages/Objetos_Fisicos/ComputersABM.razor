@@ -50,13 +50,13 @@
                             <Button OnClick="() => openEdit(context.ID)">
                                 <Icon Type="edit" /> Editar
                             </Button>
-                            <Popconfirm Title="¿Está seguro de remover este Ordenador?"
+                            <Popconfirm Title="¿Remover este Ordenador?"
                                     OnConfirm="() => delComputer(context.ID)"
-                                    OkText="si"
-                                    CancelText="no"
+                                    OkText="Si"
+                                    CancelText="No"
                                 >
                                 <Button Danger>
-                                    <Icon Type="down" /> Remover
+                                    <Icon Type="delete" /> Remover
                                 </Button>
                             </Popconfirm>
                         </SpaceItem>

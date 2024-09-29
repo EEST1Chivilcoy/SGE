@@ -3,23 +3,9 @@
 @using PaginaEEST1.Data.Enums
 @using PaginaEEST1.Services
 @inject IRequestService RequestService
+@inject IComputerService ComputerService
 @inject MessageService message
-
-@* Este modulo esta sin terminar. Trabajo en progreso *@
-
-<style>
-    .drop-zone {
-        min-height: 200px;
-        background-color: #f0f0f0;
-        border-radius: 5px;
-        padding: 10px;
-    }
-
-    .draggable-card {
-        cursor: move;
-        margin-bottom: 10px;
-    }
-</style>
+@attribute [Authorize]
 
 @* Tablas *@
 <Row Style="height: 100%; width:100%; margin: 1vw; border-radius: 1vw;">
@@ -35,11 +21,36 @@
                     {
                         <div @ondragstart="@((e) => OnDragStart(e, request))"
                              @ondragend="@(() => RequestDrag = null)"
-                             @onclick="@(() => ShowDetails(request))"
                              draggable="true"
-                             class="draggable-card">
-                            <Card Hoverable Style="font-size: 14px;">
-                                <b>@request.ShortDescription</b>
+                             class="draggable-card"><Card Hoverable Style="font-size: 14px; position: relative;">
+                                <div @onclick="@(() => ShowDetails(request))">
+                                    <b>@request.ShortDescription</b>
+                                </div>
+                                <Dropdown Trigger="new Trigger[] { Trigger.Click }" Placement="@Placement.BottomRight">
+                                    <Overlay>
+                                        <Menu>
+                                            <MenuItem OnClick="@(() => {})">
+                                                <Icon Type="edit" Theme="outline" />
+                                                Editar
+                                            </MenuItem>
+                                            <Popconfirm Title="¿Eliminar esta Solicitud?"
+                                                    OnConfirm="() => DelRequest(request.ID)"
+                                                    OkText="Si"
+                                                    CancelText="No"
+                                                >
+                                                <MenuItem>
+                                                    <Icon Type="delete" Theme="outline" />
+                                                    Eliminar
+                                                </MenuItem>
+                                            </Popconfirm>
+                                        </Menu>
+                                    </Overlay>
+                                    <ChildContent>
+                                        <a class="ant-dropdown-link" @onclick:preventDefault style="position: absolute; top: 5px; right: 5px;">
+                                            <Icon Type="ellipsis" Theme="outline" />
+                                        </a>
+                                    </ChildContent>
+                                </Dropdown>
                             </Card>
                         </div>
                     }
@@ -52,6 +63,7 @@
 @* Modals *@
 <Modal Title="@(RequestSelect?.ShortDescription)" Visible="@_DetailVisible"
        OnCancel="@(() => _DetailVisible = false)" Footer="null">
+    <p><b>Nombre/Codigo del dispositivo:</b> @ComputerName</p>
     <p><b>Tipo:</b> @RequestSelect?.Type</p>
     <p><b>Estado:</b> @RequestSelect?.Status</p>
     <p><b>Fecha reportado:</b> @RequestSelect?.RequestDate.ToShortDateString()</p>
@@ -69,7 +81,18 @@
     <h4>Datos de progreso:</h4>
     <p><b>Fecha de inicio:</b>@RequestSelect?.RequestStartDate?.ToShortDateString()</p>
     <p><b>Fecha estimada de terminación:</b>@RequestSelect?.EstimatedCompletionDate?.ToShortDateString()</p>
+    <div class="status-zone">
+        <p><b>Actualizar el estado Manualmente</b></p>
+        <EnumSelect TEnum="RequestStatus" @bind-Value="@ManualStatus" @DefaultValue="@RequestStatus.Pendiente" />
+        @if(ManualStatus == RequestStatus.EnProceso){
+            <br><br>
+            <p>Fecha estimada de terminación: </p> <DatePicker @bind-Value="@_estimatedCompletionDate" />
+        }
+        <br><br>
+        <Button Type="primary" OnClick="() => ManualRequestStatus(RequestSelect, ManualStatus)">Actualizar</Button>
+    </div>
 </Modal>
+
 <Modal Title="Establezca una fecha estimada de terminación." Visible="@_DateVisible"
        OnCancel="@(() => _DateVisible = false)"
        Footer="null">
@@ -87,13 +110,16 @@
     private RequestViewModel? RequestDrag;
     private RequestViewModel? RequestDateDrag;
     //Variables sobre modals
+    private RequestStatus ManualStatus {get; set;}
+    private string? ComputerName {get; set;}
     private bool _DetailVisible = false;
     private bool _DateVisible = false;
 
     // Funciones de visibilidad de Modals
-    private void ShowDetails(RequestViewModel request)
+    private async Task ShowDetails(RequestViewModel request)
     {
         RequestSelect = request;
+        ComputerName = ((ComputerViewModel?)(await ComputerService.GetComputer(request.ComputerId))).DeviceName;
         _DetailVisible = true;
     }
     private string GetStatusTitle(RequestStatus status){
@@ -112,6 +138,7 @@
     {
         return _requests.Where(r => r.Status == status);
     }
+    // Funciones relacionadas a la funcionalidad de arrastre
     private void OnDragStart(DragEventArgs e, RequestViewModel request)
     {
         RequestDrag = request;
@@ -134,7 +161,12 @@
         }
         RequestDrag = null;
     }
-
+    // Funciones de actualización
+    private async Task DelRequest(int Id)
+    {
+        await RequestService.DelRequest(Id);
+        await OnInitializedAsync();
+    }
     private async Task HandleDateModalOk()
     {
         if (RequestDateDrag != null && _estimatedCompletionDate.HasValue)
@@ -147,7 +179,14 @@
             _estimatedCompletionDate = null;
         }
     }
-
+    private async Task ManualRequestStatus(RequestViewModel request, RequestStatus newStatus){
+        if(request.Status == RequestStatus.Pendiente && newStatus == RequestStatus.EnProceso && _estimatedCompletionDate.HasValue){
+            await RequestService.UpdateDate(request.ID, _estimatedCompletionDate.Value);
+        }
+        await UpdateRequestStatus(request, newStatus);
+        _DetailVisible = false;
+        _estimatedCompletionDate = null;
+    }
     private async Task UpdateRequestStatus(RequestViewModel request, RequestStatus newStatus)
     {
         bool success = await RequestService.UpdateStatus(request.ID, newStatus);
@@ -168,5 +207,6 @@
     protected override async Task OnInitializedAsync()
     {
         _requests = await RequestService.GetListRequests();
+        StateHasChanged();
     }
 }

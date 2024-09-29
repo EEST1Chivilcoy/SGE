@@ -17,6 +17,7 @@ namespace PaginaEEST1.Services
         Task<bool> SaveRequest(RequestViewModel request);
         Task<bool> UpdateStatus(int Id, RequestStatus status);
         Task<bool> UpdateDate(int Id, DateTime estimated);
+        Task DelRequest(int Id);
         Task<List<RequestViewModel?>> GetListRequests();
     }
 
@@ -65,6 +66,16 @@ namespace PaginaEEST1.Services
             catch
             {
                 return false;
+            }
+        }
+        public async Task DelRequest(int Id){
+            try{
+                RequestComputer request = await _context.ComputerRequests.FindAsync(Id);
+                _context.ComputerRequests.Remove(request);
+                await _context.SaveChangesAsync();
+            }
+            catch{
+                throw new InvalidOperationException("No se pudo eliminar la solicitud.");
             }
         }
         public async Task<bool> UpdateStatus(int Id, RequestStatus status){
