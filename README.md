@@ -34,3 +34,6 @@
 - ![DBeaver](https://img.shields.io/badge/DBeaver-1f425f?style=for-the-badge&logo=dbeaver&logoColor=white)
 
 ---
+
+### Estudiantes Participantes
+Los estudiantes que participamos en este proyecto somos [**Bernardo Andrés González Erramuspe**](https://github.com/Bernard2806) e [**Ignacio Gómez**](https://github.com/IgnGom06).
