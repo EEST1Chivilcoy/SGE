@@ -14,7 +14,7 @@ namespace PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes
         public int ComputerId { get; set; }
         [ForeignKey(nameof(ComputerId))]
         public Computer Computer { get; set; } = null!;
-        /* ! Temporalmente establecido sin obligatoriedad para implementarlo correctamente en una futura actualización
+        /* ! Temporalmente deshabilitado para implementarlo correctamente en una futura actualización
         public int ProfessorId { get; set; }
         [ForeignKey(nameof(ProfessorId))]
         public Professor RequestingProfessor { get; set; }

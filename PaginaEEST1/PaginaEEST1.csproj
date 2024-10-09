@@ -26,6 +26,7 @@
 	<ItemGroup>
 		<Folder Include="Components\Pages\SGE\" />
 		<Folder Include="Components\Pages\Publico\" />
+		<Folder Include="Data\Migrations\" />
 		<Folder Include="wwwroot\bootstrap\" />
 	</ItemGroup>
 

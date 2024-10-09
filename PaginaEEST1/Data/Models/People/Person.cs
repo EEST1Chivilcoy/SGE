@@ -6,7 +6,7 @@ namespace PaginaEEST1.Data.Models.Personal
 {
     public abstract class Person
     {
-        public int PersonId { get; set; }
+        public string PersonId { get; set; } = null!;
         public TypePerson TypePerson { get; set; }
         public DateTime? BirthDate { get; set; }
         public TypeGender Gender { get; set; }

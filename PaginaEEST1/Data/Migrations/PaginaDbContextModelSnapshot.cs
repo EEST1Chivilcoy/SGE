@@ -30,11 +30,12 @@ namespace PaginaEEST1.Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ProfessorId")
-                        .HasColumnType("int");
+                    b.Property<string>("ProfessorId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<int?>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<string>("StudentId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Subject")
                         .HasColumnType("longtext");
@@ -45,7 +46,7 @@ namespace PaginaEEST1.Data.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("NetbookLoans", (string)null);
+                    b.ToTable("NetbookLoans");
                 });
 
             modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.RequestComputer", b =>
@@ -82,7 +83,7 @@ namespace PaginaEEST1.Data.Migrations
 
                     b.HasIndex("ComputerId");
 
-                    b.ToTable("ComputerRequests", (string)null);
+                    b.ToTable("ComputerRequests");
 
                     b.HasDiscriminator<int>("Type");
 
@@ -128,7 +129,7 @@ namespace PaginaEEST1.Data.Migrations
                     b.HasIndex("DeviceName")
                         .IsUnique();
 
-                    b.ToTable("Computers", (string)null);
+                    b.ToTable("Computers");
 
                     b.HasDiscriminator<int>("Type");
 
@@ -137,11 +138,8 @@ namespace PaginaEEST1.Data.Migrations
 
             modelBuilder.Entity("PaginaEEST1.Data.Models.Personal.Person", b =>
                 {
-                    b.Property<int>("PersonId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("PersonId"));
+                    b.Property<string>("PersonId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Address")
                         .HasMaxLength(255)
@@ -174,7 +172,7 @@ namespace PaginaEEST1.Data.Migrations
 
                     b.HasKey("PersonId");
 
-                    b.ToTable("People", (string)null);
+                    b.ToTable("People");
 
                     b.HasDiscriminator<int>("TypePerson");
 

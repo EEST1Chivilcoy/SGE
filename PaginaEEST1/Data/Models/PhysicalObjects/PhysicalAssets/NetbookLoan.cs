@@ -11,11 +11,11 @@ namespace PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes
         //Relacion Con Netbooks (Obligatoria)
         public List<Netbook> Netbooks { get; set; } = null!;
         //Relacion con Profesor (Obligatoria)
-        public int ProfessorId { get; set; }
+        public string ProfessorId { get; set; } = null!;
         [ForeignKey(nameof(ProfessorId))]
         public Professor Professor { get; set; } = null!;
         // Relacion con Alumno (No Obligatoria)
-        public int? StudentId { get; set; }
+        public string? StudentId { get; set; }
         [ForeignKey(nameof(StudentId))]
         public Student? Student { get; set; }
     }

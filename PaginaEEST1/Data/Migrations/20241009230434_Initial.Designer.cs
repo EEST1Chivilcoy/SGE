@@ -12,8 +12,8 @@ using PaginaEEST1.Data;
 namespace PaginaEEST1.Data.Migrations
 {
     [DbContext(typeof(PaginaDbContext))]
-    [Migration("20240925232912_Fix_Requests")]
-    partial class Fix_Requests
+    [Migration("20241009230434_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,11 +33,12 @@ namespace PaginaEEST1.Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ProfessorId")
-                        .HasColumnType("int");
+                    b.Property<string>("ProfessorId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<int?>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<string>("StudentId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Subject")
                         .HasColumnType("longtext");
@@ -140,11 +141,8 @@ namespace PaginaEEST1.Data.Migrations
 
             modelBuilder.Entity("PaginaEEST1.Data.Models.Personal.Person", b =>
                 {
-                    b.Property<int>("PersonId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("PersonId"));
+                    b.Property<string>("PersonId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Address")
                         .HasMaxLength(255)
