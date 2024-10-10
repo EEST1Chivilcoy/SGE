@@ -25,24 +25,10 @@ namespace PaginaEEST1.Components
         {
             var result = Challenge(new AuthenticationProperties { RedirectUri = returnUrl }, OpenIdConnectDefaults.AuthenticationScheme);
 
-            // Extraer información del usuario autenticado
             var user = User.Identity as ClaimsIdentity;
 
             if (user != null && user.IsAuthenticated)
             {
-                
-                var userEmail = user.FindFirst(ClaimTypes.Email)?.Value; // Correo electrónico del usuario
-                
-                var userName = user.FindFirst(ClaimTypes.Name)?.Value; // Nombre del usuario
-                var userSurname = user.FindFirst(ClaimTypes.Surname)?.Value; // Apellido de Usuario
-                var userGender = user.FindFirst(ClaimTypes.Gender)?.Value; // Genero del usuario
-                var userDateOfBirth = user.FindFirst(ClaimTypes.DateOfBirth)?.Value; //Fecha de nacimiento del usuario
-
-                // Foto del Usuario (Pendiente)
-
-                // Rol del Usuario (Trabajar)
-                var userRole = user.FindFirst(ClaimTypes.Role)?.Value;
-
                 _userService.SynchronizeUser(user);
             }
 

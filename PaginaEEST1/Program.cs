@@ -48,6 +48,7 @@ namespace PaginaEEST1
             builder.Services.AddScoped<IComputerService, ComputerService>();
             builder.Services.AddScoped<IQRService, QRService>();
             builder.Services.AddScoped<IRequestService, RequestService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             var app = builder.Build();
 
