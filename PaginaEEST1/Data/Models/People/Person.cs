@@ -16,7 +16,5 @@ namespace PaginaEEST1.Data.Models.Personal
         public string? Surname { get; set; }
         [StringLength(255)]
         public string? Address { get; set; }
-        [StringLength(255)]
-        public string? IDCard { get; set; }
     }
 }

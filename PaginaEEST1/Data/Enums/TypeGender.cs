@@ -5,10 +5,10 @@ namespace PaginaEEST1.Data.Enums
     public enum TypeGender
     {
         [Display(Name = "Hombre")]
-        Hombre,
+        Male,
         [Display(Name = "Mujer")]
-        Mujer,
+        Female,
         [Display(Name = "Otro")]
-        Otro
+        Other
     }
 }
