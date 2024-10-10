@@ -20,9 +20,7 @@ namespace PaginaEEST1.Components
         [HttpGet]
         public IActionResult Logout(string returnUrl = "/")
         {
-            return SignOut(new AuthenticationProperties { RedirectUri = returnUrl },
-                OpenIdConnectDefaults.AuthenticationScheme,
-                "Cookies");
+            return SignOut(new AuthenticationProperties { RedirectUri = returnUrl }, "Cookies");
         }
     }
 }
