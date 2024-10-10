@@ -1,0 +1,49 @@
+﻿@page "/SGE/index"
+@using AntDesign
+@inject NavigationManager NavigationManager
+@attribute [Authorize]
+
+<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f0f2f5; width: 100%;">
+    <Row Gutter="16" Style="width: 100%; max-width: 1200px;">
+        <Col Span="6">
+        <Card Style="margin: 16px 0;">
+            <Avatar Size="64" Icon="user" />
+            <div class="mt-2">
+                <h3>Serati Ma</h3>
+                <p>Be tolerant to diversity, tolerance is a virtue</p>
+            </div>
+            <div class="mt-2">
+                <Tag Color="blue">Interaction Expert</Tag>
+            </div>
+            <div class="mt-2">
+                <p>Ant Financial Services-XX</p>
+                <p>Business Group-XX Platform Department-XX Technology Department-UED</p>
+                <p>Zhejiang Province Hangzhou City</p>
+            </div>
+        </Card>
+        </Col>
+        <Col Span="18">
+        <Card Style="margin: 16px; padding: 24px;">
+            <Row Gutter="16">
+                <Col Span="12">
+                <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionOrdenadores"))">
+                    Gestión de Ordenadores
+                </Button>
+                </Col>
+                <Col Span="12">
+                <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionSolicitudes"))">
+                    Gestión de Peticiones
+                </Button>
+                </Col>
+            </Row>
+        </Card>
+        </Col>
+    </Row>
+</div>
+
+@code {
+    private void NavigateTo(string route)
+    {
+        NavigationManager.NavigateTo(route, true);
+    }
+}
