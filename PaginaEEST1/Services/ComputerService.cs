@@ -3,6 +3,8 @@ using PaginaEEST1.Data;
 using Microsoft.EntityFrameworkCore;
 using PaginaEEST1.Data.ViewModels;
 using PaginaEEST1.Data.Enums;
+using Microsoft.Identity.Client.Extensions.Msal;
+using System.Runtime.Intrinsics.Arm;
 
 namespace PaginaEEST1.Services
 {
@@ -38,6 +40,7 @@ namespace PaginaEEST1.Services
                         Processor = computer.Processor,
                         RAM = computer.RAM,
                         Storage = computer.Storage,
+                        typeStorage = computer.StorageType,
                         Location = computer.Location
                     };
                     _context.Computers.Add(Save);
@@ -52,6 +55,7 @@ namespace PaginaEEST1.Services
                         Processor = computer.Processor,
                         RAM = computer.RAM,
                         Storage = computer.Storage,
+                        typeStorage = computer.StorageType,
                         Model = computer.Model,
                         IsAvailable = computer.IsAvailable
                     };
@@ -95,17 +99,19 @@ namespace PaginaEEST1.Services
 
             try
             {
-                foreach (var property in newpc.GetType().GetProperties())
+                computer.Status = newpc.Status;
+                computer.DeviceName = newpc.DeviceName;
+                computer.OperatingSystem = newpc.OperatingSystem;
+                computer.Processor = newpc.Processor;
+                computer.RAM = newpc.RAM;
+                computer.Storage = newpc.Storage;
+                computer.typeStorage = newpc.StorageType;
+                if (computer is Desktop desktop)
+                    desktop.Location = newpc.Location;
+                if (computer is Netbook netbook)
                 {
-                    var newValue = property.GetValue(newpc);
-                    if (newValue != null)
-                    {
-                        var propToEdit = computer.GetType().GetProperty(property.Name);
-                        if (propToEdit != null && propToEdit.CanWrite)
-                        {
-                            propToEdit.SetValue(computer, newValue);
-                        }
-                    }
+                    netbook.Model = newpc.Model;
+                    netbook.IsAvailable = newpc.IsAvailable;
                 }
                 await _context.SaveChangesAsync();
                 return computer;

@@ -2,6 +2,7 @@
 @using PaginaEEST1.Data.Models.Objetos_Fisicos
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Shared
 @inject IComputerService ComputerService
 @inject IQRService QRService
 @inject IJSRuntime JSRuntime
@@ -23,12 +24,12 @@
         @if (computer != null)
         {
             <p><b>Nombre/Codigo del dispositivo</b>: @computer.DeviceName</p>
-            <p><b>Estado</b>: @computer.Status</p>
+            <p><b>Estado</b>: @computer.Status.GetDisplayName()</p>
             <p><b>Sistema Operativo</b>: @computer.OperatingSystem</p>
             <p><b>Procesador</b>: @computer.Processor</p>
             <p><b>Memoria RAM</b>: @computer.RAM</p>
             <p><b>Almacenamiento</b>: @computer.Storage</p>
-            <p><b>Tipo de Almacenamiento</b>: @computer.StorageType</p>
+            <p><b>Tipo de Almacenamiento</b>: @computer.StorageType.GetDisplayName()</p>
             @if (computer.Type == TypeComputer.Computadora)
             {
                 <p><b>Ubicación en la Institución</b>: @computer.Location</p>
@@ -36,7 +37,7 @@
             else
             {
                 <p><b>Modelo de la Netbook</b>: @computer.Model</p>
-                <p><b>Disponibilidad</b>: 
+                <p><b>Disponibilidad</b>:
                 @if(computer.IsAvailable == true){
                     <text>Disponible</text>
                 }

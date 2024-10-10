@@ -2,6 +2,7 @@
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
 @using PaginaEEST1.Services
+@using PaginaEEST1.Shared
 @inject IRequestService RequestService
 @inject IComputerService ComputerService
 @inject MessageService message
@@ -24,15 +25,16 @@
                              draggable="true"
                              class="draggable-card"><Card Hoverable Style="font-size: 14px; position: relative;">
                                 <div @onclick="@(() => ShowDetails(request))">
-                                    <b>@request.ShortDescription</b>
+                                    <Flex>
+                                        <p>@request.Type.GetDisplayName()</p>
+                                        <p style="color: grey; text-align: right; right: 0; margin-left: auto;">@request.RequestDate.ToShortDateString()</p>
+                                    </Flex>
+                                    <hr />
+                                    <h3><b>@request.ShortDescription</b></h3>
                                 </div>
                                 <Dropdown Trigger="new Trigger[] { Trigger.Click }" Placement="@Placement.BottomRight">
                                     <Overlay>
                                         <Menu>
-                                            <MenuItem OnClick="@(() => {})">
-                                                <Icon Type="edit" Theme="outline" />
-                                                Editar
-                                            </MenuItem>
                                             <Popconfirm Title="¿Eliminar esta Solicitud?"
                                                     OnConfirm="() => DelRequest(request.ID)"
                                                     OkText="Si"
@@ -64,8 +66,8 @@
 <Modal Title="@(RequestSelect?.ShortDescription)" Visible="@_DetailVisible"
        OnCancel="@(() => _DetailVisible = false)" Footer="null">
     <p><b>Nombre/Codigo del dispositivo:</b> @ComputerName</p>
-    <p><b>Tipo:</b> @RequestSelect?.Type</p>
-    <p><b>Estado:</b> @RequestSelect?.Status</p>
+    <p><b>Tipo:</b> @RequestSelect?.Type.GetDisplayName()</p>
+    <p><b>Estado:</b> @RequestSelect?.Status.GetDisplayName()</p>
     <p><b>Fecha reportado:</b> @RequestSelect?.RequestDate.ToShortDateString()</p>
     @if (RequestSelect?.Type == TypeRequest.ReporteFallo)
     {
@@ -78,9 +80,14 @@
         <p><b>Versión del Programa:</b> @RequestSelect.VersionProgram</p>
     }
     <hr>
-    <h4>Datos de progreso:</h4>
-    <p><b>Fecha de inicio:</b>@RequestSelect?.RequestStartDate?.ToShortDateString()</p>
-    <p><b>Fecha estimada de terminación:</b>@RequestSelect?.EstimatedCompletionDate?.ToShortDateString()</p>
+    <br />
+    <h3>Datos de progreso:</h3>
+    <p><b>Fecha de inicio:</b>
+        @(RequestSelect?.RequestStartDate== null ? "Aún no se inicio esta solicitud." : RequestSelect?.RequestStartDate?.ToShortDateString())
+    </p>
+    <p><b>Fecha estimada de terminación:</b>
+        @(RequestSelect?.EstimatedCompletionDate == null ? "No se ingreso una fecha estimada." : RequestSelect?.EstimatedCompletionDate?.ToShortDateString())
+    </p>
     <div class="status-zone">
         <p><b>Actualizar el estado Manualmente</b></p>
         <EnumSelect TEnum="RequestStatus" @bind-Value="@ManualStatus" @DefaultValue="@RequestStatus.Pendiente" />
