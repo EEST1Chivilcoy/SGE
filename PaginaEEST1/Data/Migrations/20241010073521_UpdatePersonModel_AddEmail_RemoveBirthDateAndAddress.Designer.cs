@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PaginaEEST1.Data;
 
@@ -11,9 +12,11 @@ using PaginaEEST1.Data;
 namespace PaginaEEST1.Data.Migrations
 {
     [DbContext(typeof(PaginaDbContext))]
-    partial class PaginaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241010073521_UpdatePersonModel_AddEmail_RemoveBirthDateAndAddress")]
+    partial class UpdatePersonModel_AddEmail_RemoveBirthDateAndAddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
