@@ -4,7 +4,7 @@ using PaginaEEST1.Data.Enums;
 
 namespace PaginaEEST1.Data.Models.Personal
 {
-    public class EMATP : Person
+    public class EMATP : Professor
     {
         // Temporalmente vacio
     }

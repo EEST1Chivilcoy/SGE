@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PaginaEEST1.Data;
 
@@ -11,9 +12,11 @@ using PaginaEEST1.Data;
 namespace PaginaEEST1.Data.Migrations
 {
     [DbContext(typeof(PaginaDbContext))]
-    partial class PaginaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241010041958_ChangeEMATPInheritanceToProfessor")]
+    partial class ChangeEMATPInheritanceToProfessor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,6 +239,7 @@ namespace PaginaEEST1.Data.Migrations
                     b.HasBaseType("PaginaEEST1.Data.Models.Personal.Person");
 
                     b.Property<string>("EducationLevel")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 

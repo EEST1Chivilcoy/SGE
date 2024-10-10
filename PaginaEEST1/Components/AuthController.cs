@@ -11,28 +11,10 @@ namespace PaginaEEST1.Components
     [Route("[controller]/[action]")]
     public class AuthController : Controller
     {
-        private readonly IUserService _userService;
-
-        // Inyección de dependencia del servicio en el constructor del controlador
-        public AuthController(IUserService userService)
-        {
-            _userService = userService;
-        }
-
-
         [HttpGet]
         public IActionResult Login(string returnUrl = "/")
         {
-            var result = Challenge(new AuthenticationProperties { RedirectUri = returnUrl }, OpenIdConnectDefaults.AuthenticationScheme);
-
-            var user = User.Identity as ClaimsIdentity;
-
-            if (user != null && user.IsAuthenticated)
-            {
-                _userService.SynchronizeUser(user);
-            }
-
-            return result;
+            return Challenge(new AuthenticationProperties { RedirectUri = returnUrl }, OpenIdConnectDefaults.AuthenticationScheme);
         }
 
         [HttpGet]

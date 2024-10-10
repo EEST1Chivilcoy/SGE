@@ -9,6 +9,6 @@ namespace PaginaEEST1.Data.Models.Personal
     public class Professor : Person
     {
         [StringLength(255)]
-        public EducationLevels EducationLevel { get; set; }
+        public EducationLevels? EducationLevel { get; set; }
     }
 }

@@ -2,14 +2,14 @@ using PaginaEEST1.Data;
 using PaginaEEST1.Services;
 using Microsoft.EntityFrameworkCore;
 using PaginaEEST1.Components;
-//Entra ID
+// Entra ID
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
-
+using System.Security.Claims;
 
 namespace PaginaEEST1
 {
@@ -29,22 +29,46 @@ namespace PaginaEEST1
                        .EnableDetailedErrors()       // Detalla los errores en los logs
             );
 
-            // Entra ID
+            // Entra ID con sincronización de usuario
             builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
+                .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"))
+                .EnableTokenAcquisitionToCallDownstreamApi()
+                .AddInMemoryTokenCaches();
 
+            // Configurar el evento OnTokenValidated para sincronizar el usuario
+            builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
+            {
+                options.Events = new OpenIdConnectEvents
+                {
+                    OnTokenValidated = async context =>
+                    {
+                        var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
+                        if (claimsIdentity != null && claimsIdentity.IsAuthenticated)
+                        {
+                            // Obtener el servicio de usuario
+                            var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+
+                            // Sincronizar el usuario con la base de datos
+                            await userService.SynchronizeUser(claimsIdentity);
+                        }
+                    }
+                };
+            });
+
+            // Agregar controladores con vistas y Entra ID UI
             builder.Services.AddControllersWithViews()
                 .AddMicrosoftIdentityUI();
 
+            // Agregar autorización
             builder.Services.AddAuthorization();
 
-            // Add services to the container.
+            // Servicios
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
             builder.Services.AddHostedService<InitData>();
             builder.Services.AddAntDesign();
 
-            // Servicios
+            // Registrar los servicios personalizados
             builder.Services.AddScoped<IComputerService, ComputerService>();
             builder.Services.AddScoped<IQRService, QRService>();
             builder.Services.AddScoped<IRequestService, RequestService>();
@@ -52,19 +76,18 @@ namespace PaginaEEST1
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // Configurar el pipeline de solicitud HTTP
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
-
             app.UseStaticFiles();
             app.UseAntiforgery();
 
+            // Middleware de autenticación y autorización
             app.UseAuthentication();
             app.UseAuthorization();
 
