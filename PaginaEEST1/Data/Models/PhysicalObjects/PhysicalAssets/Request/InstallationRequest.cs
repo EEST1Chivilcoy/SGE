@@ -1,4 +1,4 @@
-﻿namespace PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes
+﻿namespace PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request
 {
     public class InstallationRequest : RequestComputer
     {

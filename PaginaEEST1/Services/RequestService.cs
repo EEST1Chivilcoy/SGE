@@ -6,8 +6,8 @@ using QRCoder;
 using PaginaEEST1.Data.Enums;
 using AntDesign;
 using System.Reflection;
-using PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes;
 using Azure.Core;
+using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request;
 
 namespace PaginaEEST1.Services
 {
@@ -70,7 +70,7 @@ namespace PaginaEEST1.Services
         }
         public async Task DelRequest(int Id){
             try{
-                RequestComputer request = await _context.ComputerRequests.FindAsync(Id);
+                Data.Models.PhysicalObjects.PhysicalAssets.Request.Request request = await _context.ComputerRequests.FindAsync(Id);
                 _context.ComputerRequests.Remove(request);
                 await _context.SaveChangesAsync();
             }
@@ -80,7 +80,7 @@ namespace PaginaEEST1.Services
         }
         public async Task<bool> UpdateStatus(int Id, RequestStatus status){
             try{
-                RequestComputer request = await _context.ComputerRequests.FindAsync(Id);
+                Data.Models.PhysicalObjects.PhysicalAssets.Request.Request request = await _context.ComputerRequests.FindAsync(Id);
                 request.Status = status;
                 await _context.SaveChangesAsync();
                 return true;
@@ -91,7 +91,7 @@ namespace PaginaEEST1.Services
         }
         public async Task<bool> UpdateDate(int Id, DateTime estimated){
             try{
-                RequestComputer request = await _context.ComputerRequests.FindAsync(Id);
+                Data.Models.PhysicalObjects.PhysicalAssets.Request.Request request = await _context.ComputerRequests.FindAsync(Id);
                 request.RequestStartDate = DateTime.Now;
                 request.EstimatedCompletionDate = estimated;
                 await _context.SaveChangesAsync();
@@ -105,13 +105,13 @@ namespace PaginaEEST1.Services
         {
             List<RequestViewModel?> requests = new();
 
-            foreach (RequestComputer i in await _context.ComputerRequests.ToListAsync())
+            foreach (Data.Models.PhysicalObjects.PhysicalAssets.Request.RequestComputer i in await _context.ComputerRequests.ToListAsync())
             {
                 requests.Add(GetRequestVM(i));
             }
             return requests;
         }
-        private RequestViewModel GetRequestVM(RequestComputer com){
+        private RequestViewModel GetRequestVM(Data.Models.PhysicalObjects.PhysicalAssets.Request.RequestComputer com){
             RequestViewModel vm = new(){
                     ID = com.Id,
                     Type = com.Type,

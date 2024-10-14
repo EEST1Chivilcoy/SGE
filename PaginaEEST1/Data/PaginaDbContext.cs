@@ -3,6 +3,7 @@ using PaginaEEST1.Data.Enums;
 using PaginaEEST1.Data.Models.Objetos_Fisicos;
 using PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes;
 using PaginaEEST1.Data.Models.Personal;
+using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace PaginaEEST1.Data
 
         // Tablas (Reportes / Planillas)
         public DbSet<NetbookLoan> NetbookLoans { get; set; }
-        public DbSet<RequestComputer> ComputerRequests { get; set; }
+        public DbSet<Request> ComputerRequests { get; set; }
 
         public PaginaDbContext(DbContextOptions<PaginaDbContext> options) : base(options)
         {
@@ -63,7 +64,7 @@ namespace PaginaEEST1.Data
                 .Property(c => c.Type)
                 .HasConversion<int>();
 
-            modelBuilder.Entity<RequestComputer>()
+            modelBuilder.Entity<Request>()
                 .Property(s => s.Type)
                 .HasConversion<int>();
 
@@ -90,10 +91,11 @@ namespace PaginaEEST1.Data
                 .HasValue<Netbook>(TypeComputer.Netbook);
 
             modelBuilder
-                .Entity<RequestComputer>()
+                .Entity<Request>()
                 .HasDiscriminator(s => s.Type)
                 .HasValue<InstallationRequest>(TypeRequest.Instalacion)
-                .HasValue<FailureRequest>(TypeRequest.ReporteFallo);
+                .HasValue<FailureRequest>(TypeRequest.ReporteFallo)
+                .HasValue<StudentAccountRequest>(TypeRequest.SolicitudCuenta);
         }
     }
 }
