@@ -1,24 +1,21 @@
 ﻿@page "/SGE/index"
 @using AntDesign
+@using System.Security.Claims
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize]
 
 <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f0f2f5; width: 100%;">
     <Row Gutter="16" Style="width: 100%; max-width: 1200px;">
         <Col Span="6">
-        <Card Style="margin: 16px 0;">
+        <Card Style="margin: 16px 0; display: flex; flex-direction: column; align-items: center;">
             <Avatar Size="64" Icon="user" />
-            <div class="mt-2">
-                <h3>Serati Ma</h3>
-                <p>Be tolerant to diversity, tolerance is a virtue</p>
+            <div class="mt-2" style="text-align: center;">
+                <h3>@userName, @userSurname</h3>
+                <p>@userEmail</p>
             </div>
             <div class="mt-2">
                 <Tag Color="blue">Interaction Expert</Tag>
-            </div>
-            <div class="mt-2">
-                <p>Ant Financial Services-XX</p>
-                <p>Business Group-XX Platform Department-XX Technology Department-UED</p>
-                <p>Zhejiang Province Hangzhou City</p>
             </div>
         </Card>
         </Col>
@@ -42,8 +39,27 @@
 </div>
 
 @code {
+    private string userName;
+    private string userEmail;
+    private string userSurname;
+
     private void NavigateTo(string route)
     {
         NavigationManager.NavigateTo(route, true);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            // Usamos los ClaimTypes estándar para mayor claridad y consistencia
+            var personIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            userName = user.FindFirst(ClaimTypes.GivenName)?.Value;
+            userSurname = user.FindFirst(ClaimTypes.Surname)?.Value;
+            userEmail = user.FindFirst(ClaimTypes.Email)?.Value;
+        }
     }
 }
