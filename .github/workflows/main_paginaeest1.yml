@@ -13,7 +13,7 @@ jobs:
   build:
     runs-on: windows-latest
 
-    steps:
+  steps:
       - uses: actions/checkout@v4
 
       - name: Set up .NET Core
@@ -21,11 +21,19 @@ jobs:
         with:
           dotnet-version: '8.x'
 
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget
+
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
