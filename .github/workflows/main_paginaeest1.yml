@@ -13,7 +13,7 @@ jobs:
   build:
     runs-on: windows-latest
 
-  steps:
+    steps:
       - uses: actions/checkout@v4
 
       - name: Set up .NET Core
@@ -40,7 +40,7 @@ jobs:
         with:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
-
+  
   deploy:
     runs-on: windows-latest
     needs: build
