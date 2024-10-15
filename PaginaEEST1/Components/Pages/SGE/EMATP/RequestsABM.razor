@@ -65,23 +65,39 @@
 @* Modals *@
 <Modal Title="@(RequestSelect?.ShortDescription)" Visible="@_DetailVisible"
        OnCancel="@(() => _DetailVisible = false)" Footer="null">
-    <p><b>Nombre/Codigo del dispositivo:</b> @ComputerName</p>
     <p><b>Tipo:</b> @RequestSelect?.Type.GetDisplayName()</p>
     <p><b>Estado:</b> @RequestSelect?.Status.GetDisplayName()</p>
     <p><b>Fecha reportado:</b> @RequestSelect?.RequestDate.ToShortDateString()</p>
+    <br />
+    <hr>
+    <br />
     @if (RequestSelect?.Type == TypeRequest.ReporteFallo)
     {
+        <h3><u>Datos del dispositivo</u></h3>
+        <p><b>Nombre/Codigo del dispositivo:</b> @ComputerName</p>
         <p><b>Descripción del Fallo:</b> @RequestSelect.FailureDescription</p>
         <p><b>Nivel de Prioridad:</b> @RequestSelect.Preority</p>
     }
     else if (RequestSelect?.Type == TypeRequest.Instalacion)
     {
+        <h3><u>Datos del dispositivo</u></h3>
+        <p><b>Nombre/Codigo del dispositivo:</b> @ComputerName</p>
         <p><b>Nombre del Programa:</b> @RequestSelect.NameProgram</p>
         <p><b>Versión del Programa:</b> @RequestSelect.VersionProgram</p>
     }
+    else if(RequestSelect?.Type == TypeRequest.SolicitudCuenta)
+    {
+        <h3><u>Datos del estudiante</u></h3>
+        <p><b>Nombre del estudiante:</b> @RequestSelect.StudentName</p>
+        <p><b>Apellido del estudiante:</b> @RequestSelect.StudentSurname</p>
+        <p><b>Correo electronico:</b> @RequestSelect.StudentEmail</p>
+        <p><b>Número de celular:</b> @RequestSelect.StudentCellPhoneNumber</p>
+        <p><b>Año de curso:</b> @RequestSelect.SchoolYear</p>
+        <p><b>División de curso:</b> @RequestSelect.SchoolDivision</p>
+    }
     <hr>
     <br />
-    <h3>Datos de progreso:</h3>
+    <h3><u>Datos de progreso:</u></h3>
     <p><b>Fecha de inicio:</b>
         @(RequestSelect?.RequestStartDate== null ? "Aún no se inicio esta solicitud." : RequestSelect?.RequestStartDate?.ToShortDateString())
     </p>
@@ -126,7 +142,8 @@
     private async Task ShowDetails(RequestViewModel request)
     {
         RequestSelect = request;
-        ComputerName = ((ComputerViewModel?)(await ComputerService.GetComputer(request.ComputerId))).DeviceName;
+        if (request.ComputerId != 0)
+            ComputerName = ((ComputerViewModel?)(await ComputerService.GetComputer(request.ComputerId))).DeviceName;
         _DetailVisible = true;
     }
     private string GetStatusTitle(RequestStatus status){

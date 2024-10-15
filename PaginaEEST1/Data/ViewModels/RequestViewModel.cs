@@ -19,5 +19,12 @@ namespace PaginaEEST1.Data.ViewModels
         // Detalles específicos del fallo
         public string? FailureDescription { get; set; }
         public FailurePreority Preority { get; set; }
+        // Detalles específicos de la cuenta
+        public string? StudentName { get; set; }
+        public string? StudentSurname { get; set; }
+        public string? StudentEmail { get; set; }
+        public string? StudentCellPhoneNumber { get; set; }
+        public string? SchoolYear { get; set; }
+        public string? SchoolDivision { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using AntDesign;
 using System.Reflection;
 using Azure.Core;
 using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request;
+using PaginaEEST1.Components.Pages.SGE.EMATP;
 
 namespace PaginaEEST1.Services
 {
@@ -70,7 +71,7 @@ namespace PaginaEEST1.Services
         }
         public async Task DelRequest(int Id){
             try{
-                Data.Models.PhysicalObjects.PhysicalAssets.Request.RequestEMATP request = await _context.ComputerRequests.FindAsync(Id);
+                RequestEMATP request = await _context.ComputerRequests.FindAsync(Id);
                 _context.ComputerRequests.Remove(request);
                 await _context.SaveChangesAsync();
             }
@@ -80,7 +81,7 @@ namespace PaginaEEST1.Services
         }
         public async Task<bool> UpdateStatus(int Id, RequestStatus status){
             try{
-                Data.Models.PhysicalObjects.PhysicalAssets.Request.RequestEMATP request = await _context.ComputerRequests.FindAsync(Id);
+                RequestEMATP request = await _context.ComputerRequests.FindAsync(Id);
                 request.Status = status;
                 await _context.SaveChangesAsync();
                 return true;
@@ -91,7 +92,7 @@ namespace PaginaEEST1.Services
         }
         public async Task<bool> UpdateDate(int Id, DateTime estimated){
             try{
-                Data.Models.PhysicalObjects.PhysicalAssets.Request.RequestEMATP request = await _context.ComputerRequests.FindAsync(Id);
+                RequestEMATP request = await _context.ComputerRequests.FindAsync(Id);
                 request.RequestStartDate = DateTime.Now;
                 request.EstimatedCompletionDate = estimated;
                 await _context.SaveChangesAsync();
@@ -105,17 +106,16 @@ namespace PaginaEEST1.Services
         {
             List<RequestViewModel?> requests = new();
 
-            foreach (Data.Models.PhysicalObjects.PhysicalAssets.Request.RequestComputer i in await _context.ComputerRequests.ToListAsync())
+            foreach (RequestEMATP i in await _context.ComputerRequests.ToListAsync())
             {
                 requests.Add(GetRequestVM(i));
             }
             return requests;
         }
-        private RequestViewModel GetRequestVM(Data.Models.PhysicalObjects.PhysicalAssets.Request.RequestComputer com){
+        private RequestViewModel GetRequestVM(RequestEMATP com){
             RequestViewModel vm = new(){
                     ID = com.Id,
                     Type = com.Type,
-                    ComputerId = com.ComputerId,
                     ShortDescription = com.ShortDescription,
                     RequestDate = com.RequestDate,
                     RequestStartDate = com.RequestStartDate,
@@ -123,12 +123,17 @@ namespace PaginaEEST1.Services
                     Status = com.Status
             };
             if (com is FailureRequest failurerequest){
+                vm.ComputerId = failurerequest.ComputerId;
                 vm.FailureDescription = failurerequest.FailureDescription;
                 vm.Preority = failurerequest.Preority;
             }
             if(com is InstallationRequest installationrequest){
+                vm.ComputerId = installationrequest.ComputerId;
                 vm.NameProgram = installationrequest.NameProgram;
                 vm.VersionProgram = installationrequest.VersionProgram;
+            }
+            if(com is StudentAccountRequest accountrequest){
+
             }
             return vm;
         }
