@@ -2,7 +2,7 @@
 
 namespace PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request
 {
-    public class StudentAccountRequest : Request
+    public class StudentAccountRequest : RequestEMATP
     {
         public string? StudentName { get; set; } = null!;
         public string? StudentSurname { get; set; } = null!;

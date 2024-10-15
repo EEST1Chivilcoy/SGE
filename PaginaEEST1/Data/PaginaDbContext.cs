@@ -20,7 +20,7 @@ namespace PaginaEEST1.Data
 
         // Tablas (Reportes / Planillas)
         public DbSet<NetbookLoan> NetbookLoans { get; set; }
-        public DbSet<Request> ComputerRequests { get; set; }
+        public DbSet<RequestEMATP> ComputerRequests { get; set; }
 
         public PaginaDbContext(DbContextOptions<PaginaDbContext> options) : base(options)
         {
@@ -64,7 +64,7 @@ namespace PaginaEEST1.Data
                 .Property(c => c.Type)
                 .HasConversion<int>();
 
-            modelBuilder.Entity<Request>()
+            modelBuilder.Entity<RequestEMATP>()
                 .Property(s => s.Type)
                 .HasConversion<int>();
 
@@ -91,7 +91,7 @@ namespace PaginaEEST1.Data
                 .HasValue<Netbook>(TypeComputer.Netbook);
 
             modelBuilder
-                .Entity<Request>()
+                .Entity<RequestEMATP>()
                 .HasDiscriminator(s => s.Type)
                 .HasValue<InstallationRequest>(TypeRequest.Instalacion)
                 .HasValue<FailureRequest>(TypeRequest.ReporteFallo)

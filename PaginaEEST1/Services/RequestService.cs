@@ -70,7 +70,7 @@ namespace PaginaEEST1.Services
         }
         public async Task DelRequest(int Id){
             try{
-                Data.Models.PhysicalObjects.PhysicalAssets.Request.Request request = await _context.ComputerRequests.FindAsync(Id);
+                Data.Models.PhysicalObjects.PhysicalAssets.Request.RequestEMATP request = await _context.ComputerRequests.FindAsync(Id);
                 _context.ComputerRequests.Remove(request);
                 await _context.SaveChangesAsync();
             }
@@ -80,7 +80,7 @@ namespace PaginaEEST1.Services
         }
         public async Task<bool> UpdateStatus(int Id, RequestStatus status){
             try{
-                Data.Models.PhysicalObjects.PhysicalAssets.Request.Request request = await _context.ComputerRequests.FindAsync(Id);
+                Data.Models.PhysicalObjects.PhysicalAssets.Request.RequestEMATP request = await _context.ComputerRequests.FindAsync(Id);
                 request.Status = status;
                 await _context.SaveChangesAsync();
                 return true;
@@ -91,7 +91,7 @@ namespace PaginaEEST1.Services
         }
         public async Task<bool> UpdateDate(int Id, DateTime estimated){
             try{
-                Data.Models.PhysicalObjects.PhysicalAssets.Request.Request request = await _context.ComputerRequests.FindAsync(Id);
+                Data.Models.PhysicalObjects.PhysicalAssets.Request.RequestEMATP request = await _context.ComputerRequests.FindAsync(Id);
                 request.RequestStartDate = DateTime.Now;
                 request.EstimatedCompletionDate = estimated;
                 await _context.SaveChangesAsync();

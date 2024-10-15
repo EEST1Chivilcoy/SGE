@@ -5,7 +5,7 @@ using PaginaEEST1.Data.Models.Objetos_Fisicos;
 
 namespace PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request
 {
-    public abstract class Request
+    public abstract class RequestEMATP
     {
         //Datos Importantes
         public int Id { get; set; }  // ID único para la solicitud
