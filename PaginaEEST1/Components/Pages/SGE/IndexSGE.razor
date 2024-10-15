@@ -3,19 +3,19 @@
 @using System.Security.Claims
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@attribute [Authorize]
+@attribute [Authorize(Roles = "EMATP")]
 
 <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f0f2f5; width: 100%;">
     <Row Gutter="16" Style="width: 100%; max-width: 1200px;">
         <Col Span="6">
-        <Card Style="margin: 16px 0; display: flex; flex-direction: column; align-items: center;">
-            <Avatar Size="64" Icon="user" />
-            <div class="mt-2" style="text-align: center;">
-                <h3>@userName, @userSurname</h3>
-                <p>@userEmail</p>
+        <Card Title="Perfil" Style="margin: 16px 0; overflow: hidden;">
+            <div style="text-align: center; margin-bottom: 3px;">
+                <Avatar Size="64" Icon="user" />
             </div>
-            <div class="mt-2">
-                <Tag Color="blue">Interaction Expert</Tag>
+            <div style="text-align: center; padding: 0 16px;">
+                <h3 style="word-wrap: break-word;">@userName, @userSurname</h3>
+                <p style="word-wrap: break-word;">@userEmail</p>
+                <Tag Color="blue">@userRole</Tag>
             </div>
         </Card>
         </Col>
@@ -39,9 +39,7 @@
 </div>
 
 @code {
-    private string userName;
-    private string userEmail;
-    private string userSurname;
+    private string userName = null!, userEmail = null!, userSurname = null!, userRole = null!;
 
     private void NavigateTo(string route)
     {
@@ -60,6 +58,7 @@
             userName = user.FindFirst(ClaimTypes.GivenName)?.Value;
             userSurname = user.FindFirst(ClaimTypes.Surname)?.Value;
             userEmail = user.FindFirst(ClaimTypes.Email)?.Value;
+            userRole = user.FindFirst(ClaimTypes.Role)?.Value;
         }
     }
 }
