@@ -3,45 +3,62 @@
 
 <PageTitle>Inicio</PageTitle>
 
+<style>
+    .desc-card{
+        max-width: 600px;
+        gap: 30px;
+        border-radius: 1vw;
+    }
+    .page-content{
+        padding: 30px;
+        margin: 30px;
+    }
+    .desc-row{
+        max-height: 1000px;
+        width: auto;
+    }
+</style>
+
 <Layout>
-    <Content Style="padding: 0 50px;">
-        <div class="site-layout-content">
-            <Row>
-                <AntDesign.Col Span="12" Xs="24" Lg="12">
+    <Content Class="page-content">
+            <Row Class="desc-row">
+                <Col Span="12" Xs="24" Lg="12">
                     <Title Level="2">Escuela de Educación Secundaria Técnica Nº1 "Mariano Moreno" de Chivilcoy</Title>
                     <Paragraph>
                         La Escuela de Educación Secundaria Técnica Nº1 "Mariano Moreno" de Chivilcoy es una institución educativa dedicada a la formación técnica de jóvenes estudiantes. Con una rica historia y un compromiso constante con la excelencia académica, nuestra escuela se destaca por ofrecer una educación integral que combina conocimientos teóricos y prácticos en diversas especialidades técnicas.
                     </Paragraph>
-                </AntDesign.Col>
-                <AntDesign.Col Span="12" Xs="24" Lg="12">
-                    <div class="map-container">
+                </Col>
+                <Col Span="12" Xs="24" Lg="12">
+                    <div class="map-container" style="margin-left: 20px;">
                         <iframe src="https://www.google.com/maps/embed?pb=!4v1726722088745!6m8!1m7!1s2GUpJ3wgrZ4XUb8c3hYAMQ!2m2!1d-34.89151068469108!2d-60.01457439326683!3f290.39367649112154!4f3.4335852577463726!5f0.4000000000000002"
                                 style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                         </iframe>
                     </div>
-                </AntDesign.Col>
+                </Col>
             </Row>
+            <br />
             <Row Gutter="16">
-                <AntDesign.Col Span="12" Xs="24" Lg="12">
-                    <Card Title="Misión">
+                <Col Span="12" Xs="24" Lg="12">
+                    <Card Class="desc-card">
                         <Body>
+                            <h1><b>Misión</b></h1>
                             <Paragraph>
                                 Nuestra misión es proporcionar una educación técnica de alta calidad que prepare a los estudiantes para enfrentar los desafíos del mundo laboral y académico. Nos esforzamos por fomentar el desarrollo de habilidades técnicas, el pensamiento crítico y la creatividad, promoviendo al mismo tiempo valores éticos y sociales que contribuyan al crecimiento personal y profesional de nuestros alumnos.
                             </Paragraph>
                         </Body>
                     </Card>
-                </AntDesign.Col>
-                <AntDesign.Col Span="12" Xs="24" Lg="12">
-                    <Card Title="Visión">
+                </Col>
+                <Col Span="12" Xs="24" Lg="12">
+                    <Card Class="desc-card">
                         <Body>
+                            <h1><b>Visión</b></h1>
                             <Paragraph>
                                 Aspiramos a ser una institución líder en educación técnica, reconocida por la excelencia de nuestros programas académicos y la calidad de nuestros egresados. Buscamos innovar continuamente en nuestras metodologías de enseñanza y mantenernos a la vanguardia de los avances tecnológicos, para asegurar que nuestros estudiantes estén bien preparados para un futuro dinámico y en constante evolución.
                             </Paragraph>
                         </Body>
                     </Card>
-                </AntDesign.Col>
+                </Col>
             </Row>
-        </div>
     </Content>
 </Layout>
 
