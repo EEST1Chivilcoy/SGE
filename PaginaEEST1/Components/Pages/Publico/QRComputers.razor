@@ -44,7 +44,7 @@
                         </li>
                     }
                 </ul>
-                <AuthorizeView>
+                <AuthorizeView Roles="EMATP,Profesores">
                     <Authorized>
                         <div class="request-container">
                             <Form Model="@RequestVM" OnFinish="OnFinish" Context="_reqcontext">

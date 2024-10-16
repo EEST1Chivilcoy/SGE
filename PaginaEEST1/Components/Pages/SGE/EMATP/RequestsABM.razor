@@ -6,7 +6,9 @@
 @inject IRequestService RequestService
 @inject IComputerService ComputerService
 @inject MessageService message
-@attribute [Authorize]
+
+@attribute [Authorize(Roles = "EMATP")]
+@*Definimos que esta pagina solo puede ser vista por EMATP*@
 
 @* Tablas *@
 <Row Style="height: 100%; width:100%; margin: 1vw; border-radius: 1vw;">

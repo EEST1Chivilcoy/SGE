@@ -5,7 +5,9 @@
 @using PaginaEEST1.Data.Enums
 @inject IComputerService ComputerService
 @page "/SGE/EMATP/GestionOrdenadores"
-@attribute [Authorize]
+
+@attribute [Authorize (Roles = "EMATP")] 
+@*Definimos que esta pagina solo puede ser vista por EMATP*@
 
 <Flex Class="flex-container" Justify="center" Align="center" Style="height: 100%; width:100%;">
     <div class="template">

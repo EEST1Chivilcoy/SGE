@@ -3,7 +3,8 @@
 @using System.Security.Claims
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@attribute [Authorize(Roles = "EMATP")]
+
+@attribute [Authorize(Roles = "EMATP,Profesores")]
 
 <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f0f2f5; width: 100%;">
     <Row Gutter="16" Style="width: 100%; max-width: 1200px;">
