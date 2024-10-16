@@ -30,12 +30,14 @@
             <FormItem Label="Tipo de almacenamiento">
                 <EnumSelect TEnum="TypeStorage" @bind-Value="@computerVM.StorageType" />
             </FormItem>
-            @if(computerVM.Type == TypeComputer.Computadora){
+            @if (computerVM.Type == TypeComputer.Computadora)
+            {
                 <FormItem Label="Ubicación dentro de la Institución">
                     <Input @bind-Value="@computerVM.Location" />
                 </FormItem>
             }
-            @if(computerVM.Type == TypeComputer.Netbook){
+            @if (computerVM.Type == TypeComputer.Netbook)
+            {
                 <FormItem Label="Modelo de la Netbook">
                     <Input @bind-Value="@computerVM.Model" />
                 </FormItem>
@@ -65,19 +67,23 @@
     }
     private async Task OnFinish()
     {
-        try{
+        try
+        {
             await ComputerService.EditComputer(computerVM);
             computerVM = new();
             await OnClose.InvokeAsync(true);
-            message.Success("Ordenador editado con exito");
             StateHasChanged();
+            await message.Success("Ordenador editado con exito");
         }
-        catch{
-            message.Warning("Error inesperado al editar el Ordenador.");
+        catch
+        {
+            await message.Warning("Error inesperado al editar el Ordenador.");
         }
     }
-    protected override async Task OnInitializedAsync(){
-        computerVM = await ComputerService.GetComputer(ID);
+    protected override async Task OnInitializedAsync()
+    {
+        var computer = await ComputerService.GetComputer(ID);
+        computerVM = computer ?? new ComputerViewModel();
         StateHasChanged();
     }
 }

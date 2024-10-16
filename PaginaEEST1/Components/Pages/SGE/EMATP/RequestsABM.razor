@@ -217,13 +217,13 @@
         if (success)
         {
             request.Status = newStatus;
-            message.Success("Estado actualizado correctamente");
             _requests = new();
             await OnInitializedAsync();
+            await message.Success("Estado actualizado correctamente");
         }
         else
         {
-            message.Error("Error inesperado al actualizar el estado");
+            await message.Error("Error inesperado al actualizar el estado");
         }
         StateHasChanged();
     }
