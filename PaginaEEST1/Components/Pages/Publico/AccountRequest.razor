@@ -1,0 +1,125 @@
+﻿@page "/Solicitud/CuentaEscolar"
+@using PaginaEEST1.Services
+@using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Enums
+@inject IRequestService RequestService
+@inject IMessageService message
+
+<Flex Vertical Align="center" Justify="space-between" Style="padding: 32px; width: 100%;">
+    <h1 class="top-intro"><b>Te damos la bienvenida. 👋</b></h1>
+    <Paragraph Class="top-intro">A continuación comenzaras con la solicitud de tu cuenta estudiantil.</Paragraph>
+    <Paragraph Class="top-intro">Esta cuenta te dara la posibilidad de contar con multiples beneficios en diversas paginas que lo ofrezcan.</Paragraph>
+    <br />
+    <Card Style="min-width: 800px; height: auto; background-color: #F0F7FD; border-radius: 1vw;">
+        <Steps Current="current" Class="site-navigation-steps">
+            <Step Title="General"/>
+            <Step Title="Contacto"/>
+            <Step Title="Curso"/>
+        </Steps>
+        <br />
+        <Form Model="RequestVM" OnFinish="OnFinish" >
+            @switch (current)
+            {
+                case 0:
+                    @* Información General *@
+                    <div class="@animationClass">
+                        <h3>Información general</h3>
+                        <hr /> <br />
+                        <FormItem Label="Descripción corta de la solicitud" Style="">
+                            <Input @bind-Value="@RequestVM.ShortDescription"/>
+                        </FormItem>
+                        <FormItem Label="Apellido">
+                            <Input @bind-Value="@RequestVM.StudentName" />
+                        </FormItem>
+                        <FormItem Label="Nombre">
+                            <Input @bind-Value="@RequestVM.StudentSurname" />
+                        </FormItem>
+                    </div>
+                    break;
+                case 1:
+                    @* Información de Contacto *@
+                    <div class="@animationClass">
+                        <h3>Información de contacto</h3>
+                        <hr /> <br />
+                        <FormItem Label="Correo electrónico">
+                            <Input @bind-Value="@RequestVM.StudentEmail" />
+                        </FormItem>
+                        <FormItem Label="Numero de teléfono">
+                            <Input @bind-Value="@RequestVM.StudentCellPhoneNumber" />
+                        </FormItem>
+                    </div>
+                    break;
+                case 2:
+                    @* Información de Curso *@
+                    <div class="@animationClass">
+                        <h3>Información de curso</h3>
+                        <hr /> <br />
+                        <FormItem Label="Año cursando">
+                            <Input @bind-Value="@RequestVM.SchoolYear" />
+                        </FormItem>
+                        <FormItem Label="División de curso">
+                            <Input @bind-Value="@RequestVM.SchoolDivision" />
+                        </FormItem>
+                    </div>
+                    break;
+                default:
+                    <p>Cargando . . .</p>
+                    break;
+            }
+            <Flex Align = "center" Justify="space-between" Style="width: 100%; max-height: 300px;">
+                @if(current > 0)
+                {
+                    <Button OnClick="PrevClick">Anterior</Button>
+                }
+                @if (current < 2)
+                {
+                    <Button OnClick="NextClick">Siguiente</Button>
+                }
+                @if (current == 2)
+                {
+                    <Button Type="primary" HtmlType="submit">Confirmar</Button>
+                }
+            </Flex>
+        </Form>
+    </Card>
+</Flex>
+
+<Modal Footer="null" Title="@("Success")"
+       Visible="@_visible"
+       OnCancel="@(args => _visible = false)">
+    <Result Status="success"
+            Title="Se cargo tu solicitud correctamente."
+            SubTitle="Ya puedes cerrar esta ventana.">
+    </Result>
+</Modal>
+
+@code {
+    // Informacion de Steps
+    private int current { get; set; }
+    private string? animationClass { get; set; }
+    private bool _visible = false;
+
+    // Variables
+    private RequestViewModel RequestVM = new() {Type = TypeRequest.SolicitudCuenta};
+
+    // Funciones
+    void PrevClick()
+    {
+        current--;
+        animationClass = "slick-contenedor-I";
+    }
+    void NextClick()
+    {
+        current++;
+        animationClass = "slick-contenedor-D";
+    }
+    private async Task OnFinish()
+    {
+        RequestVM.Type = TypeRequest.SolicitudCuenta;
+        RequestVM.RequestDate = DateTime.Now;
+        await RequestService.SaveRequest(RequestVM);
+        _visible = true;
+        RequestVM = new();
+        StateHasChanged();
+    }
+}

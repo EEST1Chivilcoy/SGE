@@ -22,10 +22,18 @@
                 <Input @bind-Value="@computerVM.Processor" />
             </FormItem>
             <FormItem Label="RAM">
-                <Input @bind-Value="@computerVM.RAM" />
+                <Input @bind-Value="@computerVM.RAM">
+                    <Suffix>
+                        GB
+                    </Suffix>
+                </Input>
             </FormItem>
             <FormItem Label="Almacenamiento">
-                <Input @bind-Value="@computerVM.Storage" />
+                <Input @bind-Value="@computerVM.Storage">
+                <Suffix>
+                    GB
+                </Suffix>
+                </Input>
             </FormItem>
             <FormItem Label="Tipo de almacenamiento">
                 <EnumSelect TEnum="TypeStorage" @bind-Value="@computerVM.StorageType" />

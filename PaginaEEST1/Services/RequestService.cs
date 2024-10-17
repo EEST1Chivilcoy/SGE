@@ -33,33 +33,51 @@ namespace PaginaEEST1.Services
         {
             try
             {
-                if (request.Type == TypeRequest.ReporteFallo)
+                switch (request.Type)
                 {
-                    FailureRequest save = new()
-                    {
-                        Type = request.Type,
-                        ComputerId = request.ComputerId,
-                        ShortDescription = request.ShortDescription,
-                        RequestDate = request.RequestDate,
-                        FailureDescription = request.FailureDescription,
-                        Preority = request.Preority
-                    };
-                    save.Computer = await _context.Computers.Where(v => v.Id == save.ComputerId).SingleOrDefaultAsync();
-                    _context.ComputerRequests.Add(save);
-                }
-                else
-                {
-                    InstallationRequest save = new()
-                    {
-                        Type = request.Type,
-                        ComputerId = request.ComputerId,
-                        ShortDescription = request.ShortDescription,
-                        RequestDate = request.RequestDate,
-                        NameProgram = request.NameProgram,
-                        VersionProgram = request.VersionProgram
-                    };
-                    save.Computer = await _context.Computers.Where(v => v.Id == save.ComputerId).SingleOrDefaultAsync();
-                    _context.ComputerRequests.Add(save);
+                    case TypeRequest.ReporteFallo:
+                        FailureRequest failure = new()
+                        {
+                            Type = request.Type,
+                            ComputerId = request.ComputerId,
+                            ShortDescription = request.ShortDescription ?? "Sin descripción",
+                            RequestDate = request.RequestDate,
+                            FailureDescription = request.FailureDescription ?? "Sin descripción del fallo",
+                            Preority = request.Preority
+                        };
+                        failure.Computer = await _context.Computers.Where(v => v.Id == failure.ComputerId).SingleOrDefaultAsync();
+                        _context.ComputerRequests.Add(failure);
+                        break;
+                    case TypeRequest.Instalacion:
+                        InstallationRequest installation = new()
+                        {
+                            Type = request.Type,
+                            ComputerId = request.ComputerId,
+                            ShortDescription = request.ShortDescription ?? "Sin descripción",
+                            RequestDate = request.RequestDate,
+                            NameProgram = request.NameProgram ?? "No se especifico el programa",
+                            VersionProgram = request.VersionProgram
+                        };
+                        installation.Computer = await _context.Computers.Where(v => v.Id == installation.ComputerId).SingleOrDefaultAsync();
+                        _context.ComputerRequests.Add(installation);
+                        break;
+                    case TypeRequest.SolicitudCuenta:
+                        StudentAccountRequest account = new()
+                        {
+                            Type = request.Type,
+                            ShortDescription = request.ShortDescription ?? "Sin descripción",
+                            RequestDate = request.RequestDate,
+                            StudentName = request.StudentName,
+                            StudentSurname = request.StudentSurname,
+                            StudentEmail = request.StudentEmail,
+                            StudentCellPhoneNumber = request.StudentCellPhoneNumber,
+                            SchoolYear = request.SchoolYear,
+                            SchoolDivision = request.SchoolDivision
+                        };
+                        _context.ComputerRequests.Add(account);
+                        break;
+                    default:
+                        return false;
                 }
                 await _context.SaveChangesAsync();
                 return true;
@@ -133,7 +151,12 @@ namespace PaginaEEST1.Services
                 vm.VersionProgram = installationrequest.VersionProgram;
             }
             if(com is StudentAccountRequest accountrequest){
-
+                vm.StudentName = accountrequest.StudentName;
+                vm.StudentSurname = accountrequest.StudentSurname;
+                vm.StudentEmail = accountrequest.StudentEmail;
+                vm.StudentCellPhoneNumber = accountrequest.StudentCellPhoneNumber;
+                vm.SchoolYear = accountrequest.SchoolYear;
+                vm.SchoolDivision = accountrequest.SchoolDivision;
             }
             return vm;
         }

@@ -1,0 +1,10 @@
+﻿.top-intro{
+    font-size: 40px;
+    font-family: Arial;
+}
+h3{
+    font-weight: bold;
+}
+::deep .ant-form-item-label > label {
+    font-weight: bold;
+}
