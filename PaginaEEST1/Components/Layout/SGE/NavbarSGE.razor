@@ -1,0 +1,60 @@
+﻿@inject NavigationManager NavigationManager
+@using AntDesign
+
+<header>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/">
+                <img src="Images/System_Logo.jpg" alt="Logo Sistema" />
+            </a>
+        </div>
+        <AuthorizeView>
+            <Authorized>
+                <Button type="primary" class="btn-logout" OnClick="Logout">Cerrar Sesión</Button>
+            </Authorized>
+        </AuthorizeView>
+    </nav>
+</header>
+
+@code {
+    private void Logout()
+    {
+        NavigationManager.NavigateTo("/Auth/Logout", true);
+    }
+}
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .navbar {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: white;
+        padding: 10px 20px;
+    }
+
+    .logo img {
+        width: 8vw;
+        height: auto;
+    }
+
+    .btn-logout {
+        border-radius: 0.5vw;
+        text-decoration: none;
+        background: none;
+        color: black;
+        border: 2px solid black;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-logout:hover {
+        background-color: black;
+        color: white;
+    }
+</style>
