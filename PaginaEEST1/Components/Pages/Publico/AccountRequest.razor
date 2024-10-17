@@ -69,11 +69,11 @@
             <Flex Align = "center" Justify="space-between" Style="width: 100%; max-height: 300px;">
                 @if(current > 0)
                 {
-                    <Button OnClick="PrevClick">Anterior</Button>
+                    <Button OnClick="() => {current --;}">Anterior</Button>
                 }
                 @if (current < 2)
                 {
-                    <Button OnClick="NextClick">Siguiente</Button>
+                    <Button OnClick="() => {current ++;}">Siguiente</Button>
                 }
                 @if (current == 2)
                 {
@@ -103,16 +103,6 @@
     private RequestViewModel RequestVM = new() {Type = TypeRequest.SolicitudCuenta};
 
     // Funciones
-    void PrevClick()
-    {
-        current--;
-        animationClass = "slick-contenedor-I";
-    }
-    void NextClick()
-    {
-        current++;
-        animationClass = "slick-contenedor-D";
-    }
     private async Task OnFinish()
     {
         RequestVM.Type = TypeRequest.SolicitudCuenta;
