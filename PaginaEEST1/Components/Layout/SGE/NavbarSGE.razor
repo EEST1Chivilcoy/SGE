@@ -8,15 +8,42 @@
                 <img src="Images/System_Logo.jpg" alt="Logo Sistema" />
             </a>
         </div>
-        <AuthorizeView>
-            <Authorized>
-                <Button type="primary" class="btn-logout" OnClick="Logout">Cerrar Sesión</Button>
-            </Authorized>
-        </AuthorizeView>
+        <div class="right-buttons">
+            <AuthorizeView>
+                <Authorized>
+                    <Button type="primary" class="btn-logout" OnClick="Logout">Cerrar Sesión</Button>
+                </Authorized>
+            </AuthorizeView>
+            <div class="menu-button">
+                <Button type="default" OnClick="OpenDrawer">
+                    <Icon type="menu" />
+                </Button>
+            </div>
+        </div>
     </nav>
 </header>
 
+<Drawer @bind-Visible="drawerVisible" Placement="left" Width="300px">
+    <ul>
+        <li><a href="/inscripcion">Inscripción</a></li>
+        <li><a href="/contactos">Contactos</a></li>
+        <li><a href="/noticias">Noticias</a></li>
+        <AuthorizeView>
+            <Authorized>
+                <li><a href="/SGE/index">Gestión Escolar</a></li>
+            </Authorized>
+        </AuthorizeView>
+    </ul>
+</Drawer>
+
 @code {
+    private bool drawerVisible = false;
+
+    private void OpenDrawer()
+    {
+        drawerVisible = true;
+    }
+
     private void Logout()
     {
         NavigationManager.NavigateTo("/Auth/Logout", true);
@@ -44,6 +71,15 @@
         height: auto;
     }
 
+    .right-buttons {
+        display: flex;
+        align-items: center;
+    }
+
+    .menu-button {
+        margin-left: 10px;
+    }
+
     .btn-logout {
         border-radius: 0.5vw;
         text-decoration: none;
@@ -53,8 +89,8 @@
         transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    .btn-logout:hover {
-        background-color: black;
-        color: white;
-    }
+        .btn-logout:hover {
+            background-color: black;
+            color: white;
+        }
 </style>
