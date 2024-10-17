@@ -13,7 +13,7 @@ namespace PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request
 
 
         //Otros Datos
-        public string ShortDescription { get; set; } = null!;  // Descripción corta de la solicitud
+        public string? ShortDescription { get; set; }  // Descripción corta de la solicitud
         public DateTime RequestDate { get; set; }  // Fecha en que se realiza la solicitud
         public DateTime? RequestStartDate { get; set; } // Fecha en la que se empezo a trabajar en la solicitud
         public DateTime? EstimatedCompletionDate { get; set; } //Fecha estimada de finalización

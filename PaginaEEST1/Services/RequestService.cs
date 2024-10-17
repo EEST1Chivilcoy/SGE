@@ -36,7 +36,20 @@ namespace PaginaEEST1.Services
             {
                 try
                 {
-                    _context.ComputerRequests.Add(request);
+                    if (request is FailureRequest failure)
+                    {
+                        failure.Computer = await _context.Computers.FindAsync(failure.ComputerId);
+                        _context.ComputerRequests.Add(failure);
+                    }
+                    if (request is InstallationRequest installation)
+                    {
+                        installation.Computer = await _context.Computers.FindAsync(installation.ComputerId);
+                        _context.ComputerRequests.Add(installation);
+                    }
+                    else
+                    {
+                        _context.ComputerRequests.Add(request);
+                    }
                     await _context.SaveChangesAsync();
                     return true;
                 }

@@ -1,4 +1,5 @@
-﻿@using PaginaEEST1.Services
+﻿@using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request
+@using PaginaEEST1.Services
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
 @inject IComputerService ComputerService
@@ -98,15 +99,50 @@
     [Parameter]
     public int ID_Computadora { get; set; }
     private ComputerViewModel? Computadora { get; set; }
-    private RequestViewModel RequestVM = new();
+    private QRViewModel RequestVM = new();
+
+    private class QRViewModel
+    {
+        public TypeRequest Type { get; set; }
+        public string? ShortDescription { get; set; }
+        public string? FailureDescription { get; set; }
+        public FailurePreority Preority { get; set; }
+        public string? NameProgram { get; set; }
+        public string? VersionProgram { get; set; }
+    }
 
     private async Task OnFinish()
     {
         try
         {
-            RequestVM.ComputerId = ID_Computadora;
-            RequestVM.RequestDate = DateTime.Now;
-            bool saved = await RequestService.SaveRequest(RequestVM);
+            //Agregqar conversion
+            bool saved = false;
+            if (RequestVM.Type == TypeRequest.ReporteFallo)
+            {
+                FailureRequest save = new()
+                    {
+                        Type = RequestVM.Type,
+                        ShortDescription = RequestVM.ShortDescription,
+                        ComputerId = ID_Computadora,
+                        RequestDate = DateTime.Now,
+                        FailureDescription = RequestVM.FailureDescription,
+                        Preority = RequestVM.Preority
+                    };
+                saved = await RequestService.SaveRequest(save);
+            }
+            else if (RequestVM.Type == TypeRequest.Instalacion)
+            {
+                InstallationRequest save = new()
+                    {
+                        Type = RequestVM.Type,
+                        ShortDescription = RequestVM.ShortDescription,
+                        ComputerId = ID_Computadora,
+                        RequestDate = DateTime.Now,
+                        NameProgram = RequestVM.NameProgram,
+                        VersionProgram = RequestVM.VersionProgram
+                    };
+                saved = await RequestService.SaveRequest(save);
+            }
             if (saved == true)
             {
                 RequestVM = new();
