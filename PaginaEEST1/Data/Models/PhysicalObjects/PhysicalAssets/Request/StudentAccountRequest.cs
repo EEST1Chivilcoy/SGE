@@ -10,7 +10,7 @@ namespace PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request
         public string? StudentCellPhoneNumber = null!;
         public string? SchoolYear { get; set; } = null!;
         public string? SchoolDivision { get; set; } = null!;
-
+        public int? DNI { get; set; }
 
     }
 }

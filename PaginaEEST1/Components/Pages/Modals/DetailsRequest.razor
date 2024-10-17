@@ -1,0 +1,107 @@
+﻿@using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request
+@using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Services
+@using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Shared
+@inject IMessageService message
+@inject IComputerService ComputerService
+@inject IRequestService RequestService
+
+<p><b>Tipo:</b> @RequestSelect?.Type.GetDisplayName()</p>
+<p><b>Estado:</b> @RequestSelect?.Status.GetDisplayName()</p>
+<p><b>Fecha reportado:</b> @RequestSelect?.RequestDate.ToShortDateString()</p>
+<br />
+<hr>
+<br />
+@if (RequestSelect is FailureRequest failure)
+{
+    <h3><u>Datos del dispositivo</u></h3>
+    <p><b>Nombre/Codigo del dispositivo:</b> @ComputerName</p>
+    <p><b>Descripción del Fallo:</b> @failure.FailureDescription</p>
+    <p><b>Nivel de Prioridad:</b> @failure.Preority</p>
+}
+else if (RequestSelect is InstallationRequest installation)
+{
+    <h3><u>Datos del dispositivo</u></h3>
+    <p><b>Nombre/Codigo del dispositivo:</b> @ComputerName</p>
+    <p><b>Nombre del Programa:</b> @installation.NameProgram</p>
+    <p><b>Versión del Programa:</b> @installation.VersionProgram</p>
+}
+else if (RequestSelect is StudentAccountRequest account)
+{
+    <h3><u>Datos del estudiante</u></h3>
+    <p><b>Nombre del estudiante:</b> @account.StudentName</p>
+    <p><b>Apellido del estudiante:</b> @account.StudentSurname</p>
+    <p><b>Correo electronico:</b> @account.StudentEmail</p>
+    <p><b>Número de celular:</b> @account.StudentCellPhoneNumber</p>
+    <p><b>Año de curso:</b> @account.SchoolYear</p>
+    <p><b>División de curso:</b> @account.SchoolDivision</p>
+}
+<hr>
+<br />
+<h3><u>Datos de progreso:</u></h3>
+<p>
+    <b>Fecha de inicio:</b>
+    @(RequestSelect?.RequestStartDate == null ? "Aún no se inicio esta solicitud." : RequestSelect?.RequestStartDate?.ToShortDateString())
+</p>
+<p>
+    <b>Fecha estimada de terminación:</b>
+    @(RequestSelect?.EstimatedCompletionDate == null ? "No se ingreso una fecha estimada." : RequestSelect?.EstimatedCompletionDate?.ToShortDateString())
+</p>
+<div class="status-zone">
+    <p><b>Actualizar el estado Manualmente</b></p>
+    <EnumSelect TEnum="RequestStatus" @bind-Value="@ManualStatus" @DefaultValue="@RequestStatus.Pendiente" />
+    @if (ManualStatus == RequestStatus.EnProceso)
+    {
+        <br>
+
+        <br>
+        <p>Fecha estimada de terminación: </p> <DatePicker @bind-Value="@_estimatedCompletionDate" />
+    }
+    <br><br>
+    <Button Type="primary" OnClick="HandleClose">Actualizar</Button>
+</div>
+
+@code {
+    // Parametros
+    [Parameter] public int ID { get; set; }
+    [Parameter] public EventCallback CloseModal { get; set; }
+    public EventCallback<bool> OnClose { get; set; }
+
+    // Variables
+    private DateTime? _estimatedCompletionDate;
+    private RequestStatus ManualStatus { get; set; }
+    private string? ComputerName { get; set; }
+    private RequestEMATP RequestSelect { get; set; }
+
+    // Funciones
+    private async Task UpdateRequestStatus(RequestViewModel request, RequestStatus newStatus)
+    {
+        bool success = await RequestService.UpdateStatus(request.ID, newStatus);
+        if (success)
+        {
+            request.Status = newStatus;
+            await OnInitializedAsync();
+            await message.Success("Estado actualizado correctamente");
+        }
+        else
+        {
+            await message.Error("Error inesperado al actualizar el estado");
+        }
+        StateHasChanged();
+    }
+    private async Task HandleClose()
+    {
+        await CloseModal.InvokeAsync((RequestSelect, ManualStatus));
+    }
+    private async Task GetComputer(RequestComputer request)
+    {
+        if (request.ComputerId != 0)
+            ComputerName = ((ComputerViewModel?)(await ComputerService.GetComputer(request.ComputerId))).DeviceName;
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        RequestSelect = await RequestService.GetRequest(ID);
+        StateHasChanged();
+    }
+}

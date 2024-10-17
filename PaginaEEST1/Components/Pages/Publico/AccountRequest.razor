@@ -1,5 +1,6 @@
 ﻿@page "/Solicitud/CuentaEscolar"
 @using PaginaEEST1.Services
+@using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
 @inject IRequestService RequestService
@@ -12,7 +13,7 @@
     <br />
     <Card Style="min-width: 800px; height: auto; background-color: #F0F7FD; border-radius: 1vw;">
         <Steps Current="current" Class="site-navigation-steps">
-            <Step Title="General"/>
+            <Step Title="Personal"/>
             <Step Title="Contacto"/>
             <Step Title="Curso"/>
         </Steps>
@@ -23,16 +24,19 @@
                 case 0:
                     @* Información General *@
                     <div class="@animationClass">
-                        <h3>Información general</h3>
+                        <h3>Información personal</h3>
                         <hr /> <br />
                         <FormItem Label="Descripción corta de la solicitud" Style="">
                             <Input @bind-Value="@RequestVM.ShortDescription"/>
                         </FormItem>
+                        <FormItem Label="Nombre">
+                            <Input @bind-Value="@RequestVM.StudentSurname" />
+                        </FormItem>
                         <FormItem Label="Apellido">
                             <Input @bind-Value="@RequestVM.StudentName" />
                         </FormItem>
-                        <FormItem Label="Nombre">
-                            <Input @bind-Value="@RequestVM.StudentSurname" />
+                        <FormItem Label="DNI">
+                            <Input @bind-Value="@RequestVM.DNI" />
                         </FormItem>
                     </div>
                     break;
@@ -100,7 +104,7 @@
     private bool _visible = false;
 
     // Variables
-    private RequestViewModel RequestVM = new() {Type = TypeRequest.SolicitudCuenta};
+    private StudentAccountRequest RequestVM = new();
 
     // Funciones
     private async Task OnFinish()

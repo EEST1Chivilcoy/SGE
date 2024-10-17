@@ -1,4 +1,6 @@
 @page "/SGE/EMATP/GestionSolicitudes"
+@using PaginaEEST1.Components.Pages.Modals
+@using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
 @using PaginaEEST1.Services
@@ -67,55 +69,7 @@
 @* Modals *@
 <Modal Title="@(RequestSelect?.ShortDescription)" Visible="@_DetailVisible"
        OnCancel="@(() => _DetailVisible = false)" Footer="null">
-    <p><b>Tipo:</b> @RequestSelect?.Type.GetDisplayName()</p>
-    <p><b>Estado:</b> @RequestSelect?.Status.GetDisplayName()</p>
-    <p><b>Fecha reportado:</b> @RequestSelect?.RequestDate.ToShortDateString()</p>
-    <br />
-    <hr>
-    <br />
-    @if (RequestSelect?.Type == TypeRequest.ReporteFallo)
-    {
-        <h3><u>Datos del dispositivo</u></h3>
-        <p><b>Nombre/Codigo del dispositivo:</b> @ComputerName</p>
-        <p><b>Descripción del Fallo:</b> @RequestSelect.FailureDescription</p>
-        <p><b>Nivel de Prioridad:</b> @RequestSelect.Preority</p>
-    }
-    else if (RequestSelect?.Type == TypeRequest.Instalacion)
-    {
-        <h3><u>Datos del dispositivo</u></h3>
-        <p><b>Nombre/Codigo del dispositivo:</b> @ComputerName</p>
-        <p><b>Nombre del Programa:</b> @RequestSelect.NameProgram</p>
-        <p><b>Versión del Programa:</b> @RequestSelect.VersionProgram</p>
-    }
-    else if(RequestSelect?.Type == TypeRequest.SolicitudCuenta)
-    {
-        <h3><u>Datos del estudiante</u></h3>
-        <p><b>Nombre del estudiante:</b> @RequestSelect.StudentName</p>
-        <p><b>Apellido del estudiante:</b> @RequestSelect.StudentSurname</p>
-        <p><b>Correo electronico:</b> @RequestSelect.StudentEmail</p>
-        <p><b>Número de celular:</b> @RequestSelect.StudentCellPhoneNumber</p>
-        <p><b>Año de curso:</b> @RequestSelect.SchoolYear</p>
-        <p><b>División de curso:</b> @RequestSelect.SchoolDivision</p>
-    }
-    <hr>
-    <br />
-    <h3><u>Datos de progreso:</u></h3>
-    <p><b>Fecha de inicio:</b>
-        @(RequestSelect?.RequestStartDate== null ? "Aún no se inicio esta solicitud." : RequestSelect?.RequestStartDate?.ToShortDateString())
-    </p>
-    <p><b>Fecha estimada de terminación:</b>
-        @(RequestSelect?.EstimatedCompletionDate == null ? "No se ingreso una fecha estimada." : RequestSelect?.EstimatedCompletionDate?.ToShortDateString())
-    </p>
-    <div class="status-zone">
-        <p><b>Actualizar el estado Manualmente</b></p>
-        <EnumSelect TEnum="RequestStatus" @bind-Value="@ManualStatus" @DefaultValue="@RequestStatus.Pendiente" />
-        @if(ManualStatus == RequestStatus.EnProceso){
-            <br><br>
-            <p>Fecha estimada de terminación: </p> <DatePicker @bind-Value="@_estimatedCompletionDate" />
-        }
-        <br><br>
-        <Button Type="primary" OnClick="() => ManualRequestStatus(RequestSelect, ManualStatus)">Actualizar</Button>
-    </div>
+    <DetailsRequest ID="RequestSelect.ID" CloseModal="(async => HandleCloseDetail())" />
 </Modal>
 
 <Modal Title="Establezca una fecha estimada de terminación." Visible="@_DateVisible"
@@ -135,8 +89,6 @@
     private RequestViewModel? RequestDrag;
     private RequestViewModel? RequestDateDrag;
     //Variables sobre modals
-    private RequestStatus ManualStatus {get; set;}
-    private string? ComputerName {get; set;}
     private bool _DetailVisible = false;
     private bool _DateVisible = false;
 
@@ -144,8 +96,6 @@
     private async Task ShowDetails(RequestViewModel request)
     {
         RequestSelect = request;
-        if (request.ComputerId != 0)
-            ComputerName = ((ComputerViewModel?)(await ComputerService.GetComputer(request.ComputerId))).DeviceName;
         _DetailVisible = true;
     }
     private string GetStatusTitle(RequestStatus status){
@@ -205,13 +155,11 @@
             _estimatedCompletionDate = null;
         }
     }
-    private async Task ManualRequestStatus(RequestViewModel request, RequestStatus newStatus){
-        if(request.Status == RequestStatus.Pendiente && newStatus == RequestStatus.EnProceso && _estimatedCompletionDate.HasValue){
-            await RequestService.UpdateDate(request.ID, _estimatedCompletionDate.Value);
-        }
-        await UpdateRequestStatus(request, newStatus);
+    private async Task HandleCloseDetail()
+    {
         _DetailVisible = false;
-        _estimatedCompletionDate = null;
+        await OnInitializedAsync();
+        StateHasChanged();
     }
     private async Task UpdateRequestStatus(RequestViewModel request, RequestStatus newStatus)
     {
