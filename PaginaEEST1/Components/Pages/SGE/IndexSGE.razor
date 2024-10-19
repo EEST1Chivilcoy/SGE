@@ -45,7 +45,7 @@
 </div>
 
 @code {
-    private string userName = null!, userEmail = null!, userSurname = null!, userRole = null!;
+    private string? userName, userEmail, userSurname, userRole;
 
     private void NavigateTo(string route)
     {
@@ -57,7 +57,7 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
-        if (user.Identity.IsAuthenticated)
+        if (user != null && user.Identity != null && user.Identity.IsAuthenticated)
         {
             // Usamos los ClaimTypes estándar para mayor claridad y consistencia
             var personIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
