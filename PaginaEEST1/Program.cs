@@ -42,8 +42,7 @@ namespace PaginaEEST1
                 {
                     OnTokenValidated = async context =>
                     {
-                        var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
-                        if (claimsIdentity != null && claimsIdentity.IsAuthenticated)
+                        if (context.Principal != null && context.Principal.Identity is ClaimsIdentity claimsIdentity && claimsIdentity.IsAuthenticated)
                         {
                             // Obtener el servicio de usuario
                             var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
