@@ -9,6 +9,9 @@
 @inject IComputerService ComputerService
 @inject MessageService message
 
+@using PaginaEEST1.Components.Layout.SGE
+@layout SGELayout
+
 @attribute [Authorize(Roles = "EMATP")]
 @*Definimos que esta pagina solo puede ser vista por EMATP*@
 

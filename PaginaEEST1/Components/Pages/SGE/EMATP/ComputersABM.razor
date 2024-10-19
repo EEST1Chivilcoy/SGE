@@ -6,6 +6,9 @@
 @inject IComputerService ComputerService
 @page "/SGE/EMATP/GestionOrdenadores"
 
+@using PaginaEEST1.Components.Layout.SGE
+@layout SGELayout
+
 @attribute [Authorize (Roles = "EMATP")] 
 @*Definimos que esta pagina solo puede ser vista por EMATP*@
 

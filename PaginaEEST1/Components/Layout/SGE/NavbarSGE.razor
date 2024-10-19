@@ -4,7 +4,7 @@
 <header>
     <nav class="navbar">
         <div class="logo">
-            <a href="/">
+            <a href="/SGE/index">
                 <img src="Images/System_Logo.jpg" alt="Logo Sistema" />
             </a>
         </div>
@@ -23,14 +23,11 @@
     </nav>
 </header>
 
-<Drawer @bind-Visible="drawerVisible" Placement="left" Width="300px">
+<Drawer @bind-Visible="drawerVisible" Placement="right" Width="300px">
     <ul>
-        <li><a href="/inscripcion">Inscripción</a></li>
-        <li><a href="/contactos">Contactos</a></li>
-        <li><a href="/noticias">Noticias</a></li>
         <AuthorizeView>
             <Authorized>
-                <li><a href="/SGE/index">Gestión Escolar</a></li>
+                <li><a href="/SGE/index">Inicio</a></li>
             </Authorized>
         </AuthorizeView>
     </ul>
@@ -92,5 +89,6 @@
         .btn-logout:hover {
             background-color: black;
             color: white;
+            border: 2px solid black;
         }
 </style>
