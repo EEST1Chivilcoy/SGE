@@ -1,0 +1,81 @@
+﻿.contribuciones {
+	display: grid;
+	grid-template-columns: auto repeat(52, 16px); /* Espacio para etiquetas de días + 52 semanas */
+	grid-template-rows: auto repeat(7, 16px); /* Espacio para etiquetas de meses + 7 días */
+	grid-gap: 5px;
+	margin-top: 20px;
+	overflow-x: auto; /* Permite desplazamiento horizontal si es necesario */
+}
+
+.meses {
+	display: contents; /* Permite que los elementos hijos se comporten como si fueran hijos directos del grid */
+}
+
+.mes-label {
+	grid-column: 1 / 2; /* Espacio para las etiquetas de los días de la semana */
+	grid-row: 1 / 2; /* Espacio para las etiquetas de los días de la semana */
+}
+
+.mes {
+	text-align: center;
+	font-size: 10px;
+	width: 100%;
+	grid-column: span 4; /* Ajuste para que cada mes ocupe 4 columnas */
+	grid-row: 1 / 2; /* Coloca los meses en la primera fila */
+}
+
+.semanas {
+	display: contents; /* Permite que los elementos hijos se comporten como si fueran hijos directos del grid */
+}
+
+.semana {
+	display: contents; /* Permite que los elementos hijos se comporten como si fueran hijos directos del grid */
+}
+
+.semana-label {
+	text-align: center;
+	font-size: 10px;
+	margin-bottom: 5px;
+	grid-column: 1 / 2; /* Coloca las etiquetas de los días en la primera columna */
+}
+
+.contribucion {
+	width: 16px;
+	height: 16px;
+	border: 1px solid #dcdcdc;
+	position: relative;
+	cursor: pointer;
+}
+
+	.contribucion:hover .tooltip {
+		visibility: visible;
+		opacity: 1;
+	}
+
+.tooltip {
+	visibility: hidden;
+	width: 120px;
+	background-color: black;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px;
+	position: absolute;
+	z-index: 1;
+	bottom: 125%; /* Posición de la tooltip */
+	left: 50%;
+	margin-left: -60px;
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+
+	.tooltip::after {
+		content: "";
+		position: absolute;
+		top: 100%; /* En la parte inferior de la tooltip */
+		left: 50%;
+		margin-left: -5px;
+		border-width: 5px;
+		border-style: solid;
+		border-color: black transparent transparent transparent;
+	}

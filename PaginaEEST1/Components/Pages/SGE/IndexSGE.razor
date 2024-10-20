@@ -4,6 +4,8 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
+@using PaginaEEST1.Components.Pages.Modals
+
 @using PaginaEEST1.Components.Layout.SGE
 @layout SGELayout
 
@@ -39,6 +41,9 @@
                 </Button>
                 </Col>
             </Row>
+        </Card>
+        <Card Title="Asistencias" Style="margin: 16px; padding: 24px;">
+            <Attendance></Attendance>
         </Card>
         </Col>
     </Row>
