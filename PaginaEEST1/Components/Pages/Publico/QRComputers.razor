@@ -52,7 +52,18 @@
                                 <div class="request-title">
                                     <h3>Reportar una solicitud</h3>
                                     <FormItem Label="Tipo" Class="bold-label">
-                                        <EnumSelect TEnum="TypeRequest" @bind-Value="@RequestVM.Type" DefaultValue="@TypeRequest.Instalacion" />
+                                        <Select
+                                        TItemValue="@TypeRequest"
+                                        TItem="@TypeRequest"
+                                        DefaultValue="@TypeRequest.Instalacion"
+                                        Value = "@RequestVM.Type"
+                                        ValueChanged = "@(value => RequestVM.Type = value)"
+                                        >
+                                            <SelectOptions>
+                                                <SelectOption Value="@TypeRequest.Instalacion" Label="Instalación de un programa" />
+                                                <SelectOption Value="@TypeRequest.ReporteFallo" Label="Reporte de fallos" />
+                                            </SelectOptions>
+                                        </Select>
                                     </FormItem>
                                     <span><b>Fecha:</b> @DateTime.Now.ToString("dd/MM/yyyy")</span>
                                 </div>
@@ -125,7 +136,7 @@
                         ShortDescription = RequestVM.ShortDescription,
                         ComputerId = ID_Computadora,
                         RequestDate = DateTime.Now,
-                        FailureDescription = RequestVM.FailureDescription,
+                        FailureDescription = RequestVM.FailureDescription ?? "No se específico la falla",
                         Preority = RequestVM.Preority
                     };
                 saved = await RequestService.SaveRequest(save);
@@ -138,7 +149,7 @@
                         ShortDescription = RequestVM.ShortDescription,
                         ComputerId = ID_Computadora,
                         RequestDate = DateTime.Now,
-                        NameProgram = RequestVM.NameProgram,
+                        NameProgram = RequestVM.NameProgram ?? "No se específico el nombre del programa.",
                         VersionProgram = RequestVM.VersionProgram
                     };
                 saved = await RequestService.SaveRequest(save);

@@ -3,6 +3,7 @@
 @using PaginaEEST1.Components.Pages.Modals
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Shared
 @inject IComputerService ComputerService
 @page "/SGE/EMATP/GestionOrdenadores"
 
@@ -37,13 +38,13 @@
                                 Property="@(v => v.DeviceName)"
                                 Sortable />
                 <PropertyColumn Title="Tipo"
-                                Property="@(v => v.Type)"
+                                Property="@(v => v.Type.GetDisplayName())"
                                 Sortable />
                 <PropertyColumn Title="Sistema Operativo"
                                 Property="@(v => v.OperatingSystem)"
                                 Sortable />
                 <PropertyColumn Title="Estado"
-                                Property="@(v => v.Status)"
+                                Property="@(v => v.Status.GetDisplayName())"
                                 Sortable />
                 @* Acciones *@
                 <ActionColumn Title="Acciones" Align="ColumnAlign.Center">

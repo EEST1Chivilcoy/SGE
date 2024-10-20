@@ -53,46 +53,39 @@ else if (RequestSelect is StudentAccountRequest account)
     <EnumSelect TEnum="RequestStatus" @bind-Value="@ManualStatus" @DefaultValue="@RequestStatus.Pendiente" />
     @if (ManualStatus == RequestStatus.EnProceso)
     {
-        <br>
-
-        <br>
+        <br><br>
         <p>Fecha estimada de terminación: </p> <DatePicker @bind-Value="@_estimatedCompletionDate" />
     }
     <br><br>
-    <Button Type="primary" OnClick="HandleClose">Actualizar</Button>
+    <Button Type="primary" OnClick="() => UpdateRequestStatus(RequestSelect, ManualStatus)">Actualizar</Button>
 </div>
 
 @code {
     // Parametros
     [Parameter] public int ID { get; set; }
-    [Parameter] public EventCallback CloseModal { get; set; }
-    public EventCallback<bool> OnClose { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
 
     // Variables
     private DateTime? _estimatedCompletionDate;
     private RequestStatus ManualStatus { get; set; }
     private string? ComputerName { get; set; }
-    private RequestEMATP RequestSelect { get; set; }
+    private RequestEMATP RequestSelect { get; set; } = null!;
 
     // Funciones
-    private async Task UpdateRequestStatus(RequestViewModel request, RequestStatus newStatus)
+    private async Task UpdateRequestStatus(RequestEMATP request, RequestStatus newStatus)
     {
-        bool success = await RequestService.UpdateStatus(request.ID, newStatus);
+        bool success = await RequestService.UpdateStatus(request.Id, newStatus);
         if (success)
         {
             request.Status = newStatus;
-            await OnInitializedAsync();
             await message.Success("Estado actualizado correctamente");
         }
         else
         {
             await message.Error("Error inesperado al actualizar el estado");
         }
+        await OnClose.InvokeAsync();
         StateHasChanged();
-    }
-    private async Task HandleClose()
-    {
-        await CloseModal.InvokeAsync((RequestSelect, ManualStatus));
     }
     private async Task GetComputer(RequestComputer request)
     {

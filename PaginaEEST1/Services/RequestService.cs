@@ -38,7 +38,11 @@ namespace PaginaEEST1.Services
                 {
                     if (request is FailureRequest failure)
                     {
-                        failure.Computer = await _context.Computers.FindAsync(failure.ComputerId);
+                        Computer? computer = await _context.Computers.FindAsync(failure.ComputerId);
+                        if (computer != null){
+                            failure.Computer = computer;
+                            computer.Status = ComputerStatus.Fallas;
+                        }
                         _context.ComputerRequests.Add(failure);
                     }
                     if (request is InstallationRequest installation)
@@ -117,7 +121,8 @@ namespace PaginaEEST1.Services
                     ID = i.Id,
                     ShortDescription = i.ShortDescription,
                     RequestDate = i.RequestDate,
-                    Type = i.Type
+                    Type = i.Type,
+                    Status = i.Status
                 };
                 requests.Add(add);
             }

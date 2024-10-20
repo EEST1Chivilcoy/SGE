@@ -1,12 +1,14 @@
+@page "/SGE/EMATP/GestionSolicitudes"
+@using PaginaEEST1.Components.Pages.Modals
+@using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
 @using PaginaEEST1.Services
 @using PaginaEEST1.Shared
+@using PaginaEEST1.Components.Layout.SGE
 @inject IRequestService RequestService
 @inject IComputerService ComputerService
 @inject MessageService message
-
-@using PaginaEEST1.Components.Layout.SGE
 @layout SGELayout
 
 @attribute [Authorize(Roles = "EMATP")]
@@ -19,7 +21,7 @@
         <AntDesign.Col Style="width: 33%; height: 100%;">
             <Card Title="@GetStatusTitle((RequestStatus)status)">
                 <div @ondrop="@((e) => OnDrop(e, (RequestStatus)status))"
-                     @ondragover:preventDefault
+                @ondragover:preventDefault
                      @ondragover="@((e) => {})"
                      class="drop-zone">
                     @foreach (var request in GetRequestsByStatus((RequestStatus)status))
@@ -27,7 +29,8 @@
                         <div @ondragstart="@((e) => OnDragStart(e, request))"
                              @ondragend="@(() => RequestDrag = null)"
                              draggable="true"
-                             class="draggable-card"><Card Hoverable Style="font-size: 14px; position: relative;">
+                             class="draggable-card">
+                            <Card Hoverable Style="font-size: 14px; position: relative;">
                                 <div @onclick="@(() => ShowDetails(request))">
                                     <Flex>
                                         <p>@request.Type.GetDisplayName()</p>
@@ -40,10 +43,9 @@
                                     <Overlay>
                                         <Menu>
                                             <Popconfirm Title="¿Eliminar esta Solicitud?"
-                                                    OnConfirm="() => DelRequest(request.ID)"
-                                                    OkText="Si"
-                                                    CancelText="No"
-                                                >
+                                                        OnConfirm="() => DelRequest(request.ID)"
+                                                        OkText="Si"
+                                                        CancelText="No">
                                                 <MenuItem>
                                                     <Icon Type="delete" Theme="outline" />
                                                     Eliminar
@@ -68,8 +70,11 @@
 
 @* Modals *@
 <Modal Title="@(RequestSelect?.ShortDescription)" Visible="@_DetailVisible"
-       OnCancel="@(() => _DetailVisible = false)" Footer="null">
-    <DetailsRequest ID="RequestSelect.ID" CloseModal="(async => HandleCloseDetail())" />
+       OnCancel="HandleCloseDetails" Footer="null">
+    @if (RequestSelect != null)
+    {
+        <DetailsRequest ID="RequestSelect.ID" OnClose="HandleCloseDetails" />
+    }
 </Modal>
 
 <Modal Title="Establezca una fecha estimada de terminación." Visible="@_DateVisible"
@@ -93,13 +98,22 @@
     private bool _DateVisible = false;
 
     // Funciones de visibilidad de Modals
-    private async Task ShowDetails(RequestViewModel request)
+    private Task ShowDetails(RequestViewModel request)
     {
         RequestSelect = request;
         _DetailVisible = true;
+        return Task.CompletedTask;
     }
-    private string GetStatusTitle(RequestStatus status){
-        switch(status){
+
+    private async Task HandleCloseDetails(){
+        _DetailVisible = false;
+        await OnInitializedAsync();
+    }
+
+    private string GetStatusTitle(RequestStatus status)
+    {
+        switch (status)
+        {
             case RequestStatus.Pendiente:
                 return ("⏳ Pendientes");
             case RequestStatus.EnProceso:
@@ -110,10 +124,14 @@
                 return ("Sin categoria");
         }
     }
+
     private IEnumerable<RequestViewModel> GetRequestsByStatus(RequestStatus status)
     {
-        return _requests.Where(r => r.Status == status);
+        return _requests
+            .Where(r => r != null && r.Status == status)
+            .Cast<RequestViewModel>();
     }
+
     // Funciones relacionadas a la funcionalidad de arrastre
     private void OnDragStart(DragEventArgs e, RequestViewModel request)
     {
@@ -155,12 +173,6 @@
             _estimatedCompletionDate = null;
         }
     }
-    private async Task HandleCloseDetail()
-    {
-        _DetailVisible = false;
-        await OnInitializedAsync();
-        StateHasChanged();
-    }
     private async Task UpdateRequestStatus(RequestViewModel request, RequestStatus newStatus)
     {
         bool success = await RequestService.UpdateStatus(request.ID, newStatus);
@@ -169,13 +181,12 @@
             request.Status = newStatus;
             _requests = new();
             await OnInitializedAsync();
-            await message.Success("Estado actualizado correctamente");
+            StateHasChanged();
         }
         else
         {
             await message.Error("Error inesperado al actualizar el estado");
         }
-        StateHasChanged();
     }
     // Init
     protected override async Task OnInitializedAsync()
