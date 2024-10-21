@@ -1,0 +1,60 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+nav {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #A2C1DD;
+    padding: 10px 20px;
+}
+.btn-drawer{
+    font-size: 25px;
+}
+.logo img {
+    width: 8vw;
+    height: auto;
+}
+.d-logo {
+    max-width: 150px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-evenly;
+}
+
+    .d-logo img {
+        width: 11vw;
+        height: auto;
+    }
+
+    .d-logo h1 {
+        font-family: 'Poppins', sans-serif;
+        color: #eff8ff;
+        -webkit-text-stroke: 1px black;
+    }
+
+.d-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0;
+    margin: 20px 0;
+}
+
+    .d-links li a {
+        font-size: 16px;
+        color: white;
+        text-decoration: none;
+        position: relative;
+    }
+
+.drawer-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex: 1;
+}
