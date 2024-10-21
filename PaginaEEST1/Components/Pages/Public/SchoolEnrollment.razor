@@ -1,4 +1,6 @@
 ﻿@page "/inscripcion"
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Inscripción</PageTitle>
 
@@ -16,7 +18,7 @@
 
 <div class="inscripcion-content">
     <Flex Justify="center" Align="center" Style="height: 100%; width:100%;">
-        <Card Title="Formulario de Inscripción" Style="width: 100%; max-width: 800px; height: auto;">
+        <Card Title="Formulario de Inscripción" Style="width: 100%; max-width: 800px; height: auto; margin-bottom: 10px;">
             <Body>
                 @if (!string.IsNullOrEmpty(googleFormUrl))
                 {
@@ -48,10 +50,29 @@
 
 @code {
     private string? googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSc3Tgu73jsDT3skc6wuSzIMlLdd1xFLp_fOSWtFoHh6Yt5Ilw/viewform";
+    private int windowWidth;
+    private bool isRendered;
 
     RenderFragment extra =
     @<div>
         <Button Type="primary">Contactar Soporte</Button>
         <Button>Ver Más Información</Button>
     </div>;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Obtener el ancho de la ventana
+            windowWidth = await JSRuntime.InvokeAsync<int>("getWindowWidth");
+            isRendered = true;
+
+            if (windowWidth < 768 && !string.IsNullOrEmpty(googleFormUrl))
+            {
+                NavigationManager.NavigateTo(googleFormUrl, true);
+            }
+
+            StateHasChanged(); // Forzar una actualización para que el componente se vuelva a renderizar con el valor actualizado
+        }
+    }
 }
