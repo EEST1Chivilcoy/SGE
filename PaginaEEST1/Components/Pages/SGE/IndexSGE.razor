@@ -3,6 +3,7 @@
 @using System.Security.Claims
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime JSRuntime
 
 @using PaginaEEST1.Components.Pages.Modals
 
@@ -42,9 +43,12 @@
                 </Col>
             </Row>
         </Card>
-        <Card Title="Asistencias" Style="margin: 16px; padding: 24px;" Class="hide-on-mobile">
-            <Attendance></Attendance>
-        </Card>
+        @if (isRendered && ShouldShowAttendanceCard())
+        {
+            <Card Title="Asistencias" Style="margin: 16px; padding: 24px;">
+                <Attendance></Attendance>
+            </Card>
+        }
         </Col>
     </Row>
 </div>
@@ -72,4 +76,20 @@
             userRole = user.FindFirst(ClaimTypes.Role)?.Value;
         }
     }
+
+    private int windowWidth;
+    private bool isRendered;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Llamada a JS después de que el componente haya sido renderizado
+            windowWidth = await JSRuntime.InvokeAsync<int>("getWindowWidth");
+            isRendered = true;
+            StateHasChanged(); // Forzar una actualización para que el componente se vuelva a renderizar con el valor actualizado
+        }
+    }
+
+    private bool ShouldShowAttendanceCard() => windowWidth >= 768;
 }
