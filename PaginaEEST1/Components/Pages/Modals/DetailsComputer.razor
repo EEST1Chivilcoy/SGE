@@ -49,7 +49,8 @@
             <div class="_QRCode">
                 <Image Src="@QRCode" alt="QR" Style="width: 100px; height: 100px;" />
                 <Button OnClick="PrintQRCode">Imprimir</Button>
-                <Button OnClick="DownloadQRCode" >Descargar</Button>
+                <Button OnClick="DownloadQRCode">Descargar</Button>
+                <a href="@QRLink">Visitar página</a>
             </div>
         }
     </div>
@@ -60,6 +61,7 @@
     public int ID { get; set; }
     private ComputerViewModel? computer { get; set; }
     private string? QRCode { get; set; }
+    private string? QRLink { get; set; }
 
     // Funciones
 
@@ -80,6 +82,7 @@
     protected override async Task OnInitializedAsync()
     {
         computer = await ComputerService.GetComputer(ID);
-        QRCode = await QRService.LoadQR($"https://paginaeest1.azurewebsites.net/Computadora_VistaQR_{ID}");
+        QRLink = $"https://paginaeest1.azurewebsites.net/Computadora_VistaQR_{ID}";
+        QRCode = await QRService.LoadQR(QRLink);
     }
 }
