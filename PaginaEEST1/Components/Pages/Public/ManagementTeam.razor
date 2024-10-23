@@ -1,0 +1,137 @@
+﻿@page "/equipo-de-gestion"
+
+<style>
+    .card-title {
+        font-size: 18px;
+        color: #1d3b6c;
+        text-align: center;
+    }
+
+    .card img {
+        border-radius: 50%;
+        margin-bottom: 15px;
+    }
+
+    .section-title {
+        font-size: 24px;
+        color: #1d3b6c;
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    @@media (max-width: 768px) {
+        .card img {
+            width: 70%;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 20px;
+        }
+
+        .card-title {
+            font-size: 16px;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .card img {
+            width: 60%;
+        }
+
+        .section-title {
+            font-size: 18px;
+        }
+
+        .card-title {
+            font-size: 14px;
+        }
+    }
+</style>
+
+<h2 class="section-title">Directivos</h2>
+
+<Row Gutter="16">
+    <Col Xs="24" Sm="12" Md="8">
+        <Card Title="Dr. Juan Pérez - Director">
+            <Template>
+                <img src="ruta_a_imagen_director.jpg" alt="Foto Director" style="width:100%;" />
+                <p>Escuela Técnica N°1</p>
+                <p>
+                    <a href="mailto:director@escuela.edu">director@escuela.edu</a><br />
+                    Tel: (1234) 567 890
+                </p>
+            </Template>
+        </Card>
+    </Col>
+    <Col Xs="24" Sm="12" Md="8">
+        <Card Title="Sra. Ana Rodríguez - Vice Director">
+            <Template>
+                <img src="ruta_a_imagen_vicedirector1.jpg" alt="Foto Vicedirector" style="width:100%;" />
+                <p>Escuela Técnica N°1</p>
+                <p>
+                    <a href="mailto:vicedirector1@escuela.edu">vicedirector1@escuela.edu</a><br />
+                    Tel: (1234) 567 890
+                </p>
+            </Template>
+        </Card>
+    </Col>
+    <Col Xs="24" Sm="12" Md="8">
+        <Card Title="Sra. Marta López - Vice Director">
+            <Template>
+                <img src="ruta_a_imagen_vicedirector2.jpg" alt="Foto Vicedirector" style="width:100%;" />
+                <p>Escuela Técnica N°1</p>
+                <p>
+                    <a href="mailto:vicedirector2@escuela.edu">vicedirector2@escuela.edu</a><br />
+                    Tel: (1234) 567 890
+                </p>
+            </Template>
+        </Card>
+    </Col>
+</Row>
+
+<h2 class="section-title">Secretarías</h2>
+
+<Row Gutter="16">
+    <Col Xs="24" Sm="12" Md="8">
+        <Card Title="Sra. Clara Martínez - Secretaria Administrativa">
+            <Template>
+                <img src="ruta_a_imagen_secretaria.jpg" alt="Foto Secretaria" style="width:100%;" />
+                <p>Escuela Técnica N°1</p>
+                <p>
+                    <a href="mailto:secretaria@escuela.edu">secretaria@escuela.edu</a><br />
+                    Tel: (1234) 567 890
+                </p>
+            </Template>
+        </Card>
+    </Col>
+</Row>
+
+<h2 class="section-title">Jefes de Área</h2>
+
+<Row Gutter="16">
+    <Col Xs="24" Sm="12" Md="12">
+        <Card Title="Ing. Luis González - Jefe de Área (Electrónica)">
+            <Template>
+                <img src="ruta_a_imagen_jefe1.jpg" alt="Foto Jefe" style="width:100%;" />
+                <p>Electrónica</p>
+                <p>
+                    <a href="mailto:jefe1@escuela.edu">jefe1@escuela.edu</a><br />
+                    Tel: (1234) 567 890
+                </p>
+            </Template>
+        </Card>
+    </Col>
+    <Col Xs="24" Sm="12" Md="12">
+        <Card Title="Ing. Paula Fernández - Jefe de Área (Mecánica)">
+            <Template>
+                <img src="ruta_a_imagen_jefe2.jpg" alt="Foto Jefe" style="width:100%;" />
+                <p>Mecánica</p>
+                <p>
+                    <a href="mailto:jefe2@escuela.edu">jefe2@escuela.edu</a><br />
+                    Tel: (1234) 567 890
+                </p>
+            </Template>
+        </Card>
+    </Col>
+</Row>
