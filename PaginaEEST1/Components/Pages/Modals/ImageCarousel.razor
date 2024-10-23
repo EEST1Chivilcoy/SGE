@@ -1,0 +1,122 @@
+@using System.Timers
+
+<div class="carousel">
+    <div class="carousel-content" style="width:@(ImageSrc.Count * 100)%; transform: translateX(-@((currentIndex * 100) / ImageSrc.Count)%);">
+        @foreach (string image in ImageSrc)
+        {
+            <div class="carousel-item">
+                <img src="@image" />
+            </div>
+        }
+    </div>
+    <div class="carousel-nav">
+        @for (int i = 0; i < ImageSrc.Count; i++)
+        {
+            int index = i;
+            <button class="carousel-dot @(currentIndex == index ? "active" : "")"
+                    @onclick="() => SetActiveSlide(index)">
+            </button>
+        }
+    </div>
+</div>
+
+<style>
+.carousel {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.carousel-content {
+    display: flex;
+    height: 100%;
+    transition: transform 0.5s ease-in-out;
+    overflow: hidden;
+    align-items: center;
+}
+
+.carousel-item {
+    flex: 0 0 @(100.0 / ImageSrc.Count)%;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    align-items: center;
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    left: 0;
+    object-fit: cover;
+    display: block;
+}
+
+.carousel-nav {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 1;
+}
+
+.carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.3s;
+}
+
+.carousel-dot:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.carousel-dot.active {
+    background-color: white;
+}
+</style>
+
+@code {
+    [Parameter] public List<string> ImageSrc { get; set; } = new();
+    private int currentIndex = 0;
+    private Timer? autoSlideTimer;
+
+    protected override void OnInitialized()
+    {
+        autoSlideTimer = new Timer(5000); // 5 segundos
+        autoSlideTimer.Elapsed += AutoSlideTimerElapsed;
+        autoSlideTimer.AutoReset = true;
+        autoSlideTimer.Start();
+    }
+
+    private async void AutoSlideTimerElapsed(object? sender, ElapsedEventArgs e)
+    {
+        await InvokeAsync(() =>
+        {
+            currentIndex = (currentIndex + 1) % ImageSrc.Count;
+            StateHasChanged();
+        });
+    }
+
+    private void SetActiveSlide(int index)
+    {
+        currentIndex = index;
+        autoSlideTimer?.Stop();
+        autoSlideTimer?.Start();
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        autoSlideTimer?.Dispose();
+    }
+}

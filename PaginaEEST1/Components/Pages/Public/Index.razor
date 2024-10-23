@@ -1,5 +1,7 @@
 ﻿@page "/"
 @using AntDesign
+@using System.Timers
+@using PaginaEEST1.Components.Pages.Modals
 
 <PageTitle>Inicio</PageTitle>
 
@@ -19,14 +21,6 @@
         margin-bottom: 2rem;
         background-image: linear-gradient(135deg, #A2C1DD 0%, #096dd9 100%);
         box-shadow: 0 4px 15px rgba(24, 144, 255, 0.2);
-    }
-
-    .school-image {
-        width: 100%;
-        height: 300px;
-        object-fit: cover;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     .info-card {
@@ -99,7 +93,7 @@
                 </Paragraph>
                 </Col>
                 <Col Span="24" Lg="10">
-                <img src="Images/ImagesIndex/1.jpg" alt="Fachada de la Escuela" class="school-image" />
+                    <ImageCarousel ImageSrc="@schoolImages" />
                 </Col>
             </Row>
         </div>
@@ -167,3 +161,20 @@
         </Row>
     </Content>
 </Layout>
+
+@code {
+    private List<string> schoolImages = new()
+    {
+        "Images/ImagesIndex/1.jpg",
+        "Images/ImagesIndex/2.jpg",
+        "Images/ImagesIndex/3.jpg",
+        "Images/ImagesIndex/4.jpg",
+        "Images/ImagesIndex/5.jpg",
+        "Images/ImagesIndex/6.jpg",
+        "Images/ImagesIndex/7.jpg",
+        "Images/ImagesIndex/8.jpg",
+        "Images/ImagesIndex/9.jpg",
+        "Images/ImagesIndex/10.jpg",
+        "Images/ImagesIndex/11.jpg"
+    };
+}
