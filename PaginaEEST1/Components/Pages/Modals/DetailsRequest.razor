@@ -50,7 +50,17 @@ else if (RequestSelect is StudentAccountRequest account)
 </p>
 <div class="status-zone">
     <p><b>Actualizar el estado Manualmente</b></p>
-    <EnumSelect TEnum="RequestStatus" @bind-Value="@ManualStatus" @DefaultValue="@RequestStatus.Pendiente" />
+    <Select TItemValue="@RequestStatus"
+            TItem="@RequestStatus"
+            DefaultValue="@RequestStatus.Pendiente"
+            Value="@ManualStatus"
+            ValueChanged="@(value => ManualStatus = value)">
+        <SelectOptions>
+            <SelectOption Value="@RequestStatus.Pendiente" Label="Pendiente" />
+            <SelectOption Value="@TypeRequest.EnProceso" Label="En Proceso" />
+            <SelectOption Value="@TypeRequest.Completada" Label="Completada" />
+        </SelectOptions>
+    </Select>
     @if (ManualStatus == RequestStatus.EnProceso)
     {
         <br><br>

@@ -6,6 +6,7 @@
 @inject IComputerService ComputerService
 @inject IQRService QRService
 @inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
 
 <style>
     .pc-logo
@@ -82,7 +83,8 @@
     protected override async Task OnInitializedAsync()
     {
         computer = await ComputerService.GetComputer(ID);
-        QRLink = $"https://paginaeest1.azurewebsites.net/Computadora_VistaQR_{ID}";
+        var baseUrl = NavigationManager.BaseUri.TrimEnd('/');
+        QRLink = $"{baseUrl}/Computadora_VistaQR_{ID}";
         QRCode = await QRService.LoadQR(QRLink);
     }
 }
