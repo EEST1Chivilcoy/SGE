@@ -1,6 +1,5 @@
 ﻿@using PaginaEEST1.Services
 @using PaginaEEST1.Data.Models.Objetos_Fisicos
-@using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
 @inject IMessageService message
 @inject IComputerService ComputerService
@@ -35,7 +34,7 @@
                 </Input>
             </FormItem>
             <FormItem Label="Tipo de almacenamiento">
-                <EnumSelect TEnum="TypeStorage" @bind-Value="@computerVM.StorageType" />
+                <EnumSelect TEnum="TypeStorage" @bind-Value="@computerVM.typeStorage" />
             </FormItem>
             @* Selección del tipo del dispositivo: Computadora / Netbook *@
             <FormItem Label="Tipo de Dispositivo">
@@ -89,9 +88,52 @@
     }
     private async Task OnFinish()
     {
-            await ComputerService.SaveComputer(computerVM);
-            computerVM = new();
-            await OnClose.InvokeAsync(true);
-            StateHasChanged();
+        if (computerVM.Type == TypeComputer.Computadora){
+            Desktop desktop = new(){
+                DeviceName = computerVM.DeviceName,
+                Type = computerVM.Type,
+                Status = computerVM.Status,
+                OperatingSystem = computerVM.OperatingSystem,
+                Processor = computerVM.Processor,
+                RAM = computerVM.RAM,
+                Storage = computerVM.Storage,
+                typeStorage = computerVM.typeStorage,
+                Location = computerVM.Location
+            };
+            await ComputerService.SaveComputer(desktop);
+        }
+        else if (computerVM.Type == TypeComputer.Netbook){
+            Netbook netbook = new(){
+                DeviceName = computerVM.DeviceName,
+                Type = computerVM.Type,
+                Status = computerVM.Status,
+                OperatingSystem = computerVM.OperatingSystem,
+                Processor = computerVM.Processor,
+                RAM = computerVM.RAM,
+                Storage = computerVM.Storage,
+                typeStorage = computerVM.typeStorage,
+                Model = computerVM.Model,
+                IsAvailable = computerVM.IsAvailable
+            };
+            await ComputerService.SaveComputer(netbook);
+        }
+        computerVM = new();
+        await OnClose.InvokeAsync(true);
+        StateHasChanged();
+    }
+
+    // View Model
+    private class ComputerViewModel{
+        public string? DeviceName { get; set; }
+        public TypeComputer Type { get; set; }
+        public ComputerStatus Status { get; set; }
+        public string? OperatingSystem { get; set; }
+        public string? Processor { get; set; }
+        public int? RAM { get; set; }
+        public int? Storage { get; set; }
+        public TypeStorage typeStorage { get; set; }
+        public string? Location { get; set; }
+        public string? Model { get; set; }
+        public bool IsAvailable { get; set; }
     }
 }

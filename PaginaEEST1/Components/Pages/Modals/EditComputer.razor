@@ -36,21 +36,21 @@
                 </Input>
             </FormItem>
             <FormItem Label="Tipo de almacenamiento">
-                <EnumSelect TEnum="TypeStorage" @bind-Value="@computerVM.StorageType" />
+                <EnumSelect TEnum="TypeStorage" @bind-Value="@computerVM.typeStorage" />
             </FormItem>
-            @if (computerVM.Type == TypeComputer.Computadora)
+            @if (computerVM is Desktop desktop)
             {
                 <FormItem Label="Ubicación dentro de la Institución">
-                    <Input @bind-Value="@computerVM.Location" />
+                    <Input @bind-Value="@desktop.Location" />
                 </FormItem>
             }
-            @if (computerVM.Type == TypeComputer.Netbook)
+            @if (computerVM is Netbook netbook)
             {
                 <FormItem Label="Modelo de la Netbook">
-                    <Input @bind-Value="@computerVM.Model" />
+                    <Input @bind-Value="@netbook.Model" />
                 </FormItem>
                 <FormItem Label="Disponibilidad de la Netbook">
-                    <Switch @bind-Value="@computerVM.IsAvailable" />
+                    <Switch @bind-Value="@netbook.IsAvailable" />
                 </FormItem>
             }
             <FormItem>
@@ -62,11 +62,9 @@
 </div>
 
 @code {
-    [Parameter]
-    public EventCallback<bool> OnClose { get; set; }
-    [Parameter]
-    public int ID { get; set; }
-    private ComputerViewModel computerVM = new();
+    [Parameter] public EventCallback<bool> OnClose { get; set; }
+    [Parameter] public int ID { get; set; }
+    private Computer computerVM { get; set; }
 
     // Funciones
     private async Task HandleClose()
@@ -78,7 +76,6 @@
         try
         {
             await ComputerService.EditComputer(computerVM);
-            computerVM = new();
             await OnClose.InvokeAsync(true);
             StateHasChanged();
             await message.Success("Ordenador editado con exito");
@@ -91,7 +88,8 @@
     protected override async Task OnInitializedAsync()
     {
         var computer = await ComputerService.GetComputer(ID);
-        computerVM = computer ?? new ComputerViewModel();
+        if (computer != null)
+            computerVM = computer;
         StateHasChanged();
     }
 }

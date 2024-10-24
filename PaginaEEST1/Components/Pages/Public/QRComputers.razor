@@ -1,4 +1,6 @@
 ﻿@using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request
+@using PaginaEEST1.Data.Models.PhysicalObjects
+@using PaginaEEST1.Data.Models.Objetos_Fisicos
 @using PaginaEEST1.Services
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
@@ -12,29 +14,29 @@
 </head>
 
 <Flex Justify="center" Align="center" Style="height: 100%; width:100%;">
-    @if (Computadora != null)
+    @if (QRComputer != null)
     {
         <div class="pc-container">
             <div class="pc-info">
-                <h1>@Computadora.DeviceName</h1>
+                <h1>@QRComputer.DeviceName</h1>
                 <ul>
-                    <li><b>Estado: </b> @Computadora.Status</li>
-                    <li><b>Sistema Operativo: </b> @Computadora.OperatingSystem</li>
-                    <li><b>Procesador: </b> @Computadora.Processor</li>
-                    <li><b>Memoria RAM: </b> @Computadora.RAM</li>
-                    <li><b>Almacenamiento: </b> @Computadora.Storage</li>
-                    <li><b>Tipo de almacenamiento: </b> @Computadora.StorageType</li>
-                    @if (Computadora.Type == TypeComputer.Computadora)
+                    <li><b>Estado: </b> @QRComputer.Status</li>
+                    <li><b>Sistema Operativo: </b> @QRComputer.OperatingSystem</li>
+                    <li><b>Procesador: </b> @QRComputer.Processor</li>
+                    <li><b>Memoria RAM: </b> @QRComputer.RAM</li>
+                    <li><b>Almacenamiento: </b> @QRComputer.Storage</li>
+                    <li><b>Tipo de almacenamiento: </b> @QRComputer.typeStorage</li>
+                    @if (QRComputer is Desktop desktop)
                     {
-                        <li><b>Ubicación: </b> @Computadora.Location</li>
+                        <li><b>Ubicación: </b> @desktop.Location</li>
                     }
-                    @if (Computadora.Type == TypeComputer.Netbook)
+                    @if (QRComputer is Netbook netbook)
                     {
-                        <li><b>Modelo: </b> @Computadora.Model</li>
+                        <li><b>Modelo: </b> @netbook.Model</li>
 
                         <li>
                             <b>Disponibilidad: </b>
-                            @if (Computadora.IsAvailable == true)
+                            @if (netbook.IsAvailable == true)
                             {
                                 <text>Disponible</text>
                             }
@@ -101,7 +103,7 @@
                     </NotAuthorized>
                 </AuthorizeView>
             </div>
-            <img src="@(Computadora?.Type == TypeComputer.Computadora ? "Images/Logo_Desktop.png" : "Images/Logo_Netbook.png")" class="pc-logo" />
+            <img src="@(QRComputer?.Type == TypeComputer.Computadora ? "Images/Logo_Desktop.png" : "Images/Logo_Netbook.png")" class="pc-logo" />
         </div>
     }
 </Flex>
@@ -109,7 +111,7 @@
 @code {
     [Parameter]
     public int ID_Computadora { get; set; }
-    private ComputerViewModel? Computadora { get; set; }
+    private Computer? QRComputer { get; set; }
     private QRViewModel RequestVM = new();
 
     private class QRViewModel
@@ -174,7 +176,7 @@
     // Init
     protected override async Task OnInitializedAsync()
     {
-        Computadora = await ComputerService.GetComputer(ID_Computadora);
+        QRComputer = await ComputerService.GetComputer(ID_Computadora);
         StateHasChanged();
     }
 }

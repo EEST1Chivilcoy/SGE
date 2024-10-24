@@ -70,21 +70,25 @@
 </Row>
 
 @* Modals *@
-<Modal Title="@(RequestSelect?.ShortDescription)" Visible="@_DetailVisible"
-       OnCancel="HandleCloseDetails" Footer="null">
-    @if (RequestSelect != null)
-    {
-        <DetailsRequest ID="RequestSelect.ID" OnClose="HandleCloseDetails" />
-    }
-</Modal>
+@if(_DetailVisible == true){
+    <Modal Title="@(RequestSelect?.ShortDescription)" Visible="@_DetailVisible"
+           OnCancel="HandleCloseDetails" Footer="null">
+        @if (RequestSelect != null)
+        {
+            <DetailsRequest ID="RequestSelect.ID" OnClose="HandleCloseDetails" />
+        }
+    </Modal>
+}
 
-<Modal Title="Establezca una fecha estimada de terminación." Visible="@_DateVisible"
-       OnCancel="@(() => _DateVisible = false)"
-       Footer="null">
-    <DatePicker @bind-Value="@_estimatedCompletionDate" />
-    <br><br>
-    <Button Type="primary" OnClick="@HandleDateModalOk">Guardar</Button>
-</Modal>
+@if(_DateVisible == true){
+    <Modal Title="Establezca una fecha estimada de terminación." Visible="@_DateVisible"
+           OnCancel="@(() => _DateVisible = false)"
+           Footer="null">
+        <DatePicker @bind-Value="@_estimatedCompletionDate" />
+        <br><br>
+        <Button Type="primary" OnClick="@HandleDateModalOk">Guardar</Button>
+    </Modal>
+}
 
 @code {
     // Variables sobre solicitudes

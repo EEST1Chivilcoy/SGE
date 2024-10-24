@@ -30,16 +30,16 @@
             <p><b>Procesador</b>: @computer.Processor</p>
             <p><b>Memoria RAM</b>: @computer.RAM</p>
             <p><b>Almacenamiento</b>: @computer.Storage</p>
-            <p><b>Tipo de Almacenamiento</b>: @computer.StorageType.GetDisplayName()</p>
-            @if (computer.Type == TypeComputer.Computadora)
+            <p><b>Tipo de Almacenamiento</b>: @computer.typeStorage.GetDisplayName()</p>
+            @if (computer is Desktop desktop)
             {
-                <p><b>Ubicación en la Institución</b>: @computer.Location</p>
+                <p><b>Ubicación en la Institución</b>: @desktop.Location</p>
             }
-            else
+            @if(computer is Netbook netbook)
             {
-                <p><b>Modelo de la Netbook</b>: @computer.Model</p>
+                <p><b>Modelo de la Netbook</b>: @netbook.Model</p>
                 <p><b>Disponibilidad</b>:
-                @if(computer.IsAvailable == true){
+                @if(netbook.IsAvailable == true){
                     <text>Disponible</text>
                 }
                 else{
@@ -60,7 +60,7 @@
 @code {
     [Parameter]
     public int ID { get; set; }
-    private ComputerViewModel? computer { get; set; }
+    private Computer? computer { get; set; }
     private string? QRCode { get; set; }
     private string? QRLink { get; set; }
 

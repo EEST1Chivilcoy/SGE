@@ -72,8 +72,10 @@ else if (RequestSelect is StudentAccountRequest account)
 
 @code {
     // Parametros
-    [Parameter] public int ID { get; set; }
-    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter]
+    public int ID { get; set; }
+    [Parameter]
+    public EventCallback OnClose { get; set; }
 
     // Variables
     private DateTime? _estimatedCompletionDate;
@@ -100,7 +102,8 @@ else if (RequestSelect is StudentAccountRequest account)
     private async Task GetComputer(RequestComputer request)
     {
         if (request.ComputerId != 0)
-            ComputerName = ((ComputerViewModel?)(await ComputerService.GetComputer(request.ComputerId))).DeviceName;
+            ComputerName = (await ComputerService.GetComputer(request.ComputerId)).DeviceName;
+        StateHasChanged();
     }
     protected override async Task OnInitializedAsync()
     {
