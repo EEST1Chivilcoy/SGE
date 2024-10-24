@@ -1,135 +1,265 @@
 ﻿@page "/equipo-de-gestion"
+@using AntDesign
 
 <style>
-    .card-title {
-        font-size: 18px;
-        color: #1d3b6c;
-        text-align: center;
+    .page-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
     }
 
-    .card img {
-        border-radius: 50%;
-        margin-bottom: 15px;
+    .section-container {
+        padding: 24px;
+        background: #fff;
+        border-radius: 8px;
+        margin-bottom: 32px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
     .section-title {
-        font-size: 24px;
         color: #1d3b6c;
         text-align: center;
-        margin: 20px 0;
+        margin-bottom: 40px;
+        position: relative;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: #1890ff;
+        }
+
+    .staff-card {
+        height: 100%;
+        transition: all 0.3s;
+        margin-bottom: 16px;
+    }
+
+        .staff-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+    .card-title {
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 4px;
+        color: #262626;
+    }
+
+    .area-specialty {
+        color: #8c8c8c;
+        margin-bottom: 16px;
+        font-size: 14px;
+    }
+
+    .contact-info {
+        margin-top: 16px;
+        text-align: center;
+    }
+
+        .contact-info a {
+            color: #1890ff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+            .contact-info a:hover {
+                color: #40a9ff;
+            }
+
+    .avatar-container {
+        margin-bottom: 16px;
     }
 
     @@media (max-width: 768px) {
-        .card img {
-            width: 70%;
-            margin: 0 auto;
+        .section-container {
+            padding: 16px;
         }
 
-        .section-title {
-            font-size: 20px;
-        }
-
-        .card-title {
-            font-size: 16px;
-        }
-    }
-
-    @@media (max-width: 576px) {
-        .card img {
-            width: 60%;
-        }
-
-        .section-title {
-            font-size: 18px;
-        }
-
-        .card-title {
-            font-size: 14px;
+        .staff-card {
+            margin-bottom: 16px;
         }
     }
 </style>
 
-<h2 class="section-title">Directivos</h2>
-<hr class="section-title"/>
+<div class="page-container">
+    <div class="section-container">
+        <h2 class="section-title">Directivos</h2>
+        <Row Gutter="(24, 24)">
+            <Col Span="8" Xs="24" Sm="12" Md="8">
+                <Card Class="staff-card">
+                    <div style="text-align: center;">
+                        <div class="avatar-container">
+                            <Avatar Size="100" Icon="user" />
+                        </div>
+                        <div class="card-title">Ruben Cruz</div>
+                        <div class="area-specialty">Director</div>
+                        <div class="contact-info">
+                            <Space Direction="DirectionVHType.Vertical">
+                                <SpaceItem>
+                                    <a href="mailto:director@escuela.edu">
+                                        <Icon Type="mail" /> director@escuela.edu
+                                    </a>
+                                </SpaceItem>
+                                <SpaceItem>
+                                    <span style="color: #1890ff;">
+                                        <Icon Type="phone" /> (1234) 567 890
+                                    </span>
+                                </SpaceItem>
+                            </Space>
+                        </div>
+                    </div>
+                </Card>
+            </Col>
 
-<Row Gutter="16">
-    <Col Xs="24" Sm="12" Md="8">
-    <Card Title="Ruben Cruz - Director">
-            <Template>
-                <img src="ruta_a_imagen_director.jpg" alt="Foto Director" style="width:100%;" />
-                <p>
-                    <a href="mailto:director@escuela.edu">director@escuela.edu</a><br />
-                    Tel: (1234) 567 890
-                </p>
-            </Template>
-        </Card>
-    </Col>
-    <Col Xs="24" Sm="12" Md="8">
-        <Card Title="Daniel Bascaran - Vice Director">
-            <Template>
-                <img src="ruta_a_imagen_vicedirector1.jpg" alt="Foto Vicedirector" style="width:100%;" />
-                <p>
-                    <a href="mailto:vicedirector1@escuela.edu">vicedirector1@escuela.edu</a><br />
-                    Tel: (1234) 567 890
-                </p>
-            </Template>
-        </Card>
-    </Col>
-    <Col Xs="24" Sm="12" Md="8">
-    <Card Title="Yesica Cipriano - Vice Director">
-            <Template>
-                <img src="ruta_a_imagen_vicedirector2.jpg" alt="Foto Vicedirector" style="width:100%;" />
-                <p>
-                    <a href="mailto:vicedirector2@escuela.edu">vicedirector2@escuela.edu</a><br />
-                    Tel: (1234) 567 890
-                </p>
-            </Template>
-        </Card>
-    </Col>
-</Row>
+            <Col Span="8" Xs="24" Sm="12" Md="8">
+                <Card Class="staff-card">
+                    <div style="text-align: center;">
+                        <div class="avatar-container">
+                            <Avatar Size="100" Icon="user" />
+                        </div>
+                        <div class="card-title">Daniel Bascaran</div>
+                        <div class="area-specialty">Vice Director</div>
+                        <div class="contact-info">
+                            <Space Direction="DirectionVHType.Vertical">
+                                <SpaceItem>
+                                    <a href="mailto:vicedirector1@escuela.edu">
+                                        <Icon Type="mail" /> vicedirector1@escuela.edu
+                                    </a>
+                                </SpaceItem>
+                                <SpaceItem>
+                                    <span style="color: #1890ff;">
+                                        <Icon Type="phone" /> (1234) 567 890
+                                    </span>
+                                </SpaceItem>
+                            </Space>
+                        </div>
+                    </div>
+                </Card>
+            </Col>
 
-<h2 class="section-title">Secretarías</h2>
+            <Col Span="8" Xs="24" Sm="12" Md="8">
+                <Card Class="staff-card">
+                    <div style="text-align: center;">
+                        <div class="avatar-container">
+                            <Avatar Size="100" Icon="user" />
+                        </div>
+                        <div class="card-title">Yesica Cipriano</div>
+                        <div class="area-specialty">Vice Director</div>
+                        <div class="contact-info">
+                            <Space Direction="DirectionVHType.Vertical">
+                                <SpaceItem>
+                                    <a href="mailto:vicedirector2@escuela.edu">
+                                        <Icon Type="mail" /> vicedirector2@escuela.edu
+                                    </a>
+                                </SpaceItem>
+                                <SpaceItem>
+                                    <span style="color: #1890ff;">
+                                        <Icon Type="phone" /> (1234) 567 890
+                                    </span>
+                                </SpaceItem>
+                            </Space>
+                        </div>
+                    </div>
+                </Card>
+            </Col>
+        </Row>
+    </div>
 
-<Row Gutter="16">
-    <Col Xs="24" Sm="12" Md="8">
-        <Card Title="Sra. Clara Martínez - Secretaria Administrativa">
-            <Template>
-                <img src="ruta_a_imagen_secretaria.jpg" alt="Foto Secretaria" style="width:100%;" />
-                <p>Escuela Técnica N°1</p>
-                <p>
-                    <a href="mailto:secretaria@escuela.edu">secretaria@escuela.edu</a><br />
-                    Tel: (1234) 567 890
-                </p>
-            </Template>
-        </Card>
-    </Col>
-</Row>
+    <div class="section-container">
+        <h2 class="section-title">Secretarías</h2>
+        <Row Gutter="(24, 24)">
+            <Col Span="8" Xs="24" Sm="12" Md="8" Style="margin: 0 auto;">
+                <Card Class="staff-card">
+                    <div style="text-align: center;">
+                        <div class="avatar-container">
+                            <Avatar Size="100" Icon="user" />
+                        </div>
+                        <div class="card-title">Sra. Clara Martínez</div>
+                        <div class="area-specialty">Secretaria Administrativa</div>
+                        <div class="contact-info">
+                            <div style="margin-bottom: 8px;">Escuela Técnica N°1</div>
+                            <Space Direction="DirectionVHType.Vertical">
+                                <SpaceItem>
+                                    <a href="mailto:secretaria@escuela.edu">
+                                        <Icon Type="mail" /> secretaria@escuela.edu
+                                    </a>
+                                </SpaceItem>
+                                <SpaceItem>
+                                    <span style="color: #1890ff;">
+                                        <Icon Type="phone" /> (1234) 567 890
+                                    </span>
+                                </SpaceItem>
+                            </Space>
+                        </div>
+                    </div>
+                </Card>
+            </Col>
+        </Row>
+    </div>
 
-<h2 class="section-title">Jefes de Área</h2>
+    <div class="section-container">
+        <h2 class="section-title">Jefes de Área</h2>
+        <Row Gutter="(24, 24)">
+            <Col Span="12" Xs="24" Sm="12">
+                <Card Class="staff-card">
+                    <div style="text-align: center;">
+                        <div class="avatar-container">
+                            <Avatar Size="100" Icon="user" />
+                        </div>
+                        <div class="card-title">Ing. Luis González</div>
+                        <div class="area-specialty">Jefe de Área - Electrónica</div>
+                        <div class="contact-info">
+                            <Space Direction="DirectionVHType.Vertical">
+                                <SpaceItem>
+                                    <a href="mailto:jefe1@escuela.edu">
+                                        <Icon Type="mail" /> jefe1@escuela.edu
+                                    </a>
+                                </SpaceItem>
+                                <SpaceItem>
+                                    <span style="color: #1890ff;">
+                                        <Icon Type="phone" /> (1234) 567 890
+                                    </span>
+                                </SpaceItem>
+                            </Space>
+                        </div>
+                    </div>
+                </Card>
+            </Col>
 
-<Row Gutter="16">
-    <Col Xs="24" Sm="12" Md="12">
-        <Card Title="Ing. Luis González - Jefe de Área (Electrónica)">
-            <Template>
-                <img src="ruta_a_imagen_jefe1.jpg" alt="Foto Jefe" style="width:100%;" />
-                <p>Electrónica</p>
-                <p>
-                    <a href="mailto:jefe1@escuela.edu">jefe1@escuela.edu</a><br />
-                    Tel: (1234) 567 890
-                </p>
-            </Template>
-        </Card>
-    </Col>
-    <Col Xs="24" Sm="12" Md="12">
-        <Card Title="Ing. Paula Fernández - Jefe de Área (Mecánica)">
-            <Template>
-                <img src="ruta_a_imagen_jefe2.jpg" alt="Foto Jefe" style="width:100%;" />
-                <p>Mecánica</p>
-                <p>
-                    <a href="mailto:jefe2@escuela.edu">jefe2@escuela.edu</a><br />
-                    Tel: (1234) 567 890
-                </p>
-            </Template>
-        </Card>
-    </Col>
-</Row>
+            <Col Span="12" Xs="24" Sm="12">
+                <Card Class="staff-card">
+                    <div style="text-align: center;">
+                        <div class="avatar-container">
+                            <Avatar Size="100" Icon="user" />
+                        </div>
+                        <div class="card-title">Ing. Paula Fernández</div>
+                        <div class="area-specialty">Jefe de Área - Mecánica</div>
+                        <div class="contact-info">
+                            <Space Direction="DirectionVHType.Vertical">
+                                <SpaceItem>
+                                    <a href="mailto:jefe2@escuela.edu">
+                                        <Icon Type="mail" /> jefe2@escuela.edu
+                                    </a>
+                                </SpaceItem>
+                                <SpaceItem>
+                                    <span style="color: #1890ff;">
+                                        <Icon Type="phone" /> (1234) 567 890
+                                    </span>
+                                </SpaceItem>
+                            </Space>
+                        </div>
+                    </div>
+                </Card>
+            </Col>
+        </Row>
+    </div>
+</div>
