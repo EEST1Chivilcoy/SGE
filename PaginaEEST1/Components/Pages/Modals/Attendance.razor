@@ -2,6 +2,7 @@
 @inject IJSRuntime JS
 
 @using PaginaEEST1.Data.Models.People.PeopleAssets
+@using PaginaEEST1.Data.Enums
 
 <div>
     <div class="contribuciones">
@@ -18,12 +19,16 @@
                 <div class="semana-label">@Semanas[i]</div>
                 @for (int j = 0; j < 52; j++)
                 {
-                    var asistencia = Asistencias.FirstOrDefault(a => a.Fecha.DayOfWeek == (DayOfWeek)i && GetWeekOfYear(a.Fecha) == j + 1);
+                    var asistencia = Asistencias.FirstOrDefault(a => a.Date.DayOfWeek == (DayOfWeek)i && GetWeekOfYear(a.Date) == j + 1);
                     if (asistencia != null)
                     {
-                        var intensidad = Math.Min(asistencia.Entradas + asistencia.Salidas, 4);
+                        // Calculamos la intensidad basándonos en el número de entradas y salidas
+                        var entradas = asistencia.Records.Count(r => r.Type == TypeAttendance.Entry);
+                        var salidas = asistencia.Records.Count(r => r.Type == TypeAttendance.Exit);
+                        var intensidad = Math.Min(entradas + salidas, 4);
+
                         <div class="contribucion" style="background-color: @GetColor(intensidad)" @onclick="() => MostrarDetalles(asistencia)">
-                            <span class="tooltip">@asistencia.Fecha.ToString("dd/MM/yyyy")<br />Entradas: @asistencia.Entradas<br />Salidas: @asistencia.Salidas</span>
+                            <span class="tooltip">@asistencia.Date.ToString("dd/MM/yyyy")<br />Entradas: @entradas<br />Salidas: @salidas</span>
                         </div>
                     }
                     else
@@ -40,10 +45,27 @@
     private List<string> Meses = new List<string> { "Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic" };
     private List<string> Semanas = new List<string> { "Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb" };
 
-    private List<Asistencia> Asistencias = new List<Asistencia>
+    private List<Data.Models.People.PeopleAssets.Attendance> Asistencias = new List<Data.Models.People.PeopleAssets.Attendance>
     {
-        new Asistencia { Fecha = DateTime.Now.AddDays(-1), Entradas = 3, Salidas = 2 },
-        new Asistencia { Fecha = DateTime.Now.AddDays(-2), Entradas = 1, Salidas = 1 },
+        new Data.Models.People.PeopleAssets.Attendance
+        {
+            Date = DateTime.Now.AddDays(-1),
+            Records = new List<AttendanceRecord>
+            {
+                new AttendanceRecord { Time = DateTime.Now.AddHours(-1), Type = TypeAttendance.Entry },
+                new AttendanceRecord { Time = DateTime.Now.AddHours(-2), Type = TypeAttendance.Entry },
+                new AttendanceRecord { Time = DateTime.Now.AddHours(-3), Type = TypeAttendance.Exit },
+            }
+        },
+        new Data.Models.People.PeopleAssets.Attendance
+        {
+            Date = DateTime.Now.AddDays(-2),
+            Records = new List<AttendanceRecord>
+            {
+                new AttendanceRecord { Time = DateTime.Now.AddHours(-4), Type = TypeAttendance.Entry },
+                new AttendanceRecord { Time = DateTime.Now.AddHours(-5), Type = TypeAttendance.Exit },
+            }
+        },
         // Agrega más datos aquí
     };
 
@@ -59,9 +81,11 @@
         };
     }
 
-    private async Task MostrarDetalles(Asistencia asistencia)
+    private async Task MostrarDetalles(Data.Models.People.PeopleAssets.Attendance asistencia)
     {
-        await JS.InvokeVoidAsync("alert", $"Fecha: {asistencia.Fecha}\nEntradas: {asistencia.Entradas}\nSalidas: {asistencia.Salidas}");
+        var entradas = asistencia.Records.Count(r => r.Type == TypeAttendance.Entry);
+        var salidas = asistencia.Records.Count(r => r.Type == TypeAttendance.Exit);
+        await JS.InvokeVoidAsync("alert", $"Fecha: {asistencia.Date}\nEntradas: {entradas}\nSalidas: {salidas}");
     }
 
     private int GetWeekOfYear(DateTime date)

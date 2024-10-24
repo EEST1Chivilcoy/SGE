@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PaginaEEST1.Data;
 
@@ -11,9 +12,11 @@ using PaginaEEST1.Data;
 namespace PaginaEEST1.Data.Migrations
 {
     [DbContext(typeof(PaginaDbContext))]
-    partial class PaginaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241024001131_AddAttendanceAndAttendanceRecordModels")]
+    partial class AddAttendanceAndAttendanceRecordModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,33 @@ namespace PaginaEEST1.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+
+            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.NetbookLoan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ProfessorId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("StudentId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfessorId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("NetbookLoans");
+                });
 
             modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Computer", b =>
                 {
@@ -151,37 +181,6 @@ namespace PaginaEEST1.Data.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Loan.Loan", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ProfessorId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("StudentId")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProfessorId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("Loans");
-
-                    b.HasDiscriminator<int>("Type");
-
-                    b.UseTphMappingStrategy();
-                });
-
             modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request.RequestEMATP", b =>
                 {
                     b.Property<int>("Id")
@@ -282,13 +281,6 @@ namespace PaginaEEST1.Data.Migrations
                     b.HasDiscriminator().HasValue(5);
                 });
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.NetbookLoan", b =>
-                {
-                    b.HasBaseType("PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Loan.Loan");
-
-                    b.HasDiscriminator().HasValue(1);
-                });
-
             modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request.FailureRequest", b =>
                 {
                     b.HasBaseType("PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request.RequestEMATP");
@@ -361,21 +353,7 @@ namespace PaginaEEST1.Data.Migrations
                     b.HasDiscriminator().HasValue(2);
                 });
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.People.PeopleAssets.Attendance", b =>
-                {
-                    b.HasOne("PaginaEEST1.Data.Models.Personal.Professor", null)
-                        .WithMany("Attendances")
-                        .HasForeignKey("ProfessorPersonId");
-                });
-
-            modelBuilder.Entity("PaginaEEST1.Data.Models.People.PeopleAssets.AttendanceRecord", b =>
-                {
-                    b.HasOne("PaginaEEST1.Data.Models.People.PeopleAssets.Attendance", null)
-                        .WithMany("Records")
-                        .HasForeignKey("AttendanceId");
-                });
-
-            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Loan.Loan", b =>
+            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.NetbookLoan", b =>
                 {
                     b.HasOne("PaginaEEST1.Data.Models.Personal.Professor", "Professor")
                         .WithMany()
@@ -390,6 +368,20 @@ namespace PaginaEEST1.Data.Migrations
                     b.Navigation("Professor");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("PaginaEEST1.Data.Models.People.PeopleAssets.Attendance", b =>
+                {
+                    b.HasOne("PaginaEEST1.Data.Models.Personal.Professor", null)
+                        .WithMany("Attendances")
+                        .HasForeignKey("ProfessorPersonId");
+                });
+
+            modelBuilder.Entity("PaginaEEST1.Data.Models.People.PeopleAssets.AttendanceRecord", b =>
+                {
+                    b.HasOne("PaginaEEST1.Data.Models.People.PeopleAssets.Attendance", null)
+                        .WithMany("Records")
+                        .HasForeignKey("AttendanceId");
                 });
 
             modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Netbook", b =>
@@ -421,6 +413,11 @@ namespace PaginaEEST1.Data.Migrations
                     b.Navigation("Computer");
                 });
 
+            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.NetbookLoan", b =>
+                {
+                    b.Navigation("Netbooks");
+                });
+
             modelBuilder.Entity("PaginaEEST1.Data.Models.People.PeopleAssets.Attendance", b =>
                 {
                     b.Navigation("Records");
@@ -429,11 +426,6 @@ namespace PaginaEEST1.Data.Migrations
             modelBuilder.Entity("PaginaEEST1.Data.Models.Personal.Professor", b =>
                 {
                     b.Navigation("Attendances");
-                });
-
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.NetbookLoan", b =>
-                {
-                    b.Navigation("Netbooks");
                 });
 #pragma warning restore 612, 618
         }
