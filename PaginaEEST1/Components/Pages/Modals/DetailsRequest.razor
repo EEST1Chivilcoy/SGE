@@ -57,8 +57,8 @@ else if (RequestSelect is StudentAccountRequest account)
             ValueChanged="@(value => ManualStatus = value)">
         <SelectOptions>
             <SelectOption Value="@RequestStatus.Pendiente" Label="Pendiente" />
-            <SelectOption Value="@TypeRequest.EnProceso" Label="En Proceso" />
-            <SelectOption Value="@TypeRequest.Completada" Label="Completada" />
+            <SelectOption Value="@RequestStatus.EnProceso" Label="En Proceso" />
+            <SelectOption Value="@RequestStatus.Completada" Label="Completada" />
         </SelectOptions>
     </Select>
     @if (ManualStatus == RequestStatus.EnProceso)
