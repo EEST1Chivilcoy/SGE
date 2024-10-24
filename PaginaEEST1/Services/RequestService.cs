@@ -72,9 +72,11 @@ namespace PaginaEEST1.Services
         {
             try
             {
-                RequestEMATP request = await _context.ComputerRequests.FindAsync(Id);
-                _context.ComputerRequests.Remove(request);
-                await _context.SaveChangesAsync();
+                RequestEMATP? request = await _context.ComputerRequests.FindAsync(Id);
+                if (request != null) { 
+                    request.Status = RequestStatus.Archivada;
+                    await _context.SaveChangesAsync();
+                }
             }
             catch
             {
@@ -114,7 +116,9 @@ namespace PaginaEEST1.Services
         {
             List<RequestViewModel?> requests = new();
 
-            foreach (RequestEMATP i in await _context.ComputerRequests.ToListAsync())
+            foreach (RequestEMATP i in await _context.ComputerRequests
+                .Where(e => e.Status != RequestStatus.Archivada)
+                .ToListAsync())
             {
                 RequestViewModel add = new()
                 {

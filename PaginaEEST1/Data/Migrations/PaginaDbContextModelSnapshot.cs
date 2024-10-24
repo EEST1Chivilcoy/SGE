@@ -46,7 +46,7 @@ namespace PaginaEEST1.Data.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("NetbookLoans");
+                    b.ToTable("NetbookLoans", (string)null);
                 });
 
             modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Computer", b =>
@@ -88,7 +88,7 @@ namespace PaginaEEST1.Data.Migrations
                     b.HasIndex("DeviceName")
                         .IsUnique();
 
-                    b.ToTable("Computers");
+                    b.ToTable("Computers", (string)null);
 
                     b.HasDiscriminator<int>("Type");
 
@@ -171,7 +171,7 @@ namespace PaginaEEST1.Data.Migrations
 
                     b.HasKey("PersonId");
 
-                    b.ToTable("People");
+                    b.ToTable("People", (string)null);
 
                     b.HasDiscriminator<int>("TypePerson");
 
@@ -206,7 +206,7 @@ namespace PaginaEEST1.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ComputerRequests");
+                    b.ToTable("ComputerRequests", (string)null);
 
                     b.HasDiscriminator<int>("Type");
 

@@ -9,6 +9,8 @@ namespace PaginaEEST1.Data.Enums
         [Display(Name = "En Proceso")]
         EnProceso,  // La solicitud está en proceso de resolución
         [Display(Name = "Completada")]
-        Completada  // La solicitud ha sido completada
+        Completada,  // La solicitud ha sido completada
+        [Display(Name = "Solicitud Archivada")]
+        Archivada  // La solicitud ha sido archivada al plazo de dos semanas
     }
 }

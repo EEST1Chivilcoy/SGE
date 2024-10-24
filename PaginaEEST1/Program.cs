@@ -67,6 +67,9 @@ namespace PaginaEEST1
             builder.Services.AddHostedService<InitData>();
             builder.Services.AddAntDesign();
 
+            // Registrar los Servicios Hospedados personalizados
+            builder.Services.AddHostedService<RequestsHostedService>();
+
             // Registrar los servicios personalizados
             builder.Services.AddScoped<IComputerService, ComputerService>();
             builder.Services.AddScoped<IQRService, QRService>();
