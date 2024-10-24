@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PaginaEEST1.Data.Enums;
-using PaginaEEST1.Data.Models.Objetos_Fisicos;
-using PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes;
+using PaginaEEST1.Data.Models.PhysicalObjects;
+using PaginaEEST1.Data.Models.PhysicalObjects.Componentes;
 using PaginaEEST1.Data.Models.People.PeopleAssets;
 using PaginaEEST1.Data.Models.Personal;
 using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request;

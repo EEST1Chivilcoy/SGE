@@ -25,7 +25,7 @@ namespace PaginaEEST1.Data.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.NetbookLoan", b =>
+            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Componentes.NetbookLoan", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -52,7 +52,7 @@ namespace PaginaEEST1.Data.Migrations
                     b.ToTable("NetbookLoans");
                 });
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.RequestComputer", b =>
+            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Componentes.RequestComputer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -93,7 +93,7 @@ namespace PaginaEEST1.Data.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Computer", b =>
+            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Computer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -182,9 +182,9 @@ namespace PaginaEEST1.Data.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.FailureRequest", b =>
+            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Componentes.FailureRequest", b =>
                 {
-                    b.HasBaseType("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.RequestComputer");
+                    b.HasBaseType("PaginaEEST1.Data.Models.PhysicalObjects.Componentes.RequestComputer");
 
                     b.Property<string>("FailureDescription")
                         .IsRequired()
@@ -196,9 +196,9 @@ namespace PaginaEEST1.Data.Migrations
                     b.HasDiscriminator().HasValue(2);
                 });
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.InstallationRequest", b =>
+            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Componentes.InstallationRequest", b =>
                 {
-                    b.HasBaseType("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.RequestComputer");
+                    b.HasBaseType("PaginaEEST1.Data.Models.PhysicalObjects.Componentes.RequestComputer");
 
                     b.Property<string>("NameProgram")
                         .IsRequired()
@@ -210,9 +210,9 @@ namespace PaginaEEST1.Data.Migrations
                     b.HasDiscriminator().HasValue(1);
                 });
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Desktop", b =>
+            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Desktop", b =>
                 {
-                    b.HasBaseType("PaginaEEST1.Data.Models.Objetos_Fisicos.Computer");
+                    b.HasBaseType("PaginaEEST1.Data.Models.PhysicalObjects.Computer");
 
                     b.Property<string>("Location")
                         .HasColumnType("longtext");
@@ -220,9 +220,9 @@ namespace PaginaEEST1.Data.Migrations
                     b.HasDiscriminator().HasValue(1);
                 });
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Netbook", b =>
+            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Netbook", b =>
                 {
-                    b.HasBaseType("PaginaEEST1.Data.Models.Objetos_Fisicos.Computer");
+                    b.HasBaseType("PaginaEEST1.Data.Models.PhysicalObjects.Computer");
 
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("tinyint(1)");
@@ -283,7 +283,7 @@ namespace PaginaEEST1.Data.Migrations
                     b.HasDiscriminator().HasValue(5);
                 });
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.NetbookLoan", b =>
+            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Componentes.NetbookLoan", b =>
                 {
                     b.HasOne("PaginaEEST1.Data.Models.Personal.Professor", "Professor")
                         .WithMany()
@@ -300,9 +300,9 @@ namespace PaginaEEST1.Data.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.RequestComputer", b =>
+            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Componentes.RequestComputer", b =>
                 {
-                    b.HasOne("PaginaEEST1.Data.Models.Objetos_Fisicos.Computer", "Computer")
+                    b.HasOne("PaginaEEST1.Data.Models.PhysicalObjects.Computer", "Computer")
                         .WithMany("Requests")
                         .HasForeignKey("ComputerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -311,19 +311,19 @@ namespace PaginaEEST1.Data.Migrations
                     b.Navigation("Computer");
                 });
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Netbook", b =>
+            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Netbook", b =>
                 {
-                    b.HasOne("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.NetbookLoan", null)
+                    b.HasOne("PaginaEEST1.Data.Models.PhysicalObjects.Componentes.NetbookLoan", null)
                         .WithMany("Netbooks")
                         .HasForeignKey("NetbookLoanId");
                 });
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.NetbookLoan", b =>
+            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Componentes.NetbookLoan", b =>
                 {
                     b.Navigation("Netbooks");
                 });
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Computer", b =>
+            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Computer", b =>
                 {
                     b.Navigation("Requests");
                 });

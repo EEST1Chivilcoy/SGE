@@ -1,7 +1,7 @@
 ﻿using PaginaEEST1.Data.Models.Personal;
 using System.ComponentModel.DataAnnotations.Schema;
 using PaginaEEST1.Data.Enums;
-using PaginaEEST1.Data.Models.Objetos_Fisicos;
+using PaginaEEST1.Data.Models.PhysicalObjects;
 
 namespace PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request
 {

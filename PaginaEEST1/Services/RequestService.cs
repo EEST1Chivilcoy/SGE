@@ -1,4 +1,4 @@
-﻿using PaginaEEST1.Data.Models.Objetos_Fisicos;
+﻿using PaginaEEST1.Data.Models.PhysicalObjects;
 using PaginaEEST1.Data;
 using Microsoft.EntityFrameworkCore;
 using PaginaEEST1.Data.ViewModels;

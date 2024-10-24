@@ -3,7 +3,7 @@ using PaginaEEST1.Data.Models.Personal;
 
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PaginaEEST1.Data.Models.Objetos_Fisicos
+namespace PaginaEEST1.Data.Models.PhysicalObjects
 {
     public class Netbook : Computer
     {

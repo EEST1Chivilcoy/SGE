@@ -1,4 +1,4 @@
-﻿using PaginaEEST1.Data.Models.Objetos_Fisicos;
+﻿using PaginaEEST1.Data.Models.PhysicalObjects;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request

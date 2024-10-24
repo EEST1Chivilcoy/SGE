@@ -1,6 +1,7 @@
 ﻿@using PaginaEEST1.Services
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Data.Models.PhysicalObjects
 @inject IMessageService message
 @inject IComputerService ComputerService
 @inject IMessageService message
@@ -63,7 +64,7 @@
 @code {
     [Parameter] public EventCallback<bool> OnClose { get; set; }
     [Parameter] public int ID { get; set; }
-    private Computer computerVM { get; set; }
+    private Computer? computerVM { get; set; }
 
     // Funciones
     private async Task HandleClose()

@@ -22,7 +22,90 @@ namespace PaginaEEST1.Data.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Computer", b =>
+            modelBuilder.Entity("PaginaEEST1.Data.Models.People.PeopleAssets.Attendance", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ProfessorPersonId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfessorPersonId");
+
+                    b.ToTable("Attendances", (string)null);
+                });
+
+            modelBuilder.Entity("PaginaEEST1.Data.Models.People.PeopleAssets.AttendanceRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AttendanceId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttendanceId");
+
+                    b.ToTable("AttendanceRecords", (string)null);
+                });
+
+            modelBuilder.Entity("PaginaEEST1.Data.Models.Personal.Person", b =>
+                {
+                    b.Property<string>("PersonId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int>("TypePerson")
+                        .HasColumnType("int");
+
+                    b.HasKey("PersonId");
+
+                    b.ToTable("People", (string)null);
+
+                    b.HasDiscriminator<int>("TypePerson");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Computer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -61,92 +144,9 @@ namespace PaginaEEST1.Data.Migrations
                     b.HasIndex("DeviceName")
                         .IsUnique();
 
-                    b.ToTable("Computers");
+                    b.ToTable("Computers", (string)null);
 
                     b.HasDiscriminator<int>("Type");
-
-                    b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("PaginaEEST1.Data.Models.People.PeopleAssets.Attendance", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ProfessorPersonId")
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProfessorPersonId");
-
-                    b.ToTable("Attendances");
-                });
-
-            modelBuilder.Entity("PaginaEEST1.Data.Models.People.PeopleAssets.AttendanceRecord", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AttendanceId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AttendanceId");
-
-                    b.ToTable("AttendanceRecords");
-                });
-
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Personal.Person", b =>
-                {
-                    b.Property<string>("PersonId")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<int>("TypePerson")
-                        .HasColumnType("int");
-
-                    b.HasKey("PersonId");
-
-                    b.ToTable("People");
-
-                    b.HasDiscriminator<int>("TypePerson");
 
                     b.UseTphMappingStrategy();
                 });
@@ -175,7 +175,7 @@ namespace PaginaEEST1.Data.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Loans");
+                    b.ToTable("Loans", (string)null);
 
                     b.HasDiscriminator<int>("Type");
 
@@ -210,39 +210,11 @@ namespace PaginaEEST1.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ComputerRequests");
+                    b.ToTable("ComputerRequests", (string)null);
 
                     b.HasDiscriminator<int>("Type");
 
                     b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Desktop", b =>
-                {
-                    b.HasBaseType("PaginaEEST1.Data.Models.Objetos_Fisicos.Computer");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("longtext");
-
-                    b.HasDiscriminator().HasValue(1);
-                });
-
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Netbook", b =>
-                {
-                    b.HasBaseType("PaginaEEST1.Data.Models.Objetos_Fisicos.Computer");
-
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Model")
-                        .HasColumnType("longtext");
-
-                    b.Property<int?>("NetbookLoanId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("NetbookLoanId");
-
-                    b.HasDiscriminator().HasValue(2);
                 });
 
             modelBuilder.Entity("PaginaEEST1.Data.Models.Personal.Professor", b =>
@@ -282,7 +254,35 @@ namespace PaginaEEST1.Data.Migrations
                     b.HasDiscriminator().HasValue(5);
                 });
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.NetbookLoan", b =>
+            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Desktop", b =>
+                {
+                    b.HasBaseType("PaginaEEST1.Data.Models.PhysicalObjects.Computer");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("longtext");
+
+                    b.HasDiscriminator().HasValue(1);
+                });
+
+            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Netbook", b =>
+                {
+                    b.HasBaseType("PaginaEEST1.Data.Models.PhysicalObjects.Computer");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Model")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("NetbookLoanId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("NetbookLoanId");
+
+                    b.HasDiscriminator().HasValue(2);
+                });
+
+            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Componentes.NetbookLoan", b =>
                 {
                     b.HasBaseType("PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Loan.Loan");
 
@@ -392,16 +392,16 @@ namespace PaginaEEST1.Data.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Netbook", b =>
+            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Netbook", b =>
                 {
-                    b.HasOne("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.NetbookLoan", null)
+                    b.HasOne("PaginaEEST1.Data.Models.PhysicalObjects.Componentes.NetbookLoan", null)
                         .WithMany("Netbooks")
                         .HasForeignKey("NetbookLoanId");
                 });
 
             modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request.FailureRequest", b =>
                 {
-                    b.HasOne("PaginaEEST1.Data.Models.Objetos_Fisicos.Computer", "Computer")
+                    b.HasOne("PaginaEEST1.Data.Models.PhysicalObjects.Computer", "Computer")
                         .WithMany()
                         .HasForeignKey("ComputerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -412,7 +412,7 @@ namespace PaginaEEST1.Data.Migrations
 
             modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request.InstallationRequest", b =>
                 {
-                    b.HasOne("PaginaEEST1.Data.Models.Objetos_Fisicos.Computer", "Computer")
+                    b.HasOne("PaginaEEST1.Data.Models.PhysicalObjects.Computer", "Computer")
                         .WithMany()
                         .HasForeignKey("ComputerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -431,7 +431,7 @@ namespace PaginaEEST1.Data.Migrations
                     b.Navigation("Attendances");
                 });
 
-            modelBuilder.Entity("PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes.NetbookLoan", b =>
+            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Componentes.NetbookLoan", b =>
                 {
                     b.Navigation("Netbooks");
                 });

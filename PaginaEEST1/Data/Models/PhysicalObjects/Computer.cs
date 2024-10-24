@@ -1,7 +1,7 @@
 ﻿using PaginaEEST1.Data.Enums;
 using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request;
 
-namespace PaginaEEST1.Data.Models.Objetos_Fisicos
+namespace PaginaEEST1.Data.Models.PhysicalObjects
 {
     public abstract class Computer
     {
