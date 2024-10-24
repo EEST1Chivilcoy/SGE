@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PaginaEEST1.Data.Enums
 {
-    public enum AttendanceType
+    public enum TypeAttendance
     {
         [Display(Name = "Entrada")]
         Entry,

@@ -5,6 +5,7 @@ using PaginaEEST1.Data.Models.Objetos_Fisicos.Componentes;
 using PaginaEEST1.Data.Models.People.PeopleAssets;
 using PaginaEEST1.Data.Models.Personal;
 using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request;
+using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Loan;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace PaginaEEST1.Data
         public DbSet<Person> People { get; set; }
 
         // Tablas (Reportes / Planillas)
-        public DbSet<NetbookLoan> NetbookLoans { get; set; }
+        public DbSet<Loan> Loans { get; set; }
         public DbSet<RequestEMATP> ComputerRequests { get; set; }
         // Tablas Asistencia
         public DbSet<Attendance> Attendances { get; set; }
@@ -79,6 +80,10 @@ namespace PaginaEEST1.Data
                 .Property(s => s.Type)
                 .HasConversion<int>();
 
+            modelBuilder.Entity<Loan>()
+                .Property(l => l.Type)
+                .HasConversion<int>();
+
             // Unique
 
             modelBuilder.Entity<Computer>()
@@ -107,6 +112,11 @@ namespace PaginaEEST1.Data
                 .HasValue<InstallationRequest>(TypeRequest.Instalacion)
                 .HasValue<FailureRequest>(TypeRequest.ReporteFallo)
                 .HasValue<StudentAccountRequest>(TypeRequest.SolicitudCuenta);
+
+            modelBuilder
+                .Entity<Loan>()
+                .HasDiscriminator(l => l.Type)
+                .HasValue<NetbookLoan>(TypeLoan.NetbookLoan);
         }
     }
 }

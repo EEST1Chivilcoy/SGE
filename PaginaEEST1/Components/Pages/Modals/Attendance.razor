@@ -23,8 +23,8 @@
                     if (asistencia != null)
                     {
                         // Calculamos la intensidad basándonos en el número de entradas y salidas
-                        var entradas = asistencia.Records.Count(r => r.Type == AttendanceType.Entry);
-                        var salidas = asistencia.Records.Count(r => r.Type == AttendanceType.Exit);
+                        var entradas = asistencia.Records.Count(r => r.Type == TypeAttendance.Entry);
+                        var salidas = asistencia.Records.Count(r => r.Type == TypeAttendance.Exit);
                         var intensidad = Math.Min(entradas + salidas, 4);
 
                         <div class="contribucion" style="background-color: @GetColor(intensidad)" @onclick="() => MostrarDetalles(asistencia)">
@@ -52,9 +52,9 @@
             Date = DateTime.Now.AddDays(-1),
             Records = new List<AttendanceRecord>
             {
-                new AttendanceRecord { Time = DateTime.Now.AddHours(-1), Type = AttendanceType.Entry },
-                new AttendanceRecord { Time = DateTime.Now.AddHours(-2), Type = AttendanceType.Entry },
-                new AttendanceRecord { Time = DateTime.Now.AddHours(-3), Type = AttendanceType.Exit },
+                new AttendanceRecord { Time = DateTime.Now.AddHours(-1), Type = TypeAttendance.Entry },
+                new AttendanceRecord { Time = DateTime.Now.AddHours(-2), Type = TypeAttendance.Entry },
+                new AttendanceRecord { Time = DateTime.Now.AddHours(-3), Type = TypeAttendance.Exit },
             }
         },
         new Data.Models.People.PeopleAssets.Attendance
@@ -62,8 +62,8 @@
             Date = DateTime.Now.AddDays(-2),
             Records = new List<AttendanceRecord>
             {
-                new AttendanceRecord { Time = DateTime.Now.AddHours(-4), Type = AttendanceType.Entry },
-                new AttendanceRecord { Time = DateTime.Now.AddHours(-5), Type = AttendanceType.Exit },
+                new AttendanceRecord { Time = DateTime.Now.AddHours(-4), Type = TypeAttendance.Entry },
+                new AttendanceRecord { Time = DateTime.Now.AddHours(-5), Type = TypeAttendance.Exit },
             }
         },
         // Agrega más datos aquí
@@ -83,8 +83,8 @@
 
     private async Task MostrarDetalles(Data.Models.People.PeopleAssets.Attendance asistencia)
     {
-        var entradas = asistencia.Records.Count(r => r.Type == AttendanceType.Entry);
-        var salidas = asistencia.Records.Count(r => r.Type == AttendanceType.Exit);
+        var entradas = asistencia.Records.Count(r => r.Type == TypeAttendance.Entry);
+        var salidas = asistencia.Records.Count(r => r.Type == TypeAttendance.Exit);
         await JS.InvokeVoidAsync("alert", $"Fecha: {asistencia.Date}\nEntradas: {entradas}\nSalidas: {salidas}");
     }
 

@@ -6,6 +6,6 @@ namespace PaginaEEST1.Data.Models.People.PeopleAssets
     {
         public int Id { get; set; }
         public DateTime Time { get; set; }
-        public AttendanceType Type { get; set; }
+        public TypeAttendance Type { get; set; }
     }
 }
