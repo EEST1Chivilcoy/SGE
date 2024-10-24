@@ -6,6 +6,7 @@ using PaginaEEST1.Data.Models.People.PeopleAssets;
 using PaginaEEST1.Data.Models.Personal;
 using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request;
 using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Loan;
+using PaginaEEST1.Data.Models.SchoolArea;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,8 @@ namespace PaginaEEST1.Data
         // Tablas Asistencia
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<AttendanceRecord> AttendanceRecords { get; set; }
+        // Tabla de Areas Escolares
+        public DbSet<Area> Areas { get; set; }
 
         public PaginaDbContext(DbContextOptions<PaginaDbContext> options) : base(options)
         {
@@ -63,6 +66,12 @@ namespace PaginaEEST1.Data
             modelBuilder
             .Entity<Student>()
                 .Property(p => p.Shift)
+                .HasConversion<string>()
+                .HasMaxLength(255);
+
+            modelBuilder
+            .Entity<Area>()
+                .Property(a => a.AreaType)
                 .HasConversion<string>()
                 .HasMaxLength(255);
 
