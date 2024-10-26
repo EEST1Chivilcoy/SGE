@@ -28,6 +28,8 @@
                 <Button class="btn-login" OnClick="Logout">Cerrar Sesión</Button>
             </Authorized>
         </AuthorizeView>
+        <!-- Botón de la radio -->
+        <Button class="btn-radio" OnClick="NavigateToRadio">Radio en Vivo</Button>
     </nav>
 </header>
 
@@ -45,6 +47,22 @@
             background-color: white;
             color: black;
         }
+
+    .btn-radio {
+        border-radius: 0.5vw;
+        text-decoration: none;
+        background: #FF5733;
+        color: white;
+        border: 2px solid #FF5733;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        margin-left: 20px;
+    }
+
+        .btn-radio:hover {
+            background-color: white;
+            color: #FF5733;
+            border: 2px solid #FF5733 !important;
+        }
 </style>
 
 @code {
@@ -56,5 +74,10 @@
     private void Logout()
     {
         NavigationManager.NavigateTo("/Auth/Logout", true);
+    }
+
+    private void NavigateToRadio()
+    {
+        NavigationManager.NavigateTo("https://kick.com/radioinduchivilcoy", true);
     }
 }
