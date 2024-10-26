@@ -2,6 +2,9 @@
 @inject IConfiguration Configuration
 @using AntDesign
 
+@using PaginaEEST1.Services
+@inject KickService KickService
+
 <header>
     <nav style="padding: 30px;">
         <Flex Align="center" Justify="space-between" Style="margin: 10px; max-height: 250px; width: 100%">
@@ -45,7 +48,10 @@
             </ul>
         </div>
         <div style="margin-top: auto; padding: 20px 0;">
-            <Button class="btn-radio-drawer" OnClick="NavigateToRadio">Radio en Vivo</Button>
+            @if(isLive)
+            {
+                <Button class="btn-radio-drawer" OnClick="NavigateToRadio">Radio en Vivo</Button>
+            }
             <AuthorizeView>
                 <NotAuthorized>
                     <Button class="btn-login" OnClick="Login">Iniciar Sesión</Button>
@@ -94,6 +100,12 @@
 
 @code {
     private bool _Visible = false;
+    private bool isLive;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLive = await KickService.IsChannelLiveAsync("radioinduchivilcoy");
+    }
 
     // Manejo de Sesión
     private void Login()

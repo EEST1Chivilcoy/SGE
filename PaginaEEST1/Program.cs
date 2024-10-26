@@ -76,6 +76,12 @@ namespace PaginaEEST1
             builder.Services.AddScoped<IRequestService, RequestService>();
             builder.Services.AddScoped<IUserService, UserService>();
 
+            // Registrar los servicios personalizados HTTP
+            builder.Services.AddHttpClient<KickService>();
+
+            //Cache
+            builder.Services.AddMemoryCache();
+
             var app = builder.Build();
 
             // Configurar el pipeline de solicitud HTTP
