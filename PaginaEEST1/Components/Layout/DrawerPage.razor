@@ -19,13 +19,13 @@
     </nav>
 </Header>
 <Drawer @bind-Visible="_Visible" Placement="right"
-    BodyStyle="display: flex;
+        BodyStyle="display: flex;
     flex-direction: column;
     min-height: 100vh;
     justify-content: flex-start;
     border-radius: 0.6vw;
     background-color: #A2C1DD;"
-    HeaderStyle="display: none;">
+        HeaderStyle="display: none;">
     <div class="drawer-content">
         <div class="d-logo">
             <img src="Images/School_Logo.png" alt="Logo Escuela"/>
@@ -45,6 +45,7 @@
             </ul>
         </div>
         <div style="margin-top: auto; padding: 20px 0;">
+            <Button class="btn-radio-drawer" OnClick="NavigateToRadio">Radio en Vivo</Button>
             <AuthorizeView>
                 <NotAuthorized>
                     <Button class="btn-login" OnClick="Login">Iniciar Sesión</Button>
@@ -58,22 +59,41 @@
 </Drawer>
 
 <style>
-.btn-login {
-    border-radius: 0.5vw;
-    text-decoration: none;
-    background: none;
-    color: white;
-    border: 2px solid white;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
+    .btn-login {
+        border-radius: 0.5vw;
+        text-decoration: none;
+        background: none;
+        color: white;
+        border: 2px solid white;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        margin-top: 10px; /* Añadir margen superior */
+    }
 
     .btn-login:hover {
         background-color: white;
         color: black;
     }
+
+    .btn-radio-drawer {
+        border-radius: 0.5vw;
+        text-decoration: none;
+        background: #FF5733;
+        color: white;
+        border: 2px solid #FF5733;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        margin-top: 10px; /* Añadir margen superior */
+        margin-bottom: 10px; /* Añadir margen inferior */
+    }
+
+    .btn-radio-drawer:hover {
+        background-color: white;
+        color: #FF5733;
+        border: 2px solid #FF5733 !important;
+    }
 </style>
 
-@code{
+
+@code {
     private bool _Visible = false;
 
     // Manejo de Sesión
@@ -81,8 +101,14 @@
     {
         NavigationManager.NavigateTo("/Auth/Login", true);
     }
+
     private void Logout()
     {
         NavigationManager.NavigateTo("/Auth/Logout", true);
+    }
+
+    private void NavigateToRadio()
+    {
+        NavigationManager.NavigateTo("https://kick.com/radioinduchivilcoy", true);
     }
 }
