@@ -103,7 +103,7 @@ namespace PaginaEEST1.Services
                 Status = computer.Status,
                 DeviceName = computer.DeviceName,
                 OperatingSystem = computer.OperatingSystem,
-                Logo = computer.Type == TypeComputer.Computadora ? "Images/Logo_Desktop.png" : "Images/Logo_Netbook.png"
+                Logo = computer.Type == TypeComputer.Computer ? "Images/Logo_Desktop.png" : "Images/Logo_Netbook.png"
             }).ToList();
         }
         private ComputerViewModel GetComputerVM(Computer computer){
@@ -115,7 +115,7 @@ namespace PaginaEEST1.Services
                 Status = computer.Status,
                 DeviceName = computer.DeviceName,
                 OperatingSystem = computer.OperatingSystem,
-                Logo = computer.Type == TypeComputer.Computadora ? "Images/Logo_Desktop.png" : "Images/Logo_Netbook.png"
+                Logo = computer.Type == TypeComputer.Computer ? "Images/Logo_Desktop.png" : "Images/Logo_Netbook.png"
             };
             return computerVM;
         }

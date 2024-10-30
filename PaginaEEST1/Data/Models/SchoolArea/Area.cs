@@ -1,5 +1,6 @@
 ﻿using System.Security.AccessControl;
 using PaginaEEST1.Data.Enums;
+using PaginaEEST1.Data.Models.Categories;
 
 namespace PaginaEEST1.Data.Models.SchoolArea
 {
@@ -18,5 +19,9 @@ namespace PaginaEEST1.Data.Models.SchoolArea
         /// Indica si el área es de uso común o privada
         /// </summary>
         public TypeArea AreaType { get; set; }
+        /// <summary>
+        /// Representa la categoría del área.
+        /// </summary>
+        public AreaCategory? Category  { get; set; }
     }
 }

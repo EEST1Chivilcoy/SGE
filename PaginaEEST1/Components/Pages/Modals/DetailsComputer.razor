@@ -19,7 +19,7 @@
     }
 </style>
 
-<img src="@(computer?.Type == TypeComputer.Computadora ? "Images/Logo_Desktop.png" : "Images/Logo_Netbook.png")" class="pc-logo" />
+<img src="@(computer?.Type == TypeComputer.Computer ? "Images/Logo_Desktop.png" : "Images/Logo_Netbook.png")" class="pc-logo" />
 <Flex Align="left" Justify="left">
     <div class="pc-container">
         @if (computer != null)

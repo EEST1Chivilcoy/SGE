@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PaginaEEST1.Data.Models.Categories;
 
 namespace PaginaEEST1.Data
 {
@@ -20,15 +21,18 @@ namespace PaginaEEST1.Data
         // Tablas (Entidades)
         public DbSet<Computer> Computers { get; set; }
         public DbSet<Person> People { get; set; }
+        public DbSet<Area> Areas { get; set; }
 
         // Tablas (Reportes / Planillas)
         public DbSet<Loan> Loans { get; set; }
         public DbSet<RequestEMATP> ComputerRequests { get; set; }
+
         // Tablas Asistencia
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<AttendanceRecord> AttendanceRecords { get; set; }
-        // Tabla de Areas Escolares
-        public DbSet<Area> Areas { get; set; }
+
+        // Tabla de Categorias
+        public DbSet<Category> Categories { get; set; }
 
         public PaginaDbContext(DbContextOptions<PaginaDbContext> options) : base(options)
         {
@@ -93,6 +97,10 @@ namespace PaginaEEST1.Data
                 .Property(l => l.Type)
                 .HasConversion<int>();
 
+            modelBuilder.Entity<Category>()
+                .Property(c => c.TypeCategory)
+                .HasConversion<int>();
+
             // Unique
 
             modelBuilder.Entity<Computer>()
@@ -103,16 +111,16 @@ namespace PaginaEEST1.Data
 
             modelBuilder.Entity<Person>()
                 .HasDiscriminator(p => p.TypePerson)
-                .HasValue<SchoolPrincipal>(TypePerson.Directivo)
+                .HasValue<SchoolPrincipal>(TypePerson.SchoolDirector)
                 .HasValue<EMATP>(TypePerson.EMATP)
-                .HasValue<Storeroom>(TypePerson.Paniol)
-                .HasValue<Professor>(TypePerson.Profesor)
-                .HasValue<Student>(TypePerson.Alumno);
+                .HasValue<Storeroom>(TypePerson.Warehouse)
+                .HasValue<Professor>(TypePerson.Teacher)
+                .HasValue<Student>(TypePerson.Student);
 
             modelBuilder
                 .Entity<Computer>()
                 .HasDiscriminator(c => c.Type)
-                .HasValue<Desktop>(TypeComputer.Computadora)
+                .HasValue<Desktop>(TypeComputer.Computer)
                 .HasValue<Netbook>(TypeComputer.Netbook);
 
             modelBuilder
@@ -126,6 +134,11 @@ namespace PaginaEEST1.Data
                 .Entity<Loan>()
                 .HasDiscriminator(l => l.Type)
                 .HasValue<NetbookLoan>(TypeLoan.NetbookLoan);
+
+            modelBuilder
+                .Entity<Category>()
+                .HasDiscriminator(c => c.TypeCategory)
+                .HasValue<AreaCategory>(TypeCategory.AreaCategory);
         }
     }
 }

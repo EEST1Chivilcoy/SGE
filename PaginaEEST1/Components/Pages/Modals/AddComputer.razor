@@ -39,7 +39,7 @@
             @* Selección del tipo del dispositivo: Computadora / Netbook *@
             <FormItem Label="Tipo de Dispositivo">
                 <div class="device-type-selector">
-                    <div class="device-option @(computerVM.Type == TypeComputer.Computadora ? "selected" : "")" @onclick="() => SelectDeviceType(TypeComputer.Computadora)">
+                    <div class="device-option @(computerVM.Type == TypeComputer.Computer ? "selected" : "")" @onclick="() => SelectDeviceType(TypeComputer.Computer)">
                         <img src="/Images/Logo_Desktop.png" alt="Computadora" />
                         <span>Computadora</span>
                     </div>
@@ -49,7 +49,7 @@
                     </div>
                 </div>
             </FormItem>
-            @if(computerVM.Type == TypeComputer.Computadora){
+            @if(computerVM.Type == TypeComputer.Computer){
                 <FormItem Label="Ubicación dentro de la Institución">
                     <Input @bind-Value="@computerVM.Location" />
                 </FormItem>
@@ -74,7 +74,7 @@
     [Parameter]
     public EventCallback<bool> OnClose { get; set; }
     //Variables
-    private ComputerViewModel computerVM = new(){Type = TypeComputer.Computadora, IsAvailable = true};
+    private ComputerViewModel computerVM = new(){Type = TypeComputer.Computer, IsAvailable = true};
 
     // Funciones
     private async Task HandleClose()
@@ -88,7 +88,7 @@
     }
     private async Task OnFinish()
     {
-        if (computerVM.Type == TypeComputer.Computadora){
+        if (computerVM.Type == TypeComputer.Computer){
             Desktop desktop = new(){
                 DeviceName = computerVM.DeviceName,
                 Type = computerVM.Type,

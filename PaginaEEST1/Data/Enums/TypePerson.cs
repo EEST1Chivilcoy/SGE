@@ -1,19 +1,20 @@
 ﻿using PaginaEEST1.Data.Models.Personal;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace PaginaEEST1.Data.Enums
 {
     public enum TypePerson
     {
-        [Description("Directivo")]
-        Directivo = 1,
-        [Description("EMATP")]
+        [Display(Name = "Directivo")]
+        SchoolDirector = 1,
+        [Display(Name = "EMATP")]
         EMATP = 2,
-        [Description("Pañol")]
-        Paniol = 3,
-        [Description("Profesor")]
-        Profesor = 4,
-        [Description("Alumno")]
-        Alumno = 5
+        [Display(Name = "Pañol")]
+        Warehouse = 3,
+        [Display(Name = "Profesor")]
+        Teacher = 4,
+        [Display(Name = "Alumno")]
+        Student = 5
     }
 }

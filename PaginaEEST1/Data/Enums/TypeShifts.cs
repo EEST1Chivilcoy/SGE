@@ -5,10 +5,10 @@ namespace PaginaEEST1.Data.Enums
     public enum TypeShifts
     {
         [Display(Name = "Mañana")]
-        Maniana,
+        Morning,
         [Display(Name = "Tarde")]
-        Tarde,
+        Afternoon,
         [Display(Name = "Nocturno")]
-        Nocturno
+        Night
     }
 }
