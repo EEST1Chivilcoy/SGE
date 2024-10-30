@@ -29,7 +29,7 @@ namespace PaginaEEST1
                        .EnableDetailedErrors()       // Detalla los errores en los logs
             );
 
-            // Entra ID con sincronización de usuario
+            // Entra ID con sincronizaciï¿½n de usuario
             builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"))
                 .EnableTokenAcquisitionToCallDownstreamApi()
@@ -58,7 +58,7 @@ namespace PaginaEEST1
             builder.Services.AddControllersWithViews()
                 .AddMicrosoftIdentityUI();
 
-            // Agregar autorización
+            // Agregar autorizaciï¿½n
             builder.Services.AddAuthorization();
 
             // Servicios
@@ -75,6 +75,7 @@ namespace PaginaEEST1
             builder.Services.AddScoped<IQRService, QRService>();
             builder.Services.AddScoped<IRequestService, RequestService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IAreaService, AreaService>();
 
             // Registrar los servicios personalizados HTTP
             builder.Services.AddHttpClient<KickService>();
@@ -95,7 +96,7 @@ namespace PaginaEEST1
             app.UseStaticFiles();
             app.UseAntiforgery();
 
-            // Middleware de autenticación y autorización
+            // Middleware de autenticaciï¿½n y autorizaciï¿½n
             app.UseAuthentication();
             app.UseAuthorization();
 

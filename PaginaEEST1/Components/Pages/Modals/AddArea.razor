@@ -1,0 +1,74 @@
+@using PaginaEEST1.Services
+@using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Data.Models.Categories
+@using PaginaEEST1.Data.Models.SchoolArea
+@inject IMessageService message
+@inject IAreaService AreaService
+
+<div>
+    <Form Model="@areaVM" OnFinish="OnFinish">
+        <div clas="form-grid">
+            <FormItem Label="Nombre del Salón">
+                <Input @bind-Value="@areaVM.Name" />
+            </FormItem>
+            <FormItem Label="Ubicación">
+                <Input @bind-Value="@areaVM.Location" />
+            </FormItem>
+            <FormItem Label="Tipo de Area">
+                <EnumSelect TEnum="TypeArea" @bind-Value="@areaVM.AreaType" />
+            </FormItem>
+            @* Categoría *@
+            <FormItem Label="Seleccione la categoría">
+                <Select
+                    TItem="AreaCategory"
+                    TItemValue = "AreaCategory"
+                    DataSource = "@categories"
+                    @bind-value = "@areaVM.Category"
+                    Placeholder = "Sin categoría"
+                    AllowClear = "true"
+                    LabelName="@nameof(AreaCategory.Name)"
+                    DefaultActiveFirstOption="false"
+                >
+                </Select>
+            </FormItem>
+            <FormItem>
+                <Button Type="primary" HtmlType="submit">Guardar</Button>
+                <Button OnClick="HandleClose">Cerrar</Button>
+            </FormItem>
+        </div>
+    </Form>
+</div>
+
+@code{
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+
+    // Variables
+    private List<AreaCategory?> categories = new();
+    private Area areaVM  = new();
+    
+    // Funciones
+    private async Task HandleClose()
+    {
+        await OnClose.InvokeAsync(false);
+    }
+    private async Task OnFinish()
+    {
+        bool save = await AreaService.SaveArea(areaVM);
+        if (save == true){
+            areaVM = new();
+            await OnClose.InvokeAsync(true);
+            StateHasChanged();
+            await message.Success("Se registro el salón");
+        }
+        else{
+            await message.Error("Error inesperado al guardar el salón");
+        }
+    }
+    // Init
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await AreaService.GetListCategories();
+        StateHasChanged();
+    }
+}

@@ -1,0 +1,35 @@
+﻿@using PaginaEEST1.Services
+@using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Shared
+@using PaginaEEST1.Data.Models.Categories
+@using PaginaEEST1.Data.Models.SchoolArea
+@inject IAreaService AreaService
+@inject IQRService QRService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+<Flex Align="left" Justify="left">
+    <div class="area-container">
+        @if (area != null)
+        {
+            <p><b>Nombre del Salón</b>: @area.Name</p>
+            <p><b>Ubicación en la Institución</b>: @area.Location</p>
+            <p><b>Tipo de Area</b>: @area.AreaType.GetDisplayName()</p>
+            <p><b>Categoría</b>: @(area.Category?.Name ?? "Sin categoría")</p>
+        }
+    </div>
+</Flex>
+
+@code {
+    [Parameter]
+    public int ID { get; set; }
+    private Area? area { get; set; }
+
+    // Init
+    protected override async Task OnInitializedAsync()
+    {
+        area = await AreaService.GetArea(ID);
+        StateHasChanged();
+    }
+}
