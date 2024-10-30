@@ -22,6 +22,7 @@ namespace PaginaEEST1.Data
         public DbSet<Computer> Computers { get; set; }
         public DbSet<Person> People { get; set; }
         public DbSet<Area> Areas { get; set; }
+        public DbSet<Item> Items { get; set; }
 
         // Tablas (Reportes / Planillas)
         public DbSet<Loan> Loans { get; set; }
@@ -79,6 +80,11 @@ namespace PaginaEEST1.Data
                 .HasConversion<string>()
                 .HasMaxLength(255);
 
+            modelBuilder
+            .Entity<Item>()
+                .Property(i => i.Owner)
+                .HasConversion<int>();
+
             //Enums Discriminadores
 
             modelBuilder.Entity<Person>()
@@ -98,13 +104,21 @@ namespace PaginaEEST1.Data
                 .HasConversion<int>();
 
             modelBuilder.Entity<Category>()
-                .Property(c => c.TypeCategory)
+                .Property(c => c.Type)
+                .HasConversion<int>();
+
+            modelBuilder.Entity<Item>()
+                .Property(i => i.Type)
                 .HasConversion<int>();
 
             // Unique
 
             modelBuilder.Entity<Computer>()
                 .HasIndex(o => o.DeviceName)
+                .IsUnique();
+
+            modelBuilder.Entity<Item>()
+                .HasIndex(i => i.Code)
                 .IsUnique();
 
             // Discriminadores
@@ -137,8 +151,14 @@ namespace PaginaEEST1.Data
 
             modelBuilder
                 .Entity<Category>()
-                .HasDiscriminator(c => c.TypeCategory)
-                .HasValue<AreaCategory>(TypeCategory.AreaCategory);
+                .HasDiscriminator(c => c.Type)
+                .HasValue<AreaCategory>(TypeCategory.AreaCategory)
+                .HasValue<ItemCategory>(TypeCategory.ItemCategory);
+
+            modelBuilder
+                .Entity<Item>()
+                .HasDiscriminator(i => i.Type)
+                .HasValue<ReturnableItem>(TypeItem.ReturnableItem);
         }
     }
 }
