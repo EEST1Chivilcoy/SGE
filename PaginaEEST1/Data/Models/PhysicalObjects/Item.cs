@@ -1,5 +1,6 @@
 ﻿using PaginaEEST1.Data.Enums;
 using PaginaEEST1.Data.Models.Categories;
+using PaginaEEST1.Data.Models.Images;
 
 namespace PaginaEEST1.Data.Models.PhysicalObjects
 {
@@ -34,5 +35,9 @@ namespace PaginaEEST1.Data.Models.PhysicalObjects
         /// Propiedad para definir si se debe devolver un elemento
         /// </summary>
         public abstract bool RequiresReturn { get; }
+        /// <summary>
+        /// Imagen del Objeto
+        /// </summary>
+        public ItemImage_Item? ItemImage { get; set; }
     }
 }

@@ -75,7 +75,7 @@ namespace PaginaEEST1.Services
 
             return areas.Select(area => new AreaViewModel
             {
-                Id = area.Id,
+                Id = area.AreaId,
                 Name = area.Name,
                 CategoryId = area.Category?.Id ?? 0,
                 CategoryName = area.Category?.Name ?? ""

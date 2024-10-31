@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PaginaEEST1.Data.Models.Categories;
+using PaginaEEST1.Data.Models.Images;
 
 namespace PaginaEEST1.Data
 {
@@ -23,6 +24,7 @@ namespace PaginaEEST1.Data
         public DbSet<Person> People { get; set; }
         public DbSet<Area> Areas { get; set; }
         public DbSet<Item> Items { get; set; }
+        public DbSet<AbstractImage> Images { get; set; }
 
         // Tablas (Reportes / Planillas)
         public DbSet<Loan> Loans { get; set; }
@@ -42,6 +44,22 @@ namespace PaginaEEST1.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Foreaneas 1:1
+            modelBuilder.Entity<Person>()
+                .HasOne(p => p.ProfileImage)
+                .WithOne(pi => pi.Person)
+                .HasForeignKey<ProfileImage_Person>(pi => pi.PersonId); // Clave foránea en ProfileImage
+
+            modelBuilder.Entity<Area>()
+                .HasOne(a => a.ImageArea)
+                .WithOne(ai => ai.Area)
+                .HasForeignKey<AreaImage_Area>(ai => ai.AreaId); // Clave foránea en AreaImage
+
+            modelBuilder.Entity<Item>()
+                .HasOne(i => i.ItemImage)
+                .WithOne(ii => ii.Item)
+                .HasForeignKey<ItemImage_Item>(ii => ii.ItemId); // Clave foránea en ItemImage
+
             // Enums
 
             modelBuilder
@@ -111,6 +129,10 @@ namespace PaginaEEST1.Data
                 .Property(i => i.Type)
                 .HasConversion<int>();
 
+            modelBuilder.Entity<AbstractImage>()
+                .Property(a => a.ImageType)
+                .HasConversion<int>();
+
             // Unique
 
             modelBuilder.Entity<Computer>()
@@ -158,7 +180,15 @@ namespace PaginaEEST1.Data
             modelBuilder
                 .Entity<Item>()
                 .HasDiscriminator(i => i.Type)
-                .HasValue<ReturnableItem>(TypeItem.ReturnableItem);
+                .HasValue<ReturnableItem>(TypeItem.ReturnableItem)
+                .HasValue<ConsumableItem>(TypeItem.ConsumableItem);
+
+            modelBuilder
+                .Entity<AbstractImage>()
+                .HasDiscriminator(ai => ai.ImageType)
+                .HasValue<AreaImage_Area>(TypeImage.AreaImage)
+                .HasValue<ItemImage_Item>(TypeImage.ItemImage)
+                .HasValue<ProfileImage_Person>(TypeImage.ProfileImage);
         }
     }
 }
