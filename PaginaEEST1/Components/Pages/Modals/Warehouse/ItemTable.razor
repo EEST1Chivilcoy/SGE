@@ -1,0 +1,181 @@
+﻿@using PaginaEEST1.Services
+@using PaginaEEST1.Components.Pages.Modals
+@using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Shared
+@inject IItemService ItemService
+
+<style>
+    .template {
+        margin-top: 20px;
+        width: 100%;
+        padding: 20px;
+        background-color: #f8f8f8;
+        border-radius: 1vw;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<div class="template">
+    <Table @ref="_table"
+           TItem="ItemViewModel"
+           DataSource="@FilteredItems"
+           PageIndex="1"
+           PageSize="6"
+           Responsive>
+
+        <TitleTemplate>
+            <Space>
+                <SpaceItem>
+
+                    <Button Type="primary" OnClick="() => {VisAdd = true;}">
+                        <Icon Type="plus" /> Agregar
+                    </Button>
+
+                    <Search Placeholder="Buscar objeto" WrapperStyle="width: 200px;" @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
+
+                </SpaceItem>
+            </Space>
+        </TitleTemplate>
+
+        <ColumnDefinitions>
+
+            <PropertyColumn Title="Nombre"
+                            Property="@(i => i.Name)"
+                            Sortable />
+
+            <Column Title="Categoria" TData="string">
+                <Tag Color="blue">@context.Category</Tag>
+            </Column>
+
+            <PropertyColumn Title="Codigo"
+                            Property="@(i => i.Code)"
+                            Sortable />
+
+            <ActionColumn Title="Acciones" Align="ColumnAlign.Center">
+                <Space>
+                    <SpaceItem>
+                        <Button Type="primary" OnClick="() => OpenDetails(context.ID)">
+                            <Icon Type="desktop" /> Detalles
+                        </Button>
+                        <Button OnClick="() => openEdit(context.ID)">
+                            <Icon Type="edit" /> Editar
+                        </Button>
+                        <Popconfirm Title="¿Remover este Ordenador?"
+                                    OnConfirm="() => DelItem(context.ID)"
+                                    OkText="Si"
+                                    CancelText="No">
+                            <Button Danger>
+                                <Icon Type="delete" /> Remover
+                            </Button>
+                        </Popconfirm>
+                    </SpaceItem>
+                </Space>
+            </ActionColumn>
+        </ColumnDefinitions>
+    </Table>
+</div>
+
+@if (VisAdd == true)
+{
+    <Modal Visible="VisAdd" Footer="null" OnCancel="() => closeModals(false)">
+        <AddItem OnClose="closeModals" OwnerItem="Owner"/>
+    </Modal>
+}
+
+@if (VisEdit == true)
+{
+    <Modal Visible="VisEdit" Footer="null" OnCancel="() => closeModals(false)">
+        <EditComputer OnClose="closeModals" ID="ItemSelID" />
+    </Modal>
+}
+
+@if (VisDetails == true)
+{
+    <Modal Visible="VisDetails" Footer="null" OnCancel="() => {VisDetails = false;}">
+        <DetailsComputer ID="ItemSelID" />
+    </Modal>
+}
+
+@code {
+    [Parameter] public EducationalGuidance Owner { get; set; }
+
+    // Referencias
+    private Table<ItemViewModel> _table;
+
+    // Parámetro de Búsqueda
+    string searchString = "";
+
+    // Lista de Items
+    List<ItemViewModel?> Items = new();
+    List<ItemViewModel?> FilteredItems => FilterItems();
+
+    //Id de Item seleccionado
+    private int ItemSelID { get; set; }
+
+    //Variables de Visibilidad de Modals
+    private bool VisAdd = false;
+    private bool VisDetails = false;
+    private bool VisEdit = false;
+
+    //Metodo para Abrir el Modal de los Detalles de un Objeto
+    private void OpenDetails(int ID)
+    {
+        ItemSelID = ID;
+        VisDetails = true;
+    }
+
+    //Metodo para Abrir el Modal para Editar el Obejeto
+    private void openEdit(int ID)
+    {
+        ItemSelID = ID;
+        VisEdit = true;
+    }
+
+    //Metodo para Borrar Objetos
+    private async Task DelItem(int ID)
+    {
+        await ItemService.DeleteItem(ID);
+        await OnInitializedAsync();
+    }
+
+    //Metodo para Cerrar Modals
+    private async Task closeModals(bool success)
+    {
+        VisAdd = false;
+        VisEdit = false;
+
+        if (success == true)
+        {
+            await OnInitializedAsync();
+        }
+
+        StateHasChanged();
+    }
+
+    // Init
+    protected override async Task OnInitializedAsync()
+    {
+        Items = await ItemService.GetListItems(Owner);
+        StateHasChanged();
+    }
+
+    // Método de búsqueda
+    private async Task HandleSearch()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+
+    // Método de filtrado
+    private List<ItemViewModel?> FilterItems()
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return Items;
+
+        return Items.Where(item =>
+            item.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+            item.Category.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+            item.Code.Contains(searchString, StringComparison.OrdinalIgnoreCase)
+        ).ToList();
+    }
+}

@@ -1,0 +1,17 @@
+﻿@using PaginaEEST1.Services
+@using PaginaEEST1.Components.Pages.Modals
+@using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Shared
+@using PaginaEEST1.Components.Pages.Modals.Warehouse
+@page "/SGE/EMATP/DepositoInformatica"
+
+@using PaginaEEST1.Components.Layout.SGE
+@layout SGELayout
+
+@attribute [Authorize(Roles = "EMATP")]
+@*Definimos que esta pagina solo puede ser vista por EMATP*@
+
+<Flex Class="flex-container" Justify="center" Align="center" Style="height: 100%; width:100%;">
+    <ItemTable Owner="EducationalGuidance.Computing"></ItemTable>
+</Flex>

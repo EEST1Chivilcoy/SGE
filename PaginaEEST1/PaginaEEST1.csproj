@@ -28,4 +28,10 @@
 		<Folder Include="Data\Migrations\" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Content Update="Components\Pages\Modals\Warehouse\AddItem.razor">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	  </Content>
+	</ItemGroup>
+
 </Project>

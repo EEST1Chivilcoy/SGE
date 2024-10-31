@@ -42,13 +42,17 @@
                 </Button>
                 </Col>
             </Row>
+            <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/DepositoInformatica"))">
+                <Icon Type="dropbox-square" Theme="fill" />
+                    Deposito
+            </Button>
         </Card>
         @if (isRendered && ShouldShowAttendanceCard())
-        {
+            {
             <Card Title="Asistencias" Style="margin: 16px; padding: 24px;">
                 <Attendance></Attendance>
             </Card>
-        }
+            }
         </Col>
     </Row>
 </div>

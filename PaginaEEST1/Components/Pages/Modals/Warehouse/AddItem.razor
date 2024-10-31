@@ -1,0 +1,90 @@
+﻿@using PaginaEEST1.Services
+@using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Models.PhysicalObjects
+
+@inject IMessageService message
+@inject IItemService ItemService
+
+<div>
+    <Form Model="@ItemVM" OnFinish="OnFinish">
+        <div clas="form-grid">
+
+            <FormItem Label="Nombre">
+                <Input @bind-Value="@ItemVM.Name" />
+            </FormItem>
+
+            <FormItem Label="Tipo de Objeto">
+                <EnumSelect TEnum="TypeItem" @bind-Value="@ItemVM.Type" />
+            </FormItem>
+
+            <FormItem Label="Categoria">
+
+            </FormItem>
+
+            <FormItem Label="Codigo">
+                <Input Disabled @bind-Value="@ItemVM.Code" />
+            </FormItem>
+
+            <FormItem Label="Descripción">
+                <TextArea AutoSize="true" @bind-Value="@ItemVM.Description" />
+            </FormItem>
+
+            <FormItem>
+                <Button Type="primary" HtmlType="submit">Guardar</Button>
+                <Button OnClick="HandleClose">Cerrar</Button>
+            </FormItem>
+        </div>
+    </Form>
+</div>
+
+@code {
+    //Parametros
+    [Parameter] public EventCallback<bool> OnClose { get; set; }
+    [Parameter] public EducationalGuidance OwnerItem { get; set; }
+
+    //Variables
+    private ItemViewModel ItemVM = new();
+
+    // Funciones
+    protected override async Task OnInitializedAsync()
+    {
+        ItemVM.Code = await ItemService.GenerateUniqueCodeAsync();
+    }
+
+    private async Task HandleClose()
+    {
+        await OnClose.InvokeAsync(false);
+    }
+
+    private async Task OnFinish()
+    {
+        if (ItemVM.Type == TypeItem.ReturnableItem)
+        {
+            ReturnableItem item = new()
+                {
+                    Name = ItemVM.Name,
+                    Code = ItemVM.Code,
+                    Description = ItemVM.Description,
+                    Owner = OwnerItem
+                };
+            await ItemService.SaveItem(item);
+        }
+
+        else if (ItemVM.Type == TypeItem.ConsumableItem)
+        {
+            ConsumableItem item = new()
+                {
+                    Name = ItemVM.Name,
+                    Code = ItemVM.Code,
+                    Description = ItemVM.Description,
+                    Owner = OwnerItem
+                };
+            await ItemService.SaveItem(item);
+        }
+
+        ItemVM = new();
+        await OnClose.InvokeAsync(true);
+        StateHasChanged();
+    }
+}
