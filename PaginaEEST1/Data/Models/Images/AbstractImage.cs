@@ -12,6 +12,8 @@ namespace PaginaEEST1.Data.Models.Images
 
         [Required]
         public string Base64Image { get; set; } = string.Empty;
+        [Required]
+        public string TypeFile { get; set; } = string.Empty;
         public TypeImage ImageType { get; set; }
     }
 }

@@ -6,16 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PaginaEEST1.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class AddImageRelatedEntities : Migration
+    public partial class AddImagesEntities : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "Id",
-                table: "Areas",
-                newName: "AreaId");
-
             migrationBuilder.CreateTable(
                 name: "Images",
                 columns: table => new
@@ -39,7 +34,7 @@ namespace PaginaEEST1.Data.Migrations
                         name: "FK_Images_Areas_AreaId",
                         column: x => x.AreaId,
                         principalTable: "Areas",
-                        principalColumn: "AreaId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Images_Items_ItemId",
@@ -80,11 +75,6 @@ namespace PaginaEEST1.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Images");
-
-            migrationBuilder.RenameColumn(
-                name: "AreaId",
-                table: "Areas",
-                newName: "Id");
         }
     }
 }

@@ -7,7 +7,7 @@ namespace PaginaEEST1.Data.Models.SchoolArea
 {
     public class Area
     {
-        public int AreaId { get; set; }
+        public int Id { get; set; }
         /// <summary>
         /// Nombre del área (por ejemplo, "INFO3", "Biblioteca", "Audiovisuales")
         /// </summary>

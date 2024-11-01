@@ -41,22 +41,20 @@
                     Gestión de Peticiones
                 </Button>
                 </Col>
-                @* Temporalmente el rol de EMATP cuenta con la autorización de acceder a la página para realizar pruebas *@
-                <AuthorizeView Roles="EMATP,Directivo">
-                    <Authorized>
-                        <Col Span="12">
-                        <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Directivo/GestionSalones"))">
-                            <Icon Type="profile" Theme="fill" />
-                            Gestión de Salones
-                        </Button>
-                        </Col>
-                    </Authorized>
-                </AuthorizeView>
             </Row>
             <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/DepositoInformatica"))">
                 <Icon Type="dropbox-square" Theme="fill" />
                     Deposito
             </Button>
+            @* Temporalmente el rol de EMATP cuenta con la autorización de acceder a la página para realizar pruebas *@
+            <AuthorizeView Roles="EMATP,Directivo">
+                <Authorized>
+                    <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Directivo/GestionSalones"))">
+                        <Icon Type="profile" Theme="fill" />
+                        Gestión de Salones
+                    </Button>
+                </Authorized>
+            </AuthorizeView>
         </Card>
         @if (isRendered && ShouldShowAttendanceCard())
             {

@@ -12,8 +12,8 @@ using PaginaEEST1.Data;
 namespace PaginaEEST1.Data.Migrations
 {
     [DbContext(typeof(PaginaDbContext))]
-    [Migration("20241031042131_AddImageRelatedEntities")]
-    partial class AddImageRelatedEntities
+    [Migration("20241101042742_AddImageTypeFile")]
+    partial class AddImageTypeFile
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,6 +67,10 @@ namespace PaginaEEST1.Data.Migrations
 
                     b.Property<int>("ImageType")
                         .HasColumnType("int");
+
+                    b.Property<string>("TypeFile")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -316,11 +320,11 @@ namespace PaginaEEST1.Data.Migrations
 
             modelBuilder.Entity("PaginaEEST1.Data.Models.SchoolArea.Area", b =>
                 {
-                    b.Property<int>("AreaId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("AreaId"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AreaType")
                         .IsRequired()
@@ -338,7 +342,7 @@ namespace PaginaEEST1.Data.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasKey("AreaId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 

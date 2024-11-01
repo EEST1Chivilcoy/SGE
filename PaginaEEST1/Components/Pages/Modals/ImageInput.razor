@@ -1,0 +1,67 @@
+﻿@using PaginaEEST1.Services
+@using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Data.Models.Images
+@inject IMessageService message
+@inject IImageService ImageService
+
+<InputFile OnChange="HandleImage" />
+
+@code {
+    [Parameter]
+    public TypeImage ImageType { get; set; }
+    // Archivo de la imagen
+    private InputFileChangeEventArgs? InputFile { get; set; }
+    // Funciones
+    private void HandleImage(InputFileChangeEventArgs e)
+    {
+        InputFile = e;
+        StateHasChanged();
+    }
+
+    public async void SaveImage(int ReferenceId, string ProfileId = "null")
+    {
+        try
+        {
+            if (InputFile == null)
+                return;
+
+            switch (ImageType)
+            {
+                case (TypeImage.AreaImage):
+                    AreaImage_Area save_area = new()
+                        {
+                            ImageName = InputFile.File.Name,
+                            TypeFile = InputFile.File.ContentType,
+                            ImageType = ImageType,
+                            AreaId = ReferenceId
+                        };
+                    await ImageService.SaveImage(save_area, InputFile);
+                    break;
+                case (TypeImage.ProfileImage):
+                    ProfileImage_Person save_profile = new()
+                        {
+                            ImageName = InputFile.File.Name,
+                            TypeFile = InputFile.File.ContentType,
+                            ImageType = ImageType,
+                            PersonId = ProfileId
+                        };
+                    await ImageService.SaveImage(save_profile, InputFile);
+                    break;
+                case (TypeImage.ItemImage):
+                    ItemImage_Item save_item = new()
+                        {
+                            ImageName = InputFile.File.Name,
+                            TypeFile = InputFile.File.ContentType,
+                            ImageType = ImageType,
+                            ItemId = ReferenceId
+                        };
+                    await ImageService.SaveImage(save_item, InputFile);
+                    break;
+            }
+        }
+        catch
+        {
+            await message.Error("Error inesperado al cargar la imagen");
+        }
+    }
+}

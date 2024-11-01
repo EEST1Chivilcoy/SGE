@@ -1,17 +1,19 @@
-@using PaginaEEST1.Services
-@using PaginaEEST1.Components.Pages.Modals
+@using PaginaEEST1.Components.Pages.Modals.Areas
+@using PaginaEEST1.Data.Models.Categories
+@using PaginaEEST1.Data.Models.Images
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Services
 @using PaginaEEST1.Shared
-@using PaginaEEST1.Data.Models.Categories
 @inject IAreaService AreaService
+@inject IImageService ImageService
+@inject IMessageService message
 @page "/SGE/Directivo/GestionSalones"
 
 @using PaginaEEST1.Components.Layout.SGE
 @layout SGELayout
 
-@* Temporalmente el rol de EMATP cuenta con la autorización de ver la página para realizar pruebas *@
-@attribute [Authorize (Roles = "EMATP,Directivo")]
+@attribute [Authorize(Roles = "EMATP,Directivo")]
 
 <style>
     .container {
@@ -132,6 +134,7 @@
         margin-left: 10px;
     }
 </style>
+
 <div class="container">
     <Flex Vertical Justify="flex-start" Align="center" Style="height: 100%; width:100%;">
         <div class="header">
@@ -156,7 +159,6 @@
                 </div>
             </Flex>
         </div>
-        
         <Flex Justify="flex-start" Align="flex-start" Wrap="wrap" Style="width: 100%;">
             <!-- Carta / Botón para cargar nuevo salón -->
             <Card Class="area-card add-card">
@@ -165,25 +167,10 @@
                     <p>Cargar un nuevo salón</p>
                 </div>
             </Card>
-            
             <!-- Cartas del resto de salones -->
             @foreach (AreaViewModel? area in areas){
                 if (area != null){
-                    <Card Class="area-card">
-                        @* Temporalmente no se adjunta ninguna imagen hasta que se desarrollen las funciones relacionadas a la carga de imagenes *@
-                        <img src="" alt="Foto del Salón" class="card-image"/>
-                        <div class="card-content">@area.Name</div>
-                        <div class="card-buttons">
-                                <Icon Type="eye" Theme="outline" Class="card-button" OnClick="() => HandleDetails(area.Id)" />
-                            <Popconfirm Title="¿Remover este Salón?"
-                                    OnConfirm="() => delArea(area.Id)"
-                                    OkText="Si"
-                                    CancelText="No"
-                                >
-                                <Icon Type="delete" Theme="outline" Class="card-button" />
-                            </Popconfirm>
-                        </div>
-                    </Card>
+                    <CardArea area="area" />
                 }
             }
         </Flex>
@@ -196,12 +183,6 @@
         <AddArea OnClose="closeModals" />
     </Modal>
 }
-@if (visDetails == true)
-{
-    <Modal Visible="visDetails" Title="Detalles del salón." Footer="null" OnCancel="() => closeModals(false)">
-        <DetailsArea ID="@idDetails" />
-    </Modal>
-}
 
 @code {
     // Variables    
@@ -211,15 +192,9 @@
     // Variables de Visibilidad
     private string selectedCategory = "Todos";
     private bool visAdd = false;
-    private bool visDetails = false;
     private int idDetails { get; set; }
-    
+
     // Funciones de Visibilidad
-    private Task HandleDetails(int ID){
-        idDetails = ID;
-        visDetails = true;
-        return Task.CompletedTask;
-    }
     private Task OnCategoryChanged(string value)
     {   
         selectedCategory = value;
@@ -230,7 +205,6 @@
     private async Task closeModals(bool success)
     {
         visAdd = false;
-        visDetails = false;
         if (success == true)
         {
             await OnInitializedAsync();
@@ -238,7 +212,8 @@
         StateHasChanged();
     }
 
-    private void FilterAreas(){
+    private void FilterAreas()
+    {
         if (selectedCategory == "Todos" || string.IsNullOrEmpty(selectedCategory)){
             areas = AllAreas;
         }
@@ -249,18 +224,12 @@
             areas = AllAreas.Where(cat => cat?.CategoryName == selectedCategory).ToList();
         }
     }
-    // Funciones
-    private async Task delArea(int ID)
-    {
-        await AreaService.DelArea(ID);
-        await OnInitializedAsync();
-    }
     // Init
     protected override async Task OnInitializedAsync()
     {
         AllAreas = await AreaService.GetListAreas();
         FilterAreas();
-        categories = AllAreas
+        categories = areas
             .Where(name => !string.IsNullOrEmpty(name?.CategoryName))
             .Select(name => name?.CategoryName)
             .ToList();

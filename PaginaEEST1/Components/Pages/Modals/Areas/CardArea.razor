@@ -1,0 +1,69 @@
+@using PaginaEEST1.Components.Pages.Modals.Areas
+@using PaginaEEST1.Data.Models.Categories
+@using PaginaEEST1.Data.Models.Images
+@using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Services
+@using PaginaEEST1.Shared
+@inject IAreaService AreaService
+@inject IImageService ImageService
+@inject IMessageService message
+
+<Card Class="area-card">
+    <img src="@srcimage" alt="Foto del Salón" class="card-image"/>
+    <div class="card-content">@area?.Name</div>
+    <div class="card-buttons">
+    <Icon Type="eye" Theme="outline" Class="card-button" OnClick="() => {HandleDetails(area.Id);}" />
+    <Popconfirm Title="¿Remover este Salón?"
+    OnConfirm="() => delArea(area.Id)"
+    OkText="Si"
+    CancelText="No"
+    >
+    <Icon Type="delete" Theme="outline" Class="card-button" />
+    </Popconfirm>
+    </div>
+</Card>
+
+@if (visDetails == true)
+{
+    <Modal Visible="visDetails" Title="Detalles del salón." Footer="null" OnCancel="() => visDetails = false">
+        <DetailsArea ID="@idDetails" />
+    </Modal>
+}
+
+@code {
+    // Parametros
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+    [Parameter]
+    public AreaViewModel? area {get; set;}
+
+    // Variables
+    private bool visDetails = false;
+    private int idDetails { get; set; }
+
+    private string? srcimage { get; set; }
+
+    // Funciones
+    private async Task delArea(int ID)
+    {
+        await OnClose.InvokeAsync(true);
+        await AreaService.DelArea(ID);
+        await message.Success("Se removio el salón");
+        StateHasChanged();
+    }
+    private Task HandleDetails(int ID){
+        idDetails = ID;
+        visDetails = true;
+        return Task.CompletedTask;
+    }
+
+    // Init
+    protected override async Task OnInitializedAsync()
+    {
+        AbstractImage? image = await ImageService.GetImageByType(TypeImage.AreaImage, "" + area?.Id);
+        if (image != null){
+            srcimage = $"data:{image.TypeFile}; base64,{image.Base64Image}";
+        }
+    }
+}    

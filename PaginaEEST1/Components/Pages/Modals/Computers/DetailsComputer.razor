@@ -35,16 +35,19 @@
             {
                 <p><b>Ubicación en la Institución</b>: @desktop.Location</p>
             }
-            @if(computer is Netbook netbook)
+            @if (computer is Netbook netbook)
             {
                 <p><b>Modelo de la Netbook</b>: @netbook.Model</p>
-                <p><b>Disponibilidad</b>:
-                @if(netbook.IsAvailable == true){
-                    <text>Disponible</text>
-                }
-                else{
-                    <text>En uso</text>
-                }
+                <p>
+                    <b>Disponibilidad</b>:
+                    @if (netbook.IsAvailable == true)
+                    {
+                        <text>Disponible</text>
+                    }
+                    else
+                    {
+                        <text>En uso</text>
+                    }
                 </p>
             }
             <div class="_QRCode">
@@ -68,13 +71,15 @@
 
     private async Task DownloadQRCode()
     {
-        if (!string.IsNullOrEmpty(QRCode)){
+        if (!string.IsNullOrEmpty(QRCode))
+        {
             await JSRuntime.InvokeVoidAsync("downloadImage", QRCode, "QRCode.png");
         }
     }
     private async Task PrintQRCode()
     {
-        if (!string.IsNullOrEmpty(QRCode)){
+        if (!string.IsNullOrEmpty(QRCode))
+        {
             await JSRuntime.InvokeVoidAsync("printImage", QRCode);
         }
     }

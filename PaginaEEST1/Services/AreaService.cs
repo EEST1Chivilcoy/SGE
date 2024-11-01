@@ -12,7 +12,7 @@ namespace PaginaEEST1.Services
     public interface IAreaService
     {
         Task<Area?> GetArea(int ID);
-        Task<bool> SaveArea(Area area);
+        Task<Area?> SaveArea(Area area);
         Task DelArea(int ID);
         Task<List<AreaViewModel?>> GetListAreas();
 
@@ -30,7 +30,7 @@ namespace PaginaEEST1.Services
             _context = context;
         }
 
-        public async Task<bool> SaveArea(Area save)
+        public async Task<Area?> SaveArea(Area save)
         {
             try
             {
@@ -41,12 +41,13 @@ namespace PaginaEEST1.Services
                 }
                 _context.Areas.Add(save);
                 await _context.SaveChangesAsync();
-                return true;
+
+                return _context.Areas.Where(a => a == save).SingleOrDefault();
             }
             catch (DbUpdateException ex)
             {
                 Console.WriteLine(ex.Message);
-                return false;
+                return null;
             }
         }
 
@@ -75,7 +76,7 @@ namespace PaginaEEST1.Services
 
             return areas.Select(area => new AreaViewModel
             {
-                Id = area.AreaId,
+                Id = area.Id,
                 Name = area.Name,
                 CategoryId = area.Category?.Id ?? 0,
                 CategoryName = area.Category?.Name ?? ""

@@ -1,4 +1,4 @@
-@using PaginaEEST1.Services
+﻿@using PaginaEEST1.Services
 @using PaginaEEST1.Data.Enums
 @using PaginaEEST1.Data.Models.Categories
 @using PaginaEEST1.Data.Models.SchoolArea
@@ -7,7 +7,10 @@
 
 <div>
     <Form Model="@areaVM" OnFinish="OnFinish">
-        <div clas="form-grid">
+        <div class="form-grid">
+            <FormItem Label="Subir Foto">
+                <ImageInput @ref="ImageUpload" ImageType="TypeImage.AreaImage" />
+            </FormItem>
             <FormItem Label="Nombre del Salón">
                 <Input @bind-Value="@areaVM.Name" />
             </FormItem>
@@ -19,16 +22,14 @@
             </FormItem>
             @* Categoría *@
             <FormItem Label="Seleccione la categoría">
-                <Select
-                    TItem="AreaCategory"
-                    TItemValue = "AreaCategory"
-                    DataSource = "@categories"
-                    @bind-value = "@areaVM.Category"
-                    Placeholder = "Sin categoría"
-                    AllowClear = "true"
-                    LabelName="@nameof(AreaCategory.Name)"
-                    DefaultActiveFirstOption="false"
-                >
+                <Select TItem="AreaCategory"
+                        TItemValue="AreaCategory"
+                        DataSource="@categories"
+                        @bind-value="@areaVM.Category"
+                        Placeholder="Sin categoría"
+                        AllowClear="true"
+                        LabelName="@nameof(AreaCategory.Name)"
+                        DefaultActiveFirstOption="false">
                 </Select>
             </FormItem>
             <FormItem>
@@ -39,14 +40,15 @@
     </Form>
 </div>
 
-@code{
+@code {
     [Parameter]
     public EventCallback<bool> OnClose { get; set; }
 
     // Variables
     private List<AreaCategory?> categories = new();
-    private Area areaVM  = new();
-    
+    private Area areaVM = new();
+    private ImageInput? ImageUpload { get; set; } 
+
     // Funciones
     private async Task HandleClose()
     {
@@ -54,14 +56,17 @@
     }
     private async Task OnFinish()
     {
-        bool save = await AreaService.SaveArea(areaVM);
-        if (save == true){
+        Area? save = await AreaService.SaveArea(areaVM);
+        if (save != null)
+        {
+            ImageUpload.SaveImage(save.Id);
             areaVM = new();
             await OnClose.InvokeAsync(true);
             StateHasChanged();
             await message.Success("Se registro el salón");
         }
-        else{
+        else
+        {
             await message.Error("Error inesperado al guardar el salón");
         }
     }

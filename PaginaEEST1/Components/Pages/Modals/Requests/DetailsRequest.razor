@@ -63,7 +63,9 @@ else if (RequestSelect is StudentAccountRequest account)
     </Select>
     @if (ManualStatus == RequestStatus.EnProceso)
     {
-        <br><br>
+        <br>
+
+        <br>
         <p>Fecha estimada de terminación: </p> <DatePicker @bind-Value="@_estimatedCompletionDate" />
     }
     <br><br>

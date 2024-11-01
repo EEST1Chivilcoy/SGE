@@ -21,16 +21,16 @@
             </FormItem>
             <FormItem Label="RAM">
                 <Input @bind-Value="@computerVM.RAM">
-                    <Suffix>
-                        GB
-                    </Suffix>
+                <Suffix>
+                    GB
+                </Suffix>
                 </Input>
             </FormItem>
             <FormItem Label="Almacenamiento">
                 <Input @bind-Value="@computerVM.Storage">
-                    <Suffix>
-                        GB
-                    </Suffix>
+                <Suffix>
+                    GB
+                </Suffix>
                 </Input>
             </FormItem>
             <FormItem Label="Tipo de almacenamiento">
@@ -49,12 +49,14 @@
                     </div>
                 </div>
             </FormItem>
-            @if(computerVM.Type == TypeComputer.Computer){
+            @if (computerVM.Type == TypeComputer.Computer)
+            {
                 <FormItem Label="Ubicación dentro de la Institución">
                     <Input @bind-Value="@computerVM.Location" />
                 </FormItem>
             }
-            @if(computerVM.Type == TypeComputer.Netbook){
+            @if (computerVM.Type == TypeComputer.Netbook)
+            {
                 <FormItem Label="Modelo de la Netbook">
                     <Input @bind-Value="@computerVM.Model" />
                 </FormItem>
@@ -74,7 +76,7 @@
     [Parameter]
     public EventCallback<bool> OnClose { get; set; }
     //Variables
-    private ComputerViewModel computerVM = new(){Type = TypeComputer.Computer, IsAvailable = true};
+    private ComputerViewModel computerVM = new() { Type = TypeComputer.Computer, IsAvailable = true };
 
     // Funciones
     private async Task HandleClose()
@@ -88,33 +90,37 @@
     }
     private async Task OnFinish()
     {
-        if (computerVM.Type == TypeComputer.Computer){
-            Desktop desktop = new(){
-                DeviceName = computerVM.DeviceName,
-                Type = computerVM.Type,
-                Status = computerVM.Status,
-                OperatingSystem = computerVM.OperatingSystem,
-                Processor = computerVM.Processor,
-                RAM = computerVM.RAM,
-                Storage = computerVM.Storage,
-                typeStorage = computerVM.typeStorage,
-                Location = computerVM.Location
-            };
+        if (computerVM.Type == TypeComputer.Computer)
+        {
+            Desktop desktop = new()
+                {
+                    DeviceName = computerVM.DeviceName,
+                    Type = computerVM.Type,
+                    Status = computerVM.Status,
+                    OperatingSystem = computerVM.OperatingSystem,
+                    Processor = computerVM.Processor,
+                    RAM = computerVM.RAM,
+                    Storage = computerVM.Storage,
+                    typeStorage = computerVM.typeStorage,
+                    Location = computerVM.Location
+                };
             await ComputerService.SaveComputer(desktop);
         }
-        else if (computerVM.Type == TypeComputer.Netbook){
-            Netbook netbook = new(){
-                DeviceName = computerVM.DeviceName,
-                Type = computerVM.Type,
-                Status = computerVM.Status,
-                OperatingSystem = computerVM.OperatingSystem,
-                Processor = computerVM.Processor,
-                RAM = computerVM.RAM,
-                Storage = computerVM.Storage,
-                typeStorage = computerVM.typeStorage,
-                Model = computerVM.Model,
-                IsAvailable = computerVM.IsAvailable
-            };
+        else if (computerVM.Type == TypeComputer.Netbook)
+        {
+            Netbook netbook = new()
+                {
+                    DeviceName = computerVM.DeviceName,
+                    Type = computerVM.Type,
+                    Status = computerVM.Status,
+                    OperatingSystem = computerVM.OperatingSystem,
+                    Processor = computerVM.Processor,
+                    RAM = computerVM.RAM,
+                    Storage = computerVM.Storage,
+                    typeStorage = computerVM.typeStorage,
+                    Model = computerVM.Model,
+                    IsAvailable = computerVM.IsAvailable
+                };
             await ComputerService.SaveComputer(netbook);
         }
         computerVM = new();
@@ -123,7 +129,8 @@
     }
 
     // View Model
-    private class ComputerViewModel{
+    private class ComputerViewModel
+    {
         public string? DeviceName { get; set; }
         public TypeComputer Type { get; set; }
         public ComputerStatus Status { get; set; }
