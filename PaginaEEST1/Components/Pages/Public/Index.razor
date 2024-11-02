@@ -204,7 +204,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        /// Ajusta si la fecha actual es anterior al aniversario de la fundación de este año
+        // Calcular los años transcurridos desde la fundación
+        yearsPassed = currentDate.Year - foundationDate.Year;
+        
+        // Ajusta si la fecha actual es anterior al aniversario de la fundación de este año
         if (currentDate < foundationDate.AddYears(yearsPassed))
         {
             yearsPassed--;
