@@ -97,11 +97,11 @@
                 <Col Span="24" Lg="14">
                 <Title Level="1" Class="title">Escuela de Educación Secundaria Técnica Nº1 "Mariano Moreno"</Title>
                 <Paragraph Class="paragraph">
-                    Más de 113 años formando técnicos profesionales en Chivilcoy, Buenos Aires. Una institución educativa estatal comprometida con la excelencia académica y la formación integral de nuestros estudiantes.
+                    Más de @yearsPassed años formando técnicos profesionales en Chivilcoy, Buenos Aires. Una institución educativa estatal comprometida con la excelencia académica y la formación integral de nuestros estudiantes.
                 </Paragraph>
                 </Col>
                 <Col Span="24" Lg="10">
-                    <img src="Images/School.jpg" alt="Fachada de la Escuela" class="school-image" />
+                <img src="Images/School.jpg" alt="Fachada de la Escuela" class="school-image" />
                 </Col>
             </Row>
         </div>
@@ -188,4 +188,26 @@
         "Images/ImagesIndex/9.jpg",
         "Images/ImagesIndex/10.jpg",
     };
+
+    /// <summary>
+    /// Fecha de Fundación de la Institución
+    /// </summary>
+    private DateTime foundationDate = new DateTime(1910, 5, 12);
+    /// <summary>
+    /// Fecha Actual
+    /// </summary>
+    private DateTime currentDate = DateTime.Now;
+    /// <summary>
+    /// Años transcurridos desde la fundación
+    /// </summary>
+    private int yearsPassed;
+
+    protected override async Task OnInitializedAsync()
+    {
+        /// Ajusta si la fecha actual es anterior al aniversario de la fundación de este año
+        if (currentDate < foundationDate.AddYears(yearsPassed))
+        {
+            yearsPassed--;
+        }
+    }
 }
