@@ -79,8 +79,8 @@ namespace PaginaEEST1
             builder.Services.AddScoped<IAreaService, AreaService>();
             builder.Services.AddScoped<IImageService, ImageService>();
 
-            // Registrar los servicios personalizados HTTP
-            builder.Services.AddHttpClient<KickService>();
+            // Registrar los servicios Singleton
+            builder.Services.AddSingleton<KickService>();
 
             //Cache
             builder.Services.AddMemoryCache();
