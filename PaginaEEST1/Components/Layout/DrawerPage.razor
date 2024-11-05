@@ -48,16 +48,16 @@
             </ul>
         </div>
         <div style="margin-top: auto; padding: 20px 0;">
-            @if(isLive)
+            @if(_showRadioButton)
             {
-                <Button class="btn-radio-drawer" OnClick="NavigateToRadio">Radio en Vivo</Button>
+                <Button Class="btn-radio-drawer" OnClick="NavigateToRadio">Radio en Vivo</Button>
             }
             <AuthorizeView>
                 <NotAuthorized>
-                    <Button class="btn-login" OnClick="Login">Iniciar Sesión</Button>
+                    <Button Class="btn-login" OnClick="Login">Iniciar Sesión</Button>
                 </NotAuthorized>
                 <Authorized>
-                    <Button class="btn-login" OnClick="Logout">Cerrar Sesión</Button>
+                    <Button Class="btn-login" OnClick="Logout">Cerrar Sesión</Button>
                 </Authorized>
             </AuthorizeView>
         </div>
@@ -100,11 +100,30 @@
 
 @code {
     private bool _Visible = false;
-    private bool isLive;
-
-    protected override async Task OnInitializedAsync()
+    private bool _showRadioButton = false;
+    
+    protected override void OnInitialized()
     {
-        isLive = await KickService.IsChannelLiveAsync("radioinduchivilcoy");
+        // Inicia la verificación del estado del canal de forma asíncrona
+        Task.Run(CheckChannelStatus);
+    }
+    
+    private async Task CheckChannelStatus()
+    {
+        try
+        {
+            var isLive = await KickService.IsChannelLiveAsync("radioinduchivilcoy");
+            _showRadioButton = isLive; // Asigna el resultado directamente
+        }
+        catch
+        {
+            // Manejar errores silenciosamente
+            _showRadioButton = false; // O puedes omitir esta línea si quieres mantenerlo en false
+        }
+        finally
+        {
+        StateHasChanged(); // Actualiza la UI para reflejar el estado
+        }
     }
 
     // Manejo de Sesión
