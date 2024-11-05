@@ -23,7 +23,7 @@ namespace PaginaEEST1.Controllers
 
         // GET: api/Images/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<FileContentResult>> GetAbstractImage(int id)
+        public async Task<ActionResult> GetAbstractImage(int id)
         {
             var abstractImage = await _context.Images.FindAsync(id);
 
