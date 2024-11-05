@@ -1,5 +1,6 @@
 ﻿using PaginaEEST1.Data.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PaginaEEST1.Data.Models.Images
 {
@@ -11,9 +12,17 @@ namespace PaginaEEST1.Data.Models.Images
         public string? ImageName { get; set; }
 
         [Required]
-        public string Base64Image { get; set; } = string.Empty;
+        public byte[] ImageContent { get; set; } = null!;
+
         [Required]
-        public string TypeFile { get; set; } = string.Empty;
+        /// <summary>
+        /// MIME Type
+        /// </summary>
+        public string TypeFile { get; set; } = null!;
+
         public TypeImage ImageType { get; set; }
+
+        [NotMapped]
+        public string Base64Image { get; set; } = null!;
     }
 }
