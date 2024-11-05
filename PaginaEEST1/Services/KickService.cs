@@ -7,6 +7,7 @@ namespace PaginaEEST1.Services
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
         private readonly IMemoryCache _cache;
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
         public KickService(HttpClient httpClient, IConfiguration configuration, IMemoryCache cache)
         {
@@ -17,20 +18,24 @@ namespace PaginaEEST1.Services
 
         public async Task<bool> IsChannelLiveAsync(string channelName)
         {
-            if (_cache.TryGetValue(channelName, out bool isLive))
-            {
-                return isLive;
-            }
-
-            var apiKey = _configuration["KickApiKey"];
-            var request = new HttpRequestMessage(HttpMethod.Get, $"https://kick-com-api.p.rapidapi.com/livestream/{channelName}/status");
-            request.Headers.Add("X-RapidAPI-Key", apiKey);
-            request.Headers.Add("X-RapidAPI-Host", "kick-com-api.p.rapidapi.com");
-
-            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3)); // Timeout de 3 segundos
+            await _semaphore.WaitAsync();
 
             try
             {
+                var isLive = _cache.TryGetValue(channelName, out bool cacheHit);
+
+                if (cacheHit)
+                {
+                    return isLive;
+                }
+
+                var apiKey = _configuration["KickApiKey"];
+                var request = new HttpRequestMessage(HttpMethod.Get, $"https://kick-com-api.p.rapidapi.com/livestream/{channelName}/status");
+                request.Headers.Add("X-RapidAPI-Key", apiKey);
+                request.Headers.Add("X-RapidAPI-Host", "kick-com-api.p.rapidapi.com");
+
+                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30)); // Timeout de 30 segundos
+
                 var response = await _httpClient.SendAsync(request, cts.Token);
 
                 if (response.IsSuccessStatusCode)
@@ -47,6 +52,10 @@ namespace PaginaEEST1.Services
             catch (TaskCanceledException)
             {
                 // La solicitud fue cancelada debido al timeout
+            }
+            finally
+            {
+                _semaphore.Release();
             }
 
             return false;
