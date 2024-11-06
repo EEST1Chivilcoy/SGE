@@ -32,6 +32,9 @@
                         DefaultActiveFirstOption="false">
                 </Select>
             </FormItem>
+            <FormItem Label="Orientación del Área">
+                <EnumSelect TEnum="EducationalGuidance" @bind-Value="@areaVM.AreaGuidance" />
+            </FormItem>
             <FormItem>
                 <Button Type="primary" HtmlType="submit">Guardar</Button>
                 <Button OnClick="HandleClose">Cerrar</Button>

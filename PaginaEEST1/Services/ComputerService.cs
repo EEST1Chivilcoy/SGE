@@ -30,6 +30,10 @@ namespace PaginaEEST1.Services
         {
             try
             {
+                if (save is Desktop desktop)
+                {
+                    desktop.Location = await _context.Areas.FindAsync(desktop.LocationId);
+                }
                 _context.Computers.Add(save);
                 await _context.SaveChangesAsync();
                 return true;
@@ -76,7 +80,10 @@ namespace PaginaEEST1.Services
                 computer.Storage = newpc.Storage;
                 computer.typeStorage = newpc.typeStorage;
                 if (computer is Desktop desktop && newpc is Desktop newdesktop)
-                    desktop.Location = newdesktop.Location;
+                { 
+                    desktop.LocationId = newdesktop.LocationId;
+                    desktop.Location = await _context.Areas.FindAsync(newdesktop.LocationId);
+                }
                 if (computer is Netbook netbook && newpc is Netbook newnetbook)
                 {
                     netbook.Model = newnetbook.Model;

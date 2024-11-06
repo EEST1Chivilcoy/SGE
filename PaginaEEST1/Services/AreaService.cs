@@ -75,6 +75,7 @@ namespace PaginaEEST1.Services
                 area.Location = newArea.Location;
                 area.AreaType = newArea.AreaType;
                 area.Category = newArea.Category;
+                area.AreaGuidance = newArea.AreaGuidance;
                 await _context.SaveChangesAsync();
                 return area;
             }

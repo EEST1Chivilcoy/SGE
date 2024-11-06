@@ -17,6 +17,7 @@
             <p><b>Ubicación en la Institución</b>: @area.Location</p>
             <p><b>Tipo de Area</b>: @area.AreaType.GetDisplayName()</p>
             <p><b>Categoría</b>: @(area.Category?.Name ?? "Sin categoría")</p>
+            <p><b>Orientación</b>: @area.AreaGuidance.GetDisplayName()</p>
         }
     </div>
 </Flex>

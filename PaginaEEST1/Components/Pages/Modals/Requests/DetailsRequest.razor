@@ -1,5 +1,6 @@
 ﻿@using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request
 @using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Models.PhysicalObjects
 @using PaginaEEST1.Services
 @using PaginaEEST1.Data.Enums
 @using PaginaEEST1.Shared
@@ -101,15 +102,14 @@ else if (RequestSelect is StudentAccountRequest account)
         await OnClose.InvokeAsync();
         StateHasChanged();
     }
-    private async Task GetComputer(RequestComputer request)
-    {
-        if (request.ComputerId != 0)
-            ComputerName = (await ComputerService.GetComputer(request.ComputerId)).DeviceName;
-        StateHasChanged();
-    }
     protected override async Task OnInitializedAsync()
     {
         RequestSelect = await RequestService.GetRequest(ID);
+        if (RequestSelect is RequestComputer _request)
+        {
+            Computer? relatedDevice = await ComputerService.GetComputer(_request.ComputerId);
+            ComputerName = relatedDevice.DeviceName;
+        }
         StateHasChanged();
     }
 }

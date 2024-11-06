@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PaginaEEST1.Data;
 
@@ -11,9 +12,11 @@ using PaginaEEST1.Data;
 namespace PaginaEEST1.Data.Migrations
 {
     [DbContext(typeof(PaginaDbContext))]
-    partial class PaginaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241106222801_AddAreaGuidance")]
+    partial class AddAreaGuidance
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -444,10 +447,8 @@ namespace PaginaEEST1.Data.Migrations
                 {
                     b.HasBaseType("PaginaEEST1.Data.Models.PhysicalObjects.Computer");
 
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("LocationId");
+                    b.Property<string>("Location")
+                        .HasColumnType("longtext");
 
                     b.HasDiscriminator().HasValue(1);
                 });
@@ -643,17 +644,6 @@ namespace PaginaEEST1.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Person");
-                });
-
-            modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Desktop", b =>
-                {
-                    b.HasOne("PaginaEEST1.Data.Models.SchoolArea.Area", "Location")
-                        .WithMany()
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("PaginaEEST1.Data.Models.PhysicalObjects.Netbook", b =>

@@ -10,7 +10,7 @@
 @using PaginaEEST1.Components.Layout.SGE
 @layout SGELayout
 
-@attribute [Authorize(Roles = "EMATP,Profesores")]
+@attribute [Authorize(Roles = "EMATP,Profesores,Directivo")]
 
 <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f0f2f5; width: 100%;">
     <Row Gutter="16" Style="width: 100%; max-width: 1200px;">
@@ -46,8 +46,7 @@
                 <Icon Type="dropbox-square" Theme="fill" />
                     Deposito
             </Button>
-            @* Temporalmente el rol de EMATP cuenta con la autorización de acceder a la página para realizar pruebas *@
-            <AuthorizeView Roles="EMATP,Directivo">
+            <AuthorizeView Roles="Directivo">
                 <Authorized>
                     <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Directivo/GestionSalones"))">
                         <Icon Type="profile" Theme="fill" />

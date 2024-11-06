@@ -1,7 +1,9 @@
 ﻿@using PaginaEEST1.Services
 @using PaginaEEST1.Data.Enums
 @using PaginaEEST1.Data.Models.PhysicalObjects
+@using PaginaEEST1.Data.ViewModels
 @inject IMessageService message
+@inject IAreaService AreaService
 @inject IComputerService ComputerService
 
 <div>
@@ -52,7 +54,16 @@
             @if (computerVM.Type == TypeComputer.Computer)
             {
                 <FormItem Label="Ubicación dentro de la Institución">
-                    <Input @bind-Value="@computerVM.Location" />
+                    <Select
+                        @bind-Value="@computerVM.LocationId"
+                        DataSource="@areas"
+                        TItem="AreaViewModel"
+                        TItemValue="int"
+                        LabelName="@nameof(AreaViewModel.Name)"
+                        ValueName="@nameof(AreaViewModel.Id)"
+                        DefaultActiveFirstOption = "true"
+                        Placeholder="No se encuentra salones disponibles"
+                        />
                 </FormItem>
             }
             @if (computerVM.Type == TypeComputer.Netbook)
@@ -77,6 +88,7 @@
     public EventCallback<bool> OnClose { get; set; }
     //Variables
     private ComputerViewModel computerVM = new() { Type = TypeComputer.Computer, IsAvailable = true };
+    private List<AreaViewModel> areas = new();
 
     // Funciones
     private async Task HandleClose()
@@ -102,7 +114,7 @@
                     RAM = computerVM.RAM,
                     Storage = computerVM.Storage,
                     typeStorage = computerVM.typeStorage,
-                    Location = computerVM.Location
+                    LocationId = computerVM.LocationId
                 };
             await ComputerService.SaveComputer(desktop);
         }
@@ -139,8 +151,12 @@
         public int? RAM { get; set; }
         public int? Storage { get; set; }
         public TypeStorage typeStorage { get; set; }
-        public string? Location { get; set; }
         public string? Model { get; set; }
         public bool IsAvailable { get; set; }
+        public int LocationId { get; set; }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        areas = await AreaService.GetListAreas();
     }
 }

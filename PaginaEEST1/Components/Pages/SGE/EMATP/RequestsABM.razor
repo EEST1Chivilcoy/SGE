@@ -12,7 +12,6 @@
 @layout SGELayout
 
 @attribute [Authorize(Roles = "EMATP")]
-@*Definimos que esta pagina solo puede ser vista por EMATP*@
 
 @* Tablas *@
 <Row Style="height: 100%; width:100%; margin: 1vw; border-radius: 1vw;">
@@ -146,7 +145,8 @@
 
     private async Task OnDrop(DragEventArgs e, RequestStatus newStatus)
     {
-        if (RequestDrag != null && RequestDrag.Status != newStatus)
+        if (RequestDrag != null && RequestDrag.Status != newStatus &&
+            !(RequestDrag.Status == RequestStatus.Pendiente && newStatus == RequestStatus.Completada))
         {
             if (RequestDrag.Status == RequestStatus.Pendiente && newStatus == RequestStatus.EnProceso)
             {

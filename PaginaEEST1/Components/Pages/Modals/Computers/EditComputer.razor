@@ -4,6 +4,7 @@
 @using PaginaEEST1.Data.Models.PhysicalObjects
 @inject IMessageService message
 @inject IComputerService ComputerService
+@inject IAreaService AreaService
 
 <div clas="container">
     <Form Model="@computerVM" OnFinish="OnFinish">
@@ -40,7 +41,16 @@
             @if (computerVM is Desktop desktop)
             {
                 <FormItem Label="Ubicación dentro de la Institución">
-                    <Input @bind-Value="@desktop.Location" />
+                    <Select
+                        @bind-Value="@desktop.LocationId"
+                        DataSource="@areas"
+                        TItem="AreaViewModel"
+                        TItemValue="int"
+                        LabelName="@nameof(AreaViewModel.Name)"
+                        ValueName="@nameof(AreaViewModel.Id)"
+                        DefaultActiveFirstOption = "true"
+                        Placeholder="No se encuentra salones disponibles"
+                        />
                 </FormItem>
             }
             @if (computerVM is Netbook netbook)
@@ -64,6 +74,7 @@
     [Parameter] public EventCallback<bool> OnClose { get; set; }
     [Parameter] public int ID { get; set; }
     private Computer? computerVM { get; set; }
+    private List<AreaViewModel> areas = new();
 
     // Funciones
     private async Task HandleClose()
@@ -89,6 +100,7 @@
         var computer = await ComputerService.GetComputer(ID);
         if (computer != null)
             computerVM = computer;
+        areas = await AreaService.GetListAreas();
         StateHasChanged();
     }
 }

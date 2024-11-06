@@ -28,5 +28,9 @@ namespace PaginaEEST1.Data.Models.SchoolArea
         /// Imagen del área.
         /// </summary>
         public AreaImage_Area? ImageArea { get; set; }
+        /// <summary>
+        /// Indica la orientación dedicada del área según: Ninguna, Informática, Electromecánica
+        /// </summary>
+        public EducationalGuidance AreaGuidance { get; set; }
     }
 }
