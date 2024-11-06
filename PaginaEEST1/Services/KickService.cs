@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿  using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Text.Json;
 
@@ -86,34 +86,19 @@ namespace PaginaEEST1.Services
 
                 return isLive;
             }
-            catch (HttpRequestException ex)
+            catch (Exception ex)
             {
-                Console.WriteLine("La API ha vuelto a brillar por su incompetencia.");
+
+                if(ex is HttpRequestException)
+                    Console.WriteLine("La API ha vuelto a brillar por su incompetencia.");
+                if(ex is TaskCanceledException)
+                    Console.WriteLine("La API decidió tomarse un descanso... otra vez.");
+                if (ex is JsonException)
+                    Console.WriteLine("Parece que la API esta inventando su propio formato JSON... ¡genial!");
+                else
+                    Console.WriteLine("La API ya se esta inventado sus propios errores.");
 
                 // En caso de error, guardar false en la caché
-                var cacheOptions = new MemoryCacheEntryOptions()
-                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(CacheMinutes));
-                _cache.Set(cacheKey, false, cacheOptions);
-
-                return false;
-            }
-            catch (TaskCanceledException)
-            {
-                // Solicitud agotada (Guardar false en la caché)
-                Console.WriteLine("La API decidió tomarse un descanso... otra vez.");
-
-                var cacheOptions = new MemoryCacheEntryOptions()
-                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(CacheMinutes));
-                _cache.Set(cacheKey, false, cacheOptions);
-
-                return false;
-            }
-            catch (JsonException)
-            {
-                // Respuesta JSON no válida (Guardar false en la caché)
-
-                Console.WriteLine("Parece que la API esta inventando su propio formato JSON... ¡genial!");
-
                 var cacheOptions = new MemoryCacheEntryOptions()
                     .SetAbsoluteExpiration(TimeSpan.FromMinutes(CacheMinutes));
                 _cache.Set(cacheKey, false, cacheOptions);
