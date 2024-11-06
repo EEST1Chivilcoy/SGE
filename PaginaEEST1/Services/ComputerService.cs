@@ -14,7 +14,7 @@ namespace PaginaEEST1.Services
         Task<bool> SaveComputer(Computer computer);
         Task<Computer?> EditComputer(Computer NewPC);
         Task DelComputer(int ID);
-        Task<List<ComputerViewModel?>> GetListComputerDevices();
+        Task<List<ComputerViewModel>> GetListComputerDevices();
     }
 
     public class ComputerService : IComputerService
@@ -92,9 +92,9 @@ namespace PaginaEEST1.Services
             }
         }
 
-        public async Task<List<ComputerViewModel?>> GetListComputerDevices()
+        public async Task<List<ComputerViewModel>> GetListComputerDevices()
         {
-            List<Computer> computers = await _context.Computers.ToListAsync();
+            List<Computer> computers = await _context.Computers.Where(c => c != null).ToListAsync();
 
             return computers.Select(computer => new ComputerViewModel
             {

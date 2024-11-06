@@ -16,7 +16,7 @@
     private async Task HandleImage(InputFileChangeEventArgs e)
     {
         InputFile = e;
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
     }
 
     public async Task<bool> SaveImage(int ReferenceId, string ProfileId = "null")

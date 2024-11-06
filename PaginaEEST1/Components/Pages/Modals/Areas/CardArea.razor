@@ -14,7 +14,8 @@
     <img src="@imageSrc" alt="Foto del Salón" class="card-image" />
     <div class="card-content">@area.Name</div>
     <div class="card-buttons">
-        <Icon Type="eye" Theme="outline" Class="card-button" OnClick="() => {HandleDetails(area.Id);}" />
+        <Icon Type="eye" Theme="outline" Class="card-button" OnClick="() => {visDetails = true;}" />
+        <Icon Type="edit" Theme="outline" Class="card-button" OnClick="() => {visEdit = true;}" />
         <Popconfirm Title="¿Remover este Salón?"
                     OnConfirm="() => delArea(area.Id)"
                     OkText="Si"
@@ -26,8 +27,15 @@
 
 @if (visDetails == true)
 {
-    <Modal Visible="visDetails" Title="Detalles del salón." Footer="null" OnCancel="() => visDetails = false">
-        <DetailsArea ID="@idDetails" />
+    <Modal Visible="visDetails" Title="Detalles del salón" Footer="null" OnCancel="() => visDetails = false">
+        <DetailsArea ID="@idArea" />
+    </Modal>
+}
+
+@if (visEdit == true)
+{
+    <Modal Visible="visEdit" Title="Edición del salón" Footer="null" OnCancel="() => visEdit = false">
+        <EditArea ID="@idArea" OnClose="closeEdit" />
     </Modal>
 }
 
@@ -40,25 +48,25 @@
     public AreaViewModel area { get; set; } = null!;
 
     // Variables
+    private int idArea { get; set; }
     private bool visDetails = false;
-    private int idDetails { get; set; }
-    private AbstractImage? image { get; set; }
+    private bool visEdit = false;
     private string? imageSrc { get; set; }
 
     // Funciones
-    private async Task delArea(int ID)
+    private async Task closeEdit(bool success)
     {
-        await OnClose.InvokeAsync(true);
-        await AreaService.DelArea(ID);
-        await message.Success("Se removio el salón");
+        visEdit = false;
+        if (success == true)
+            await OnClose.InvokeAsync(true);
         StateHasChanged();
     }
-
-    private Task HandleDetails(int ID)
+    private async Task delArea(int ID)
     {
-        idDetails = ID;
-        visDetails = true;
-        return Task.CompletedTask;
+        await AreaService.DelArea(ID);
+        await OnClose.InvokeAsync(true);
+        StateHasChanged();
+        await message.Success("Se removio el salón");
     }
 
     // Init
@@ -75,5 +83,7 @@
 
             imageSrc = $"data:{mimeType};base64,{Convert.ToBase64String(imageBytes)}";
         }
+
+        idArea = area.Id;
     }
 }

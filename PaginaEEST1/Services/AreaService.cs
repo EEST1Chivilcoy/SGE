@@ -7,6 +7,8 @@ using PaginaEEST1.Data.Enums;
 using Microsoft.Identity.Client.Extensions.Msal;
 using System.Runtime.Intrinsics.Arm;
 using PaginaEEST1.Data.Models.Images;
+using PaginaEEST1.Data.Models.PhysicalObjects;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 
 namespace PaginaEEST1.Services
 {
@@ -14,6 +16,7 @@ namespace PaginaEEST1.Services
     {
         Task<Area?> GetArea(int ID);
         Task<Area?> SaveArea(Area area);
+        Task<Area?> EditArea(Area newArea);
         Task DelArea(int ID);
         Task<List<AreaViewModel>> GetListAreas();
 
@@ -61,7 +64,26 @@ namespace PaginaEEST1.Services
             _context.Areas.Remove(area);
             await _context.SaveChangesAsync();
         }
-
+        public async Task<Area?> EditArea(Area newArea)
+        {
+            Area? area = await _context.Areas.FindAsync(newArea.Id);
+            if (area == null)
+                throw new InvalidOperationException("No se encontró el Area.");
+            try
+            {
+                area.Name = newArea.Name;
+                area.Location = newArea.Location;
+                area.AreaType = newArea.AreaType;
+                area.Category = newArea.Category;
+                await _context.SaveChangesAsync();
+                return area;
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new InvalidOperationException("Error inesperado al editar el Area.");
+            }
+        }
         public async Task<Area?> GetArea(int ID)
         {
             Area? area = await _context.Areas.FindAsync(ID);

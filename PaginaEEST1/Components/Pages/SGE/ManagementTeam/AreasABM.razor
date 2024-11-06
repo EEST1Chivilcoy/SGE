@@ -170,7 +170,7 @@
             <!-- Cartas del resto de salones -->
             @foreach (AreaViewModel? area in areas){
                 if (area != null){
-                    <CardArea area="area" />
+                    <CardArea area="area" OnClose="refreshAreas" />
                 }
             }
         </Flex>
@@ -179,8 +179,8 @@
 
 @if (visAdd == true)
 {
-    <Modal Visible="visAdd" Title="Cargar un nuevo salón." Footer="null" OnCancel="() => closeModals(false)">
-        <AddArea OnClose="closeModals" />
+    <Modal Visible="visAdd" Title="Cargar un nuevo salón." Footer="null" OnCancel="() => refreshAreas(false)">
+        <AddArea OnClose="refreshAreas" />
     </Modal>
 }
 
@@ -204,13 +204,11 @@
         return Task.CompletedTask;
     }
 
-    private async Task closeModals(bool success)
+    private async Task refreshAreas(bool success)
     {
         visAdd = false;
-        if (success == true)
-        {
+        if (success)
             await OnInitializedAsync();
-        }
         StateHasChanged();
     }
 
