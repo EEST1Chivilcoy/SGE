@@ -67,8 +67,8 @@ namespace PaginaEEST1.Services
             }
             catch (Exception ex)
             {
-                // Aquí podrías agregar logging del error si lo necesitas
-                return false;
+                Console.WriteLine(ex.Message);
+                throw new InvalidOperationException("Error inesperado al guardar una Imagen.");
             }
         }
     }

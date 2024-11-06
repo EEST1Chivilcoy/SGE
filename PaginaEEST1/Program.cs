@@ -82,7 +82,7 @@ namespace PaginaEEST1
             // Registrar los servicios Singleton
             builder.Services.AddSingleton<KickService>();
 
-            //Cache
+            // Cache
             builder.Services.AddMemoryCache();
 
             var app = builder.Build();

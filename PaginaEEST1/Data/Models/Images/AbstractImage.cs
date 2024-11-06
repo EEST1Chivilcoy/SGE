@@ -19,10 +19,7 @@ namespace PaginaEEST1.Data.Models.Images
         /// MIME Type
         /// </summary>
         public string TypeFile { get; set; } = null!;
-
+        
         public TypeImage ImageType { get; set; }
-
-        [NotMapped]
-        public string Base64Image { get; set; } = null!;
     }
 }

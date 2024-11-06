@@ -59,7 +59,7 @@
         Area? save = await AreaService.SaveArea(areaVM);
         if (save != null)
         {
-            ImageUpload.SaveImage(save.Id);
+            await ImageUpload.SaveImage(save.Id);
             areaVM = new();
             await OnClose.InvokeAsync(true);
             StateHasChanged();

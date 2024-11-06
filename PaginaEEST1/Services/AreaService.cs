@@ -6,6 +6,7 @@ using PaginaEEST1.Data.ViewModels;
 using PaginaEEST1.Data.Enums;
 using Microsoft.Identity.Client.Extensions.Msal;
 using System.Runtime.Intrinsics.Arm;
+using PaginaEEST1.Data.Models.Images;
 
 namespace PaginaEEST1.Services
 {
@@ -14,7 +15,7 @@ namespace PaginaEEST1.Services
         Task<Area?> GetArea(int ID);
         Task<Area?> SaveArea(Area area);
         Task DelArea(int ID);
-        Task<List<AreaViewModel?>> GetListAreas();
+        Task<List<AreaViewModel>> GetListAreas();
 
         // Funcion GetListCategories implementada temporalmente
         // Posiblemente se deba implementar dentro de un posible futuro servicio especifico para categorias
@@ -70,17 +71,18 @@ namespace PaginaEEST1.Services
 
             return area;
         }
-        public async Task<List<AreaViewModel?>> GetListAreas()
+        public async Task<List<AreaViewModel>> GetListAreas()
         {
-            List<Area> areas = await _context.Areas.ToListAsync();
-
+            List<Area> areas = await _context.Areas.Where(a => a != null).ToListAsync();
             return areas.Select(area => new AreaViewModel
             {
                 Id = area.Id,
                 Name = area.Name,
-                CategoryId = area.Category?.Id ?? 0,
+                CategoryId = area.Category != null ? area.Category.Id : 0,
                 CategoryName = area.Category?.Name ?? "",
-                ImageId = area.ImageArea?.Id ?? 0
+                ImageId = _context.Images.OfType<AreaImage_Area>()
+                    .Where(i => i.AreaId == area.Id)
+                    .SingleOrDefault()?.Id
             }).ToList();
         }
         public async Task<List<AreaCategory?>> GetListCategories()

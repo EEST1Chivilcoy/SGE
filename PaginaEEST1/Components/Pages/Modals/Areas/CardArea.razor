@@ -8,10 +8,11 @@
 @inject HttpClient Http
 @inject IAreaService AreaService
 @inject IMessageService message
+@inject NavigationManager NavigationManager
 
 <Card Class="area-card">
-    <img src="@imageUrl" alt="Foto del Salón" class="card-image" />
-    <div class="card-content">@area?.Name</div>
+    <img src="@imageSrc" alt="Foto del Salón" class="card-image" />
+    <div class="card-content">@area.Name</div>
     <div class="card-buttons">
         <Icon Type="eye" Theme="outline" Class="card-button" OnClick="() => {HandleDetails(area.Id);}" />
         <Popconfirm Title="¿Remover este Salón?"
@@ -36,12 +37,13 @@
     public EventCallback<bool> OnClose { get; set; }
 
     [Parameter]
-    public AreaViewModel? area { get; set; }
+    public AreaViewModel area { get; set; } = null!;
 
     // Variables
     private bool visDetails = false;
     private int idDetails { get; set; }
-    private string? imageUrl { get; set; }
+    private AbstractImage? image { get; set; }
+    private string? imageSrc { get; set; }
 
     // Funciones
     private async Task delArea(int ID)
@@ -60,12 +62,18 @@
     }
 
     // Init
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        if (area?.ImageId != null)
+        var baseUrl = NavigationManager.BaseUri.TrimEnd('/');
+        var response = await Http.GetAsync($"{baseUrl}/api/Images/{area.ImageId}");
+
+        if (response.IsSuccessStatusCode)
         {
-            // Construir la URL de la API para obtener la imagen
-            imageUrl = $"/api/Images/{area.ImageId}";
+            var imageBytes = await response.Content.ReadAsByteArrayAsync();
+
+            string mimeType = response.Content.Headers.ContentType?.MediaType ?? "image/png";
+
+            imageSrc = $"data:{mimeType};base64,{Convert.ToBase64String(imageBytes)}";
         }
     }
 }
