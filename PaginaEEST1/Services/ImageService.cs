@@ -9,16 +9,13 @@ using PaginaEEST1.Data.Models.Images;
 using PaginaEEST1.Data.Models.Categories;
 using PaginaEEST1.Data.Models.SchoolArea;
 using Microsoft.AspNetCore.Components.Forms;
-using PaginaEEST1.Helpers;
 using PaginaEEST1.Data.Models.Personal;
 
 namespace PaginaEEST1.Services
 {
     public interface IImageService
     {
-        Task<bool> SaveImage(AbstractImage image, InputFileChangeEventArgs file);
-        Task<AbstractImage> GetImageById(int ID);
-        Task<AbstractImage?> GetImageByType(TypeImage type, string ReferenceId);
+        Task<bool> SaveImage(AbstractImage image);
     }
 
     public class ImageService : IImageService
@@ -28,82 +25,50 @@ namespace PaginaEEST1.Services
         {
             _context = context;
         }
-        public async Task<bool> SaveImage(AbstractImage image, InputFileChangeEventArgs file)
+        public async Task<bool> SaveImage(AbstractImage image)
         {
             try
             {
-                if (image is AreaImage_Area AreaImage)
+                // Manejar las relaciones según el tipo de imagen
+                switch (image)
                 {
-                    Area? area = await _context.Areas.FindAsync(AreaImage.AreaId);
-                    if (area != null){
-                        AreaImage.Area = area;
-                        area.ImageArea = AreaImage;
-                    }
+                    case AreaImage_Area areaImage:
+                        var area = await _context.Areas.FindAsync(areaImage.AreaId);
+                        if (area != null)
+                        {
+                            areaImage.Area = area;
+                            area.ImageArea = areaImage;
+                        }
+                        break;
+
+                    case ItemImage_Item itemImage:
+                        var item = await _context.Items.FindAsync(itemImage.ItemId);
+                        if (item != null)
+                        {
+                            itemImage.Item = item;
+                            item.ItemImage = itemImage;
+                        }
+                        break;
+
+                    case ProfileImage_Person profileImage:
+                        var person = await _context.People.FindAsync(profileImage.PersonId);
+                        if (person != null)
+                        {
+                            profileImage.Person = person;
+                            person.ProfileImage = profileImage;
+                        }
+                        break;
                 }
-                else if (image is ItemImage_Item ItemImage)
-                {
-                    Item? item = await _context.Items.FindAsync(ItemImage.ItemId);
-                    if (item != null){
-                        ItemImage.Item = item;
-                        item.ItemImage = ItemImage;
-                    }
-                }
-                else if (image is ProfileImage_Person ProfileImage)
-                {
-                    Person? person = await _context.People.FindAsync(ProfileImage.PersonId);
-                    if (person != null){
-                        ProfileImage.Person = person;
-                        person.ProfileImage = ProfileImage;
-                    }
-                }
-                image.Base64Image = await ImageUploadHelper.StreamToBase64(file) ?? "";
+
+                // Agregar y guardar la imagen
                 _context.Images.Add(image);
                 await _context.SaveChangesAsync();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                // Aquí podrías agregar logging del error si lo necesitas
                 return false;
-            }
-        }
-        public async Task<AbstractImage> GetImageById(int ID)
-        {
-            AbstractImage? image = await _context.Images.FindAsync(ID);
-            if (image == null)
-                throw new InvalidOperationException("No se encontró la Computadora.");
-
-            return image;
-        }
-        public async Task<AbstractImage?> GetImageByType(TypeImage type, string ReferenceId)
-        {
-            try
-            {
-                switch (type)
-                {
-                    case (TypeImage.AreaImage):
-                        AreaImage_Area? imageArea = await _context.Images.OfType<AreaImage_Area>()
-                        .Where(i => i.AreaId == Convert.ToInt32(ReferenceId))
-                        .SingleOrDefaultAsync();
-
-                        return imageArea;
-
-                    case (TypeImage.ItemImage):
-                        ItemImage_Item? imageItem = await _context.Images.OfType<ItemImage_Item>()
-                        .Where(i => i.ItemId == Convert.ToInt32(ReferenceId))
-                        .SingleOrDefaultAsync();
-
-                        return imageItem;
-
-                    case (TypeImage.ProfileImage):
-                        return null;
-
-                    default:
-                        return null;
-                }
-            }
-            catch
-            {
-                return null;
             }
         }
     }

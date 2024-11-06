@@ -189,6 +189,7 @@
     private List<AreaViewModel?> AllAreas = new();
     private List<AreaViewModel?> areas = new();
     private List<string?> categories = new();
+
     // Variables de Visibilidad
     private string selectedCategory = "Todos";
     private bool visAdd = false;
@@ -202,6 +203,7 @@
         StateHasChanged();
         return Task.CompletedTask;
     }
+
     private async Task closeModals(bool success)
     {
         visAdd = false;
@@ -224,6 +226,7 @@
             areas = AllAreas.Where(cat => cat?.CategoryName == selectedCategory).ToList();
         }
     }
+
     // Init
     protected override async Task OnInitializedAsync()
     {

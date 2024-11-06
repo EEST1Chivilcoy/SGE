@@ -79,7 +79,8 @@ namespace PaginaEEST1.Services
                 Id = area.Id,
                 Name = area.Name,
                 CategoryId = area.Category?.Id ?? 0,
-                CategoryName = area.Category?.Name ?? ""
+                CategoryName = area.Category?.Name ?? "",
+                ImageId = area.ImageArea?.Id ?? 0
             }).ToList();
         }
         public async Task<List<AreaCategory?>> GetListCategories()

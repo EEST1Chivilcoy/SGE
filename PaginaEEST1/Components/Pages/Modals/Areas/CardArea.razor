@@ -5,22 +5,21 @@
 @using PaginaEEST1.Data.Enums
 @using PaginaEEST1.Services
 @using PaginaEEST1.Shared
+@inject HttpClient Http
 @inject IAreaService AreaService
-@inject IImageService ImageService
 @inject IMessageService message
 
 <Card Class="area-card">
-    <img src="@srcimage" alt="Foto del Salón" class="card-image"/>
+    <img src="@imageUrl" alt="Foto del Salón" class="card-image" />
     <div class="card-content">@area?.Name</div>
     <div class="card-buttons">
-    <Icon Type="eye" Theme="outline" Class="card-button" OnClick="() => {HandleDetails(area.Id);}" />
-    <Popconfirm Title="¿Remover este Salón?"
-    OnConfirm="() => delArea(area.Id)"
-    OkText="Si"
-    CancelText="No"
-    >
-    <Icon Type="delete" Theme="outline" Class="card-button" />
-    </Popconfirm>
+        <Icon Type="eye" Theme="outline" Class="card-button" OnClick="() => {HandleDetails(area.Id);}" />
+        <Popconfirm Title="¿Remover este Salón?"
+                    OnConfirm="() => delArea(area.Id)"
+                    OkText="Si"
+                    CancelText="No">
+            <Icon Type="delete" Theme="outline" Class="card-button" />
+        </Popconfirm>
     </div>
 </Card>
 
@@ -35,14 +34,14 @@
     // Parametros
     [Parameter]
     public EventCallback<bool> OnClose { get; set; }
+
     [Parameter]
-    public AreaViewModel? area {get; set;}
+    public AreaViewModel? area { get; set; }
 
     // Variables
     private bool visDetails = false;
     private int idDetails { get; set; }
-
-    private string? srcimage { get; set; }
+    private string? imageUrl { get; set; }
 
     // Funciones
     private async Task delArea(int ID)
@@ -52,18 +51,21 @@
         await message.Success("Se removio el salón");
         StateHasChanged();
     }
-    private Task HandleDetails(int ID){
+
+    private Task HandleDetails(int ID)
+    {
         idDetails = ID;
         visDetails = true;
         return Task.CompletedTask;
     }
 
     // Init
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        AbstractImage? image = await ImageService.GetImageByType(TypeImage.AreaImage, "" + area?.Id);
-        if (image != null){
-            srcimage = $"data:{image.TypeFile}; base64,{image.Base64Image}";
+        if (area?.ImageId != null)
+        {
+            // Construir la URL de la API para obtener la imagen
+            imageUrl = $"/api/Images/{area.ImageId}";
         }
     }
-}    
+}

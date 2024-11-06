@@ -1,6 +1,7 @@
 ﻿@using PaginaEEST1.Services
 @using PaginaEEST1.Data.Enums
 @using PaginaEEST1.Data.Models.Images
+@using System.IO
 @inject IMessageService message
 @inject IImageService ImageService
 
@@ -9,59 +10,74 @@
 @code {
     [Parameter]
     public TypeImage ImageType { get; set; }
-    // Archivo de la imagen
+
     private InputFileChangeEventArgs? InputFile { get; set; }
-    // Funciones
-    private void HandleImage(InputFileChangeEventArgs e)
+
+    private async Task HandleImage(InputFileChangeEventArgs e)
     {
         InputFile = e;
         StateHasChanged();
     }
 
-    public async void SaveImage(int ReferenceId, string ProfileId = "null")
+    public async Task<bool> SaveImage(int ReferenceId, string ProfileId = "null")
     {
         try
         {
             if (InputFile == null)
-                return;
+                return false;
+
+            // Convertir el archivo a byte array
+            byte[] imageContent;
+            using (var ms = new MemoryStream())
+            {
+                await InputFile.File.OpenReadStream().CopyToAsync(ms);
+                imageContent = ms.ToArray();
+            }
 
             switch (ImageType)
             {
-                case (TypeImage.AreaImage):
-                    AreaImage_Area save_area = new()
+                case TypeImage.AreaImage:
+                    var save_area = new AreaImage_Area
                         {
                             ImageName = InputFile.File.Name,
                             TypeFile = InputFile.File.ContentType,
                             ImageType = ImageType,
-                            AreaId = ReferenceId
+                            AreaId = ReferenceId,
+                            ImageContent = imageContent
                         };
-                    await ImageService.SaveImage(save_area, InputFile);
+                    await ImageService.SaveImage(save_area);
                     break;
-                case (TypeImage.ProfileImage):
-                    ProfileImage_Person save_profile = new()
+
+                case TypeImage.ProfileImage:
+                    var save_profile = new ProfileImage_Person
                         {
                             ImageName = InputFile.File.Name,
                             TypeFile = InputFile.File.ContentType,
                             ImageType = ImageType,
-                            PersonId = ProfileId
+                            PersonId = ProfileId,
+                            ImageContent = imageContent
                         };
-                    await ImageService.SaveImage(save_profile, InputFile);
+                    await ImageService.SaveImage(save_profile);
                     break;
-                case (TypeImage.ItemImage):
-                    ItemImage_Item save_item = new()
+
+                case TypeImage.ItemImage:
+                    var save_item = new ItemImage_Item
                         {
                             ImageName = InputFile.File.Name,
                             TypeFile = InputFile.File.ContentType,
                             ImageType = ImageType,
-                            ItemId = ReferenceId
+                            ItemId = ReferenceId,
+                            ImageContent = imageContent
                         };
-                    await ImageService.SaveImage(save_item, InputFile);
+                    await ImageService.SaveImage(save_item);
                     break;
             }
+            return true;
         }
-        catch
+        catch (Exception ex)
         {
-            await message.Error("Error inesperado al cargar la imagen");
+            await message.Error($"Error inesperado al cargar la imagen: {ex.Message}");
+            return false;
         }
     }
 }
