@@ -57,24 +57,6 @@
         margin-bottom: 1rem;
     }
 
-    .video-container {
-        position: relative;
-        padding-bottom: 56.25%;
-        height: 0;
-        overflow: hidden;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
     .title {
         color: inherit;
         font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -86,6 +68,87 @@
         font-size: 1.1rem;
         line-height: 1.6;
         margin-bottom: 1rem;
+    }
+
+    /* Estilos mejorados para el contenedor del carrusel */
+    .carousel-container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .carousel-image {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+
+    /* Media query para ajustar altura en dispositivos móviles */
+    @@media (max-width: 768px) {
+        .carousel-image {
+            height: 250px;
+        }
+    }
+
+    /* Estilos actualizados para el contenedor de video */
+    .video-section {
+        margin: 2rem 0;
+        padding: 0 1rem;
+    }
+
+    .video-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #000;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+        .video-container::before {
+            content: "";
+            display: block;
+            padding-top: 75%; /* Relación de aspecto 4:3 */
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+    /* Media queries para responsividad */
+    @@media (max-width: 1200px) {
+        .carousel-container {
+            max-width: 900px;
+        }
+    }
+
+    @@media (max-width: 992px) {
+        .carousel-container {
+            max-width: 700px;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .page-content {
+            padding: 1rem;
+        }
+
+        .carousel-container {
+            padding: 0 0.5rem;
+        }
+
+        .video-section {
+            padding: 0 0.5rem;
+        }
     }
 </style>
 
@@ -130,11 +193,12 @@
                 </Col>
             </Row>
         </div>
-        <Flex Align="center" Justify="center" Style="width: 100%; max-height: 300px; margin: 20px;">
-            <div style="max-width: 800px; max-height: 300px;">
-                <ImageCarousel ImageSrc="@schoolImages" />
-            </div>
-        </Flex>
+
+        @*Carrousel Image Section*@
+        <div class="carousel-container">
+            <ImageCarousel ImageSrc="@schoolImages" />
+        </div>
+
         @* Mission, Vision, Values Section *@
         <Row Gutter="24">
             <Col Span="24" Md="8">
@@ -166,8 +230,12 @@
         @*Video Section*@
         <Row Style="margin-top: 2rem;">
             <Col Span="24">
-            <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/_MWoRgv3q1U?si=qIY-ndjwMFX3p3a4" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <div class="video-section">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/_MWoRgv3q1U?si=qIY-ndjwMFX3p3a4"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen></iframe>
+                </div>
             </div>
             </Col>
         </Row>
@@ -206,7 +274,7 @@
     {
         // Calcular los años transcurridos desde la fundación
         yearsPassed = currentDate.Year - foundationDate.Year;
-        
+
         // Ajusta si la fecha actual es anterior al aniversario de la fundación de este año
         if (currentDate < foundationDate.AddYears(yearsPassed))
         {

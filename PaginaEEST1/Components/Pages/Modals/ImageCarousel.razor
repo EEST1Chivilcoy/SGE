@@ -1,87 +1,152 @@
 @using System.Timers
 
-<div class="carousel">
-    <div class="carousel-content" style="width:@(ImageSrc.Count * 100)%; transform: translateX(-@((currentIndex * 100) / ImageSrc.Count)%);">
-        @foreach (string image in ImageSrc)
-        {
-            <div class="carousel-item">
-                <img src="@image" />
-            </div>
-        }
-    </div>
-    <div class="carousel-nav">
-        @for (int i = 0; i < ImageSrc.Count; i++)
-        {
-            int index = i;
-            <button class="carousel-dot @(currentIndex == index ? "active" : "")"
-                    @onclick="() => SetActiveSlide(index)">
-            </button>
-        }
+<div class="carousel-wrapper">
+    <div class="carousel">
+        <div class="carousel-content" style="width:@(ImageSrc.Count * 100)%; transform: translateX(-@((currentIndex * 100) / ImageSrc.Count)%);">
+            @foreach (string image in ImageSrc)
+            {
+                <div class="carousel-item">
+                    <img src="@image" alt="Imagen de la escuela" />
+                </div>
+            }
+        </div>
+        <div class="carousel-nav">
+            @for (int i = 0; i < ImageSrc.Count; i++)
+            {
+                int index = i;
+                <button class="carousel-dot @(currentIndex == index ? "active" : "")"
+                        @onclick="() => SetActiveSlide(index)">
+                </button>
+            }
+        </div>
     </div>
 </div>
 
 <style>
-.carousel {
-    position: relative;
-    width: 100%;
-    height: 300px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-}
+    .carousel-wrapper {
+        width: 100%;
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
 
-.carousel-content {
-    display: flex;
-    height: 100%;
-    transition: transform 0.5s ease-in-out;
-    overflow: hidden;
-    align-items: center;
-}
+    .carousel {
+        position: relative;
+        width: 100%;
+        height: 500px;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        background-color: #f0f2f5;
+    }
 
-.carousel-item {
-    flex: 0 0 @(100.0 / ImageSrc.Count)%;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    align-items: center;
-}
+    .carousel-content {
+        display: flex;
+        height: 100%;
+        transition: transform 0.5s ease-in-out;
+    }
 
-.carousel-item img {
-    width: 100%;
-    height: 100%;
-    max-width: 100%;
-    left: 0;
-    display: block;
-}
+    .carousel-item {
+        flex: 0 0 @(100.0 / ImageSrc.Count)%;
+        height: 100%;
+        position: relative;
+    }
 
-.carousel-nav {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 10px;
-    z-index: 1;
-}
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
 
-.carousel-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 2px solid white;
-    background: transparent;
-    cursor: pointer;
-    padding: 0;
-    transition: background-color 0.3s;
-}
+    .carousel-nav {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        z-index: 1;
+        padding: 10px 20px;
+        background-color: rgba(0, 0, 0, 0.3);
+        border-radius: 20px;
+        backdrop-filter: blur(4px);
+    }
 
-.carousel-dot:hover {
-    background-color: rgba(255, 255, 255, 0.5);
-}
+    .carousel-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 2px solid white;
+        background: transparent;
+        cursor: pointer;
+        padding: 0;
+        transition: all 0.3s ease;
+    }
 
-.carousel-dot.active {
-    background-color: white;
-}
+        .carousel-dot:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+            transform: scale(1.1);
+        }
+
+        .carousel-dot.active {
+            background-color: white;
+            transform: scale(1.2);
+        }
+
+    /* Media Queries para responsividad */
+    @@media (max-width: 1200px) {
+        .carousel-wrapper {
+            max-width: 900px;
+        }
+
+        .carousel {
+            height: 450px;
+        }
+    }
+
+    @@media (max-width: 992px) {
+        .carousel-wrapper {
+            max-width: 700px;
+        }
+
+        .carousel {
+            height: 400px;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .carousel {
+            height: 350px;
+        }
+
+        .carousel-wrapper {
+            margin: 1.5rem auto;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .carousel {
+            height: 250px;
+            border-radius: 8px;
+        }
+
+        .carousel-wrapper {
+            padding: 0 0.5rem;
+            margin: 1rem auto;
+        }
+
+        .carousel-nav {
+            bottom: 15px;
+            gap: 8px;
+            padding: 8px 15px;
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+        }
+    }
 </style>
 
 @code {
@@ -91,7 +156,7 @@
 
     protected override void OnInitialized()
     {
-        autoSlideTimer = new Timer(5000); // 5 segundos
+        autoSlideTimer = new Timer(5000);
         autoSlideTimer.Elapsed += AutoSlideTimerElapsed;
         autoSlideTimer.AutoReset = true;
         autoSlideTimer.Start();
