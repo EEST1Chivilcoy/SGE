@@ -12,39 +12,34 @@
 
 @attribute [Authorize(Roles = "EMATP,Profesores,Directivo")]
 
-<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f0f2f5; width: 100%;">
-    <Row Gutter="16" Style="width: 100%; max-width: 1200px;">
-        <Col Span="6">
-        <Card Title="Perfil" Style="margin: 16px 0; overflow: hidden;">
-            <div style="text-align: center; margin-bottom: 3px;">
-                <Avatar Size="64" Icon="user" />
+<div class="sge-layout">
+    <div class="sge-layout__profile">
+        <div class="sge-profile-card">
+            <div class="sge-profile-card__avatar">
+                <Avatar Size="80" Icon="user" />
             </div>
-            <div style="text-align: center; padding: 0 16px;">
-                <h3 style="word-wrap: break-word;">@userName, @userSurname</h3>
-                <p style="word-wrap: break-word;">@userEmail</p>
-                <Tag Color="blue">@userRole</Tag>
+            <div class="sge-profile-card__info">
+                <h3 class="sge-profile-card__name word-wrap">@userName, @userSurname</h3>
+                <p class="sge-profile-card__email word-wrap">@userEmail</p>
+                <Tag Color="blue" Class="sge-profile-card__role">@userRole</Tag>
             </div>
-        </Card>
-        </Col>
-        <Col Span="18">
-        <Card Style="margin: 16px; padding: 24px;">
-            <Row Gutter="16">
-                <Col Span="12">
+        </div>
+    </div>
+    <div class="sge-layout__content">
+        <div class="sge-actions-card">
+            <div class="sge-actions-card__row">
                 <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionOrdenadores"))">
                     <Icon Type="desktop" Theme="outline" />
                     Gestión de Ordenadores
                 </Button>
-                </Col>
-                <Col Span="12">
                 <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionSolicitudes"))">
                     <Icon Type="schedule" Theme="fill" />
                     Gestión de Peticiones
                 </Button>
-                </Col>
-            </Row>
+            </div>
             <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/DepositoInformatica"))">
                 <Icon Type="dropbox-square" Theme="fill" />
-                    Deposito
+                Deposito
             </Button>
             <AuthorizeView Roles="Directivo">
                 <Authorized>
@@ -54,16 +49,108 @@
                     </Button>
                 </Authorized>
             </AuthorizeView>
-        </Card>
+        </div>
         @if (isRendered && ShouldShowAttendanceCard())
-            {
-            <Card Title="Asistencias" Style="margin: 16px; padding: 24px;">
-                <Attendance></Attendance>
-            </Card>
-            }
-        </Col>
-    </Row>
+        {
+            <div class="sge-attendance-card">
+                <div class="sge-attendance-card__header">Asistencias</div>
+                <div class="sge-attendance-card__content">
+                    <Attendance></Attendance>
+                </div>
+            </div>
+        }
+    </div>
 </div>
+
+<style>
+    .page{
+        flex-direction: column !important;
+    }
+
+    .sge-layout {
+        display: flex;
+        flex-direction: column !important;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background-color: #f5f5f5;
+        padding: 2rem;
+    }
+
+    .sge-layout__profile {
+        width: 100%;
+        max-width: 400px;
+        margin-bottom: 2rem;
+    }
+
+    .sge-profile-card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .sge-profile-card__avatar {
+        margin-bottom: 1rem;
+    }
+
+    .sge-profile-card__info {
+        text-align: center;
+    }
+
+    .sge-profile-card__name {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .sge-profile-card__email {
+        color: #666;
+        margin-bottom: 1rem;
+    }
+
+    .sge-profile-card__role {
+        font-size: 0.875rem;
+    }
+
+    .sge-layout__content {
+        width: 100%;
+        max-width: 800px;
+    }
+
+    .sge-actions-card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .sge-actions-card__row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .sge-attendance-card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        margin-top: 2rem;
+    }
+
+    .sge-attendance-card__header {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+</style>
 
 @code {
     private string? userName, userEmail, userSurname, userRole;
