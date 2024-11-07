@@ -169,7 +169,8 @@ namespace PaginaEEST1.Data
             modelBuilder
                 .Entity<Loan>()
                 .HasDiscriminator(l => l.Type)
-                .HasValue<NetbookLoan>(TypeLoan.NetbookLoan);
+                .HasValue<NetbookLoan>(TypeLoan.NetbookLoan)
+                .HasValue<ItemLoan>(TypeLoan.ItemLoan);
 
             modelBuilder
                 .Entity<Category>()
