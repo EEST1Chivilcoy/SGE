@@ -35,5 +35,8 @@
 
 ---
 
-### Estudiantes Participantes
-Los estudiantes que participamos en este proyecto somos [**Bernardo Andrés González Erramuspe**](https://github.com/Bernard2806) e [**Ignacio Gómez**](https://github.com/IgnGom06).
+### Equipo del Proyecto
+
+<a href="https://github.com/EEST1Chivilcoy/SGE/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=EEST1Chivilcoy/SGE" />
+</a>
