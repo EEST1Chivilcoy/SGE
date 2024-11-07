@@ -6,7 +6,7 @@ using System.Security.Claims;
 //Servicios Utilizados
 using PaginaEEST1.Services;
 
-namespace PaginaEEST1.Components
+namespace PaginaEEST1.Controllers
 {
     [Route("[controller]/[action]")]
     public class AuthController : Controller
