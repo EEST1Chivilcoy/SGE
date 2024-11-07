@@ -66,9 +66,9 @@
     [Parameter]
     public int ID { get; set; }
     private Computer? computer { get; set; }
-    private string? Location { get; set; }
     private string? QRCode { get; set; }
     private string? QRLink { get; set; }
+    private string? Location { get; set; }
 
     // Funciones
 
@@ -94,10 +94,9 @@
         var baseUrl = NavigationManager.BaseUri.TrimEnd('/');
         QRLink = $"{baseUrl}/Computadora_VistaQR_{ID}";
         QRCode = await QRService.LoadQR(QRLink);
-        if (computer is Desktop desktop)
-        {
-            Area? area = await AreaService.GetArea(desktop.LocationId);
-            Location = area?.Name ?? "Sin especificar";
+        if (computer is Desktop desktop){
+            Location = desktop.LocationId != 0 ? (await AreaService.GetArea(desktop.LocationId))?.Name : 
+                "Sin especificar";
         }
     }
 }
