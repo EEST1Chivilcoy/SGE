@@ -2,8 +2,11 @@
 @using PaginaEEST1.Data.Enums
 @using PaginaEEST1.Data.Models.Categories
 @using PaginaEEST1.Data.Models.SchoolArea
+
+@*Servicios Utilizados*@
 @inject IMessageService message
 @inject IAreaService AreaService
+@inject ICategoryService CategoryService
 
 <div>
     <Form Model="@areaVM" OnFinish="OnFinish">
@@ -22,15 +25,7 @@
             </FormItem>
             @* Categoría *@
             <FormItem Label="Seleccione la categoría">
-                <Select TItem="AreaCategory"
-                        TItemValue="AreaCategory"
-                        DataSource="@categories"
-                        @bind-value="@areaVM.Category"
-                        Placeholder="Sin categoría"
-                        AllowClear="true"
-                        LabelName="@nameof(AreaCategory.Name)"
-                        DefaultActiveFirstOption="false">
-                </Select>
+
             </FormItem>
             <FormItem Label="Orientación del Área">
                 <EnumSelect TEnum="EducationalGuidance" @bind-Value="@areaVM.AreaGuidance" />
@@ -48,7 +43,7 @@
     public EventCallback<bool> OnClose { get; set; }
 
     // Variables
-    private List<AreaCategory?> categories = new();
+    private List<string> categories = new();
     private Area areaVM = new();
     private ImageInput? ImageUpload { get; set; }
 
@@ -77,7 +72,7 @@
     // Init
     protected override async Task OnInitializedAsync()
     {
-        categories = await AreaService.GetListCategories();
+        categories = await CategoryService.GetListCategories(TypeCategory.AreaCategory);
         StateHasChanged();
     }
 }

@@ -19,10 +19,6 @@ namespace PaginaEEST1.Services
         Task<Area?> EditArea(Area newArea);
         Task DelArea(int ID);
         Task<List<AreaViewModel>> GetListAreas();
-
-        // Funcion GetListCategories implementada temporalmente
-        // Posiblemente se deba implementar dentro de un posible futuro servicio especifico para categorias
-        Task<List<AreaCategory?>> GetListCategories();
     }
 
     public class AreaService : IAreaService
@@ -107,15 +103,6 @@ namespace PaginaEEST1.Services
                     .Where(i => i.AreaId == area.Id)
                     .SingleOrDefault()?.Id
             }).ToList();
-        }
-        public async Task<List<AreaCategory?>> GetListCategories()
-        {
-            // Funcion implementada temporalmente hasta que se agregue posiblemente el servicio propio de categorías
-            List<AreaCategory> areas = await _context.Categories
-                .OfType<AreaCategory>()
-                .ToListAsync();
-
-            return areas;
         }
     }
 }

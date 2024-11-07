@@ -2,9 +2,11 @@
 @using PaginaEEST1.Data.Enums
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Models.PhysicalObjects
+@using PaginaEEST1.Data.Models.Categories
 
 @inject IMessageService message
 @inject IItemService ItemService
+@inject ICategoryService CategoryService
 
 <div>
     <Form Model="@ItemVM" OnFinish="OnFinish">
@@ -19,7 +21,7 @@
             </FormItem>
 
             <FormItem Label="Categoria">
-
+                <AutoComplete @bind-Value="@ItemVM.Category" Options="@CategoryOptions" Style="min-width:200px" />
             </FormItem>
 
             <FormItem Label="Codigo">
@@ -45,11 +47,13 @@
 
     //Variables
     private ItemViewModel ItemVM = new();
+    private List<string> CategoryOptions = new();
 
     // Funciones
     protected override async Task OnInitializedAsync()
     {
         ItemVM.Code = await ItemService.GenerateUniqueCodeAsync();
+        CategoryOptions = await CategoryService.GetListCategories(TypeCategory.ItemCategory);
     }
 
     private async Task HandleClose()
