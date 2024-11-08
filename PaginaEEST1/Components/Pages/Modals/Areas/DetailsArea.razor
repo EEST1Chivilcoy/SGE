@@ -5,6 +5,7 @@
 @using PaginaEEST1.Data.Models.Categories
 @using PaginaEEST1.Data.Models.SchoolArea
 @inject IAreaService AreaService
+@inject ICategoryService CategoryService
 @inject IQRService QRService
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
@@ -16,7 +17,7 @@
             <p><b>Nombre del Salón</b>: @area.Name</p>
             <p><b>Ubicación en la Institución</b>: @area.Location</p>
             <p><b>Tipo de Area</b>: @area.AreaType.GetDisplayName()</p>
-            <p><b>Categoría</b>: @(area.Category?.Name ?? "Sin categoría")</p>
+            <p><b>Categoría</b>: @areaCategory</p>
             <p><b>Orientación</b>: @area.AreaGuidance.GetDisplayName()</p>
         }
     </div>
@@ -26,11 +27,14 @@
     [Parameter]
     public int ID { get; set; }
     private Area? area { get; set; }
+    private string? areaCategory { get; set; } = null!;
 
     // Init
     protected override async Task OnInitializedAsync()
     {
         area = await AreaService.GetArea(ID);
+        string? category = await CategoryService.GetCategoryByReference(TypeCategory.AreaCategory, ID);
+        areaCategory = category ?? "Sin categoría";
         StateHasChanged();
     }
 }

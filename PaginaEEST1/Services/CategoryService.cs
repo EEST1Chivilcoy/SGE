@@ -8,6 +8,8 @@ namespace PaginaEEST1.Services
     public interface ICategoryService
     {
         Task<List<string>> GetListCategories(TypeCategory typeCategory);
+        Task<Category?> SaveCategory(TypeCategory typeCategory, string name);
+        Task<string?> GetCategoryByReference(TypeCategory typeCategory, int ReferenceId);
     }
 
     public class CategoryService : ICategoryService
@@ -17,6 +19,28 @@ namespace PaginaEEST1.Services
         public CategoryService(PaginaDbContext context)
         {
             _context = context;
+        }
+        public async Task<string?> GetCategoryByReference(TypeCategory typeCategory, int ReferenceId)
+        {
+            if (typeCategory == TypeCategory.AreaCategory)
+            {
+                AreaCategory? category = _context.Categories
+                    .AsNoTracking()
+                    .OfType<AreaCategory>()
+                    .Where(c => c.Areas.Any(a => a.Id == ReferenceId)).SingleOrDefault();
+                
+                return category?.Name;
+            }
+            else if (typeCategory == TypeCategory.ItemCategory)
+            {
+                return await _context.Categories
+                    .AsNoTracking()
+                    .OfType<ItemCategory>()
+                    .Where(c => c.Items.Any(a => a.Id == ReferenceId))
+                    .Select(c => c.Name)
+                    .SingleOrDefaultAsync();
+            }
+            return null;
         }
 
         public async Task<List<string>> GetListCategories(TypeCategory typeCategory)
@@ -29,6 +53,34 @@ namespace PaginaEEST1.Services
                 return await _context.Categories.AsNoTracking().OfType<ItemCategory>().Where(c => c.Name != null).Select(c => c.Name).Distinct().ToListAsync();
 
             return null;
+        }
+        public async Task<Category?> SaveCategory(TypeCategory typeCategory, string name)
+        {
+            Category? exists = _context.Categories
+                .Where(c => c.Name.Replace(" ", "").ToLower() == name.Replace(" ", "").ToLower())
+                .SingleOrDefault();
+            if (exists != null || string.IsNullOrEmpty(name))
+                return exists;
+            
+            Category? category = null;
+            if (typeCategory == TypeCategory.AreaCategory){
+                AreaCategory save = new(){
+                    Type = TypeCategory.AreaCategory,
+                    Name = name
+                };
+                category = save;
+                _context.Categories.Add(save);
+            }
+            if (typeCategory == TypeCategory.ItemCategory){
+                ItemCategory save = new(){
+                    Type = TypeCategory.ItemCategory,
+                    Name = name
+                };
+                category = save;
+                _context.Categories.Add(save);
+            }
+            await _context.SaveChangesAsync();
+            return _context.Categories.Where(c => c == category).SingleOrDefault();
         }
     }
 }

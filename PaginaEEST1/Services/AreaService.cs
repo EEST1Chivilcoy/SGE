@@ -35,9 +35,15 @@ namespace PaginaEEST1.Services
             try
             {
                 if (save.Category != null){
-                    save.Category = await _context.Categories
+                    AreaCategory? category = await _context.Categories
                         .OfType<AreaCategory>()
                         .FirstOrDefaultAsync(v => v.Id == save.Category.Id);
+
+                    if (category.Areas == null)
+                        category.Areas = new();
+
+                    category.Areas.Add(save);
+                    save.Category = category;
                 }
                 _context.Areas.Add(save);
                 await _context.SaveChangesAsync();
@@ -70,8 +76,20 @@ namespace PaginaEEST1.Services
                 area.Name = newArea.Name;
                 area.Location = newArea.Location;
                 area.AreaType = newArea.AreaType;
-                area.Category = newArea.Category;
                 area.AreaGuidance = newArea.AreaGuidance;
+
+                if (newArea.Category != null){
+                    AreaCategory? category = await _context.Categories
+                        .OfType<AreaCategory>()
+                        .FirstOrDefaultAsync(v => v.Id == newArea.Category.Id);
+
+                    if (category.Areas == null)
+                        category.Areas = new();
+
+                    category.Areas.Add(area);
+                    area.Category = category;
+                }
+
                 await _context.SaveChangesAsync();
                 return area;
             }

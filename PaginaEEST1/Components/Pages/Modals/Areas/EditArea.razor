@@ -5,6 +5,7 @@
 @using PaginaEEST1.Services
 @inject IMessageService message
 @inject IAreaService AreaService
+@inject ICategoryService CategoryService
 
 <div clas="container">
     <Form Model="@areaVM" OnFinish="OnFinish">
@@ -20,15 +21,7 @@
             </FormItem>
             @* Categoría *@
             <FormItem Label="Seleccione la categoría">
-                <Select TItem="AreaCategory"
-                        TItemValue="AreaCategory"
-                        DataSource="@categories"
-                        @bind-value="@areaVM.Category"
-                        Placeholder="Sin categoría"
-                        AllowClear="true"
-                        LabelName="@nameof(AreaCategory.Name)"
-                        DefaultActiveFirstOption="false">
-                </Select>
+                <AutoComplete @bind-Value="@AreaCategory" Options="@categories" Style="min-width:200px" />
             </FormItem>
             <FormItem Label="Orientación del Área">
                 <EnumSelect TEnum="EducationalGuidance" @bind-Value="@areaVM.AreaGuidance" />
@@ -45,7 +38,8 @@
     [Parameter] public EventCallback<bool> OnClose { get; set; }
     [Parameter] public int ID { get; set; }
     private Area areaVM { get; set; } = null!;
-    private List<AreaCategory?> categories = new();
+    private List<string> categories = new();
+    private string? AreaCategory { get; set; }
 
     // Funciones
     private async Task HandleClose()
@@ -56,6 +50,11 @@
     {
         try
         {
+            if (!string.IsNullOrEmpty(AreaCategory)){
+                Category? category = await CategoryService.SaveCategory(TypeCategory.AreaCategory, AreaCategory);
+                if (category != null && category is AreaCategory areaCategory)
+                    areaVM.Category = areaCategory;
+            }
             await AreaService.EditArea(areaVM);
             await OnClose.InvokeAsync(true);
             StateHasChanged();
@@ -69,6 +68,7 @@
     protected override async Task OnInitializedAsync()
     {
         var area = await AreaService.GetArea(ID);
+        AreaCategory = await CategoryService.GetCategoryByReference(TypeCategory.AreaCategory, ID);
         if (area != null)
             areaVM = area;
         StateHasChanged();
