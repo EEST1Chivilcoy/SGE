@@ -6,8 +6,8 @@
 @using PaginaEEST1.Services
 @using PaginaEEST1.Shared
 @inject IAreaService AreaService
+@inject ICategoryService CategoryService
 @inject IImageService ImageService
-@inject IMessageService message
 @page "/SGE/Directivo/GestionSalones"
 
 @using PaginaEEST1.Components.Layout.SGE
@@ -168,10 +168,8 @@
                 </div>
             </Card>
             <!-- Cartas del resto de salones -->
-            @foreach (AreaViewModel? area in areas){
-                if (area != null){
-                    <CardArea area="area" OnClose="refreshAreas" />
-                }
+            @foreach (AreaViewModel area in areas){
+                <CardArea area="@area" OnClose="refreshAreas" />
             }
         </Flex>
     </Flex>
@@ -186,21 +184,19 @@
 
 @code {
     // Variables    
-    private List<AreaViewModel?> AllAreas = new();
-    private List<AreaViewModel?> areas = new();
-    private List<string?> categories = new();
+    private List<AreaViewModel> AllAreas = new();
+    private List<AreaViewModel> areas = new();
+    private List<string> categories = new();
 
     // Variables de Visibilidad
     private string selectedCategory = "Todos";
     private bool visAdd = false;
-    private int idDetails { get; set; }
 
     // Funciones de Visibilidad
     private Task OnCategoryChanged(string value)
     {   
         selectedCategory = value;
         FilterAreas();
-        StateHasChanged();
         return Task.CompletedTask;
     }
 
@@ -209,7 +205,6 @@
         visAdd = false;
         if (success)
             await OnInitializedAsync();
-        StateHasChanged();
     }
 
     private void FilterAreas()
@@ -223,6 +218,7 @@
         else{
             areas = AllAreas.Where(cat => cat?.CategoryName == selectedCategory).ToList();
         }
+        StateHasChanged();
     }
 
     // Init
@@ -230,10 +226,7 @@
     {
         AllAreas = await AreaService.GetListAreas();
         FilterAreas();
-        categories = areas
-            .Where(name => !string.IsNullOrEmpty(name?.CategoryName))
-            .Select(name => name?.CategoryName)
-            .ToList();
-        await base.OnInitializedAsync();
+        categories = await CategoryService.GetListCategories(TypeCategory.AreaCategory);
+        StateHasChanged();
     }
 }

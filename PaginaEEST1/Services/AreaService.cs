@@ -115,8 +115,9 @@ namespace PaginaEEST1.Services
             {
                 Id = area.Id,
                 Name = area.Name,
-                CategoryId = area.Category != null ? area.Category.Id : 0,
-                CategoryName = area.Category?.Name ?? "",
+                CategoryName = _context.Categories.AsNoTracking()
+                .OfType<AreaCategory>()
+                .Where(c => c.Areas.Any(a => a.Id == area.Id)).SingleOrDefault()?.Name ?? "",
                 ImageId = _context.Images.OfType<AreaImage_Area>()
                     .Where(i => i.AreaId == area.Id)
                     .SingleOrDefault()?.Id

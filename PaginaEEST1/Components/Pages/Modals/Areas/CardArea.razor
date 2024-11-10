@@ -28,14 +28,14 @@
 @if (visDetails == true)
 {
     <Modal Visible="visDetails" Title="Detalles del salón" Footer="null" OnCancel="() => visDetails = false">
-        <DetailsArea ID="@idArea" />
+        <DetailsArea ID="@area.Id" />
     </Modal>
 }
 
 @if (visEdit == true)
 {
     <Modal Visible="visEdit" Title="Edición del salón" Footer="null" OnCancel="() => visEdit = false">
-        <EditArea ID="@idArea" OnClose="closeEdit" />
+        <EditArea ID="@area.Id" OnClose="closeEdit" />
     </Modal>
 }
 
@@ -48,7 +48,6 @@
     public AreaViewModel area { get; set; } = null!;
 
     // Variables
-    private int idArea { get; set; }
     private bool visDetails = false;
     private bool visEdit = false;
     private string? imageSrc { get; set; }
@@ -70,7 +69,7 @@
     }
 
     // Init
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         var baseUrl = NavigationManager.BaseUri.TrimEnd('/');
         var response = await Http.GetAsync($"{baseUrl}/api/Images/{area.ImageId}");
@@ -83,7 +82,5 @@
 
             imageSrc = $"data:{mimeType};base64,{Convert.ToBase64String(imageBytes)}";
         }
-
-        idArea = area.Id;
     }
 }

@@ -71,6 +71,7 @@
         AreaCategory = await CategoryService.GetCategoryByReference(TypeCategory.AreaCategory, ID);
         if (area != null)
             areaVM = area;
+        categories = await CategoryService.GetListCategories(TypeCategory.AreaCategory);
         StateHasChanged();
     }
 }
