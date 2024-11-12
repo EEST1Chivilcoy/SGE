@@ -37,18 +37,23 @@
                     Gestión de Peticiones
                 </Button>
             </div>
-            <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/DepositoInformatica"))">
-                <Icon Type="dropbox-square" Theme="fill" />
-                Deposito
-            </Button>
-            <AuthorizeView Roles="Directivo">
-                <Authorized>
-                    <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Directivo/GestionSalones"))">
-                        <Icon Type="profile" Theme="fill" />
-                        Gestión de Salones
-                    </Button>
-                </Authorized>
-            </AuthorizeView>
+            <div class="sge-actions-card__row">
+                <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/DepositoInformatica"))">
+                    <Icon Type="dropbox-square" Theme="fill" />
+                    Deposito
+                </Button>
+                <AuthorizeView Roles="Directivo">
+                    <Authorized>
+                        <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Directivo/GestionSalones"))">
+                            <Icon Type="home" Theme="fill"/>
+                            Gestión de Salones
+                        </Button>
+                    </Authorized>
+                </AuthorizeView>
+            </div>
+
+            <QRAccountRequest />
+            
         </div>
         @if (isRendered && ShouldShowAttendanceCard())
         {
@@ -154,7 +159,6 @@
 
 @code {
     private string? userName, userEmail, userSurname, userRole;
-
     private void NavigateTo(string route)
     {
         NavigationManager.NavigateTo(route, true);

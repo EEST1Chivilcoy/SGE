@@ -1,0 +1,76 @@
+@using PaginaEEST1.Services
+@inject IQRService QRService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+<style>
+    .qr-modal-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        height: 280px;
+    }
+
+    .qr-image-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-grow: 1;
+    }
+
+    .qr-buttons {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+    }
+</style>
+
+<Button Type="primary" Block OnClick="@(() => _visible = true)">
+    <Icon Type="idcard" Theme="outline"/>
+    Cuenta escolar
+</Button>
+
+<Modal Visible="_visible" OnCancel="() => _visible = false" Footer="null" Title="Acceso a la Solicitud de Cuenta Estudiantil">
+    <div class="qr-modal-content">
+        <div class="qr-image-container">
+            <Image Src="@QRCode" alt="QR" Style="width: 250px; height: auto;" />
+        </div>
+        <div class="qr-buttons">
+            <Button OnClick="PrintQRCode">Imprimir</Button>
+            <Button OnClick="DownloadQRCode">Descargar</Button>
+            <a href="@QRLink">Visitar página</a>
+        </div>
+    </div>
+</Modal>
+
+@code{
+    private bool _visible { get; set; }
+    private string? QRCode { get; set; }
+    private string? QRLink { get; set; }
+
+    // Funciones
+    private async Task DownloadQRCode()
+    {
+        if (!string.IsNullOrEmpty(QRCode))
+        {
+            await JSRuntime.InvokeVoidAsync("downloadImage", QRCode, "QRCode.png");
+        }
+    }
+    private async Task PrintQRCode()
+    {
+        if (!string.IsNullOrEmpty(QRCode))
+        {
+            await JSRuntime.InvokeVoidAsync("printImage", QRCode);
+        }
+    }
+
+    // Init
+    protected override async Task OnParametersSetAsync()
+    {
+        var baseUrl = NavigationManager.BaseUri.TrimEnd('/');
+        QRLink = $"{baseUrl}/Solicitud/CuentaEscolar";
+        QRCode = await QRService.LoadQR(QRLink);
+        StateHasChanged();
+    }
+}
