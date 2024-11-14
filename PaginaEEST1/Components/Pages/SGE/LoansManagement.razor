@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="loans-display">
-            <Table TItem="Loan"
+            <Table TItem="NetbookLoanViewModel"
                    DataSource="@loans"
                    PageIndex="1"
                    PageSize="6"
@@ -45,41 +45,50 @@
                 </TitleTemplate>
                 <ColumnDefinitions>
                     @* Datos *@
-                    <PropertyColumn Title="Fecha solicitado"
-                                    Property="@(v => v.SubmitDate)"
+                    <PropertyColumn Title="Estado"
+                                    Property="@(v => v.Status.GetDisplayName())"
                                     Sortable />
                     <PropertyColumn Title="Fecha requerido"
                                     Property="@(v => v.RequiredDate)"
                                     Sortable />
-                    <PropertyColumn Title="Fecha de inicio y entrega"
+                    <PropertyColumn Title="Hora de inicio y entrega"
                                     Property="@(v => v.StartTime + " a " + v.FinishTime)"
                                     Sortable />
                     <PropertyColumn Title="Curso"
                                     Property="@(v => v.SchoolGrade)"
                                     Sortable />
-                    <PropertyColumn Title="Estado"
-                                    Property="@(v => v.Status.GetDisplayName())"
-                                    Sortable />
                     <ActionColumn Title="Netbooks solicitadas" Align="ColumnAlign.Center">
-                        <Dropdown>
+                        <Dropdown Id="@($"dropdown_{context.Id}")" Trigger="new Trigger[] { Trigger.Click }">
                             <Overlay>
-                                <!-- Pasar a un overlay -->
-                                <Menu>
-                                    @if (context is NetbookLoan netbookLoan)
+                                <Menu Id="@($"menu_{context.Id}")">
+                                    @if (context.Netbooks != null && context.Netbooks.Any())
                                     {
-                                        foreach (string name in LoanService.GetDeviceNames(netbookLoan.Id))
+                                        @foreach (var name in context.Netbooks)
                                         {
                                             <MenuItem>
-                                                <p>@name</p>
+                                                <Space>
+                                                    <SpaceItem>
+                                                        <Icon Type="laptop" />
+                                                    </SpaceItem>
+                                                    <SpaceItem>
+                                                        @name
+                                                    </SpaceItem>
+                                                </Space>
                                             </MenuItem>
                                         }
+                                    }
+                                    else
+                                    {
+                                        <MenuItem>
+                                            <Empty />
+                                        </MenuItem>
                                     }
                                 </Menu>
                             </Overlay>
                             <ChildContent>
-                                <a class="ant-dropdown-link">
-                                    Netbooks solicitadas <Icon Type="down" />
-                                </a>
+                                <Button Type="link" Class="ant-dropdown-link">
+                                    Netbooks (@(context.Netbooks?.Count ?? 0)) <Icon Type="down" />
+                                </Button>
                             </ChildContent>
                         </Dropdown>
                     </ActionColumn>
@@ -98,7 +107,7 @@
 
 @code{
     // Variables
-    List<Loan> loans = new();
+    List<NetbookLoanViewModel> loans = new();
     private bool visAdd = false;
 
     // Funciones
@@ -115,7 +124,7 @@
     // Init
     protected override async Task OnInitializedAsync()
     {
-        loans = await LoanService.GetListLoans(TypeLoan.NetbookLoan);
+        loans = await LoanService.GetNetbookLoans();
         StateHasChanged();
     }
 }

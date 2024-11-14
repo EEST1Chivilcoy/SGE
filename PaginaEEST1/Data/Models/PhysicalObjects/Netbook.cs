@@ -1,6 +1,6 @@
 ﻿using Microsoft.Identity.Client;
 using PaginaEEST1.Data.Models.Personal;
-
+using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Loan;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PaginaEEST1.Data.Models.PhysicalObjects
@@ -9,5 +9,7 @@ namespace PaginaEEST1.Data.Models.PhysicalObjects
     {
         public string? Model { get; set; }
         public bool IsAvailable { get; set; }
+        public int? LoanId { get; set; }
+        public NetbookLoan? Loan { get; set; }
     }
 }
