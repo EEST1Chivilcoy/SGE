@@ -1,0 +1,121 @@
+@using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Loan
+@using PaginaEEST1.Components.Pages.Modals.Loans
+@using PaginaEEST1.Data.Models.PhysicalObjects
+@using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Services
+@using PaginaEEST1.Shared
+@using PaginaEEST1.Components.Layout.SGE
+@inject ILoanService LoanService
+@layout SGELayout
+@page "/SGE/Prestamos_Netbooks"
+
+@attribute [Authorize (Roles = "EMATP")]
+
+<Flex Justify="center" Align="center" Style="height: 100%; width:100%;">
+    <div class="template">
+        <div class="header-content">
+            <div class="square">
+                <p>Prestamos pendientes:</p>
+                <p>@loans.Where(l => l.Status == LoanStatus.Pending).ToList().Count()</p>
+            </div>
+            <div class="square">
+                <p>Prestamos en uso:</p>
+                <p>@loans.Where(l => l.Status == LoanStatus.Busy).ToList().Count()</p>
+            </div>
+            <div class="square">
+                <p>Prestamos entregados:</p>
+                <p>@loans.Where(l => l.Status == LoanStatus.Returned).ToList().Count()</p>
+            </div>
+        </div>
+        <div class="loans-display">
+            <Table TItem="Loan"
+                   DataSource="@loans"
+                   PageIndex="1"
+                   PageSize="6"
+                   Responsive>
+                <TitleTemplate>
+                    <Flex Justify="space-between" Align="center" Style="width:100%;">
+                        <h3 style="font-family: Arial;">Lista de prestamos</h3>
+                        <Button Type="primary"
+                                OnClick="() => {visAdd = true;}">
+                            <Icon Type="plus" /> Solicitar un Prestamo
+                        </Button>
+                    </Flex>
+                </TitleTemplate>
+                <ColumnDefinitions>
+                    @* Datos *@
+                    <PropertyColumn Title="Fecha solicitado"
+                                    Property="@(v => v.SubmitDate)"
+                                    Sortable />
+                    <PropertyColumn Title="Fecha requerido"
+                                    Property="@(v => v.RequiredDate)"
+                                    Sortable />
+                    <PropertyColumn Title="Fecha de inicio y entrega"
+                                    Property="@(v => v.StartTime + " a " + v.FinishTime)"
+                                    Sortable />
+                    <PropertyColumn Title="Curso"
+                                    Property="@(v => v.SchoolGrade)"
+                                    Sortable />
+                    <PropertyColumn Title="Estado"
+                                    Property="@(v => v.Status.GetDisplayName())"
+                                    Sortable />
+                    <ActionColumn Title="Netbooks solicitadas" Align="ColumnAlign.Center">
+                        <Dropdown>
+                            <Overlay>
+                                <!-- Pasar a un overlay -->
+                                <Menu>
+                                    @if (context is NetbookLoan netbookLoan)
+                                    {
+                                        foreach (string name in LoanService.GetDeviceNames(netbookLoan.Id))
+                                        {
+                                            <MenuItem>
+                                                <p>@name</p>
+                                            </MenuItem>
+                                        }
+                                    }
+                                </Menu>
+                            </Overlay>
+                            <ChildContent>
+                                <a class="ant-dropdown-link">
+                                    Netbooks solicitadas <Icon Type="down" />
+                                </a>
+                            </ChildContent>
+                        </Dropdown>
+                    </ActionColumn>
+                </ColumnDefinitions>
+            </Table>
+        </div>
+    </div>
+</Flex>
+
+@if (visAdd == true)
+{
+    <Modal Title="Solicitar un prestamo" Visible="visAdd" Footer="null" OnCancel="() => closeModals(false)">
+        <RequestLoan OnClose="closeModals" />
+    </Modal>
+}
+
+@code{
+    // Variables
+    List<Loan> loans = new();
+    private bool visAdd = false;
+
+    // Funciones
+    private async Task closeModals(bool success)
+    {
+        visAdd = false;
+        if (success == true)
+        {
+            await OnInitializedAsync();
+        }
+        StateHasChanged();
+    }
+
+    // Init
+    protected override async Task OnInitializedAsync()
+    {
+        loans = await LoanService.GetListLoans(TypeLoan.NetbookLoan);
+        StateHasChanged();
+    }
+}

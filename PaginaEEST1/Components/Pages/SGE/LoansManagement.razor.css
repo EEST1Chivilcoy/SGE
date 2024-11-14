@@ -1,0 +1,40 @@
+﻿.template {
+    margin-top: 20px;
+    width: 90%;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 1vw;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
+
+.square {
+    width: 150px;
+    height: 150px;
+    border: 3px solid #0c2c45;
+    border-radius: 15px;
+    font-size: 14px;
+    font-family: Arial;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+}
+
+    .square p {
+        margin: 5px 0;
+    }
+
+.loans-display{
+    margin-top: 20px;
+}

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PaginaEEST1.Data.Enums;
 using PaginaEEST1.Data.Models.PhysicalObjects;
-using PaginaEEST1.Data.Models.PhysicalObjects.Componentes;
 using PaginaEEST1.Data.Models.People.PeopleAssets;
 using PaginaEEST1.Data.Models.Personal;
 using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request;
@@ -96,6 +95,12 @@ namespace PaginaEEST1.Data
             .Entity<Area>()
                 .Property(a => a.AreaType)
                 .HasConversion<string>()
+                .HasMaxLength(255);
+
+            modelBuilder
+            .Entity<Loan>()
+                .Property(o => o.Status)
+                .HasConversion<int>()
                 .HasMaxLength(255);
 
             modelBuilder

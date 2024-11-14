@@ -1,0 +1,87 @@
+﻿@using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Loan
+@using PaginaEEST1.Data.Models.PhysicalObjects
+@using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Enums
+@using System.Security.Claims
+@using PaginaEEST1.Services
+@using PaginaEEST1.Shared
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILoanService LoanService
+
+<Form Model="@netbookLoanVM" OnFinish="OnFinish">
+    <FormItem Label="Día de uso">
+        <DatePicker @bind-Value="netbookLoanVM.RequiredDate" Format="dd-MM-yyyy" AllowClear="false" />
+    </FormItem>
+
+    <FormItem Label="Hora de inicio">
+        <TimePicker @bind-Value="netbookLoanVM.StartTime" Format="HH:mm" AllowClear="false" />
+    </FormItem>
+
+    <FormItem Label="Hora de entrega">
+        <TimePicker @bind-Value="netbookLoanVM.FinishTime" Format="HH:mm" AllowClear="false" />
+    </FormItem>
+
+    <FormItem Label="Grado y División">
+        <Input @bind-Value="netbookLoanVM.SchoolGrade" Placeholder="Ej. 5to B" />
+    </FormItem>
+
+    <FormItem Label="Seleccione las netbooks solicitadas">
+        <Select Mode="multiple"
+                Placeholder="Please select"
+                @bind-Values="@netbookLoanVM.NetbooksIds"
+                TItemValue="int?"
+                TItem="Netbook"
+                DataSource="@netbooks"
+                LabelName="@nameof(Netbook.DeviceName)"
+                ValueName="@nameof(Netbook.Id)" />
+    </FormItem>
+
+    <FormItem>
+        <Button Type="primary" HtmlType="submit">Solicitar</Button>
+    </FormItem>
+</Form>
+
+@code {
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+
+    // Variables
+    private List<Netbook> netbooks = new();
+    private NetbookLoanVM netbookLoanVM { get; set; } = new();    
+
+    // View Model
+    public class NetbookLoanVM
+    {
+        public DateOnly RequiredDate { get; set; }
+        public TimeOnly StartTime { get; set; }
+        public TimeOnly FinishTime { get; set; }
+        public string? SchoolGrade { get; set; }
+        public IEnumerable<int?> NetbooksIds = new List<int?>();
+    }
+
+    // Funciones
+    private async Task OnFinish()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        NetbookLoan newLoan = new()
+        {
+            Status = LoanStatus.Pending,
+            SubmitDate = DateTime.Now,
+            RequiredDate = netbookLoanVM.RequiredDate,
+            StartTime = netbookLoanVM.StartTime,
+            FinishTime = netbookLoanVM.FinishTime,
+            SchoolGrade = netbookLoanVM.SchoolGrade,
+            ProfessorId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+            Netbooks = netbooks.Where(x => netbookLoanVM.NetbooksIds.Contains(x.Id)).ToList()
+        };
+        await LoanService.SaveLoan(newLoan);
+        await OnClose.InvokeAsync(true);
+    }
+
+    // Init
+    protected override async Task OnInitializedAsync()
+    {
+        netbooks = await LoanService.GetListNetbooks();
+    }
+}

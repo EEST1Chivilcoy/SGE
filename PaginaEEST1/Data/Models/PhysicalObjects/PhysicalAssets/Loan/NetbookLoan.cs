@@ -3,7 +3,7 @@ using PaginaEEST1.Data.Models.Personal;
 using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Loan;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PaginaEEST1.Data.Models.PhysicalObjects.Componentes
+namespace PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Loan
 {
     public class NetbookLoan : Loan
     {
