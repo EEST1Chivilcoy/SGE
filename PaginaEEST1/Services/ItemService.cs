@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PaginaEEST1.Data;
 using PaginaEEST1.Data.Enums;
+using PaginaEEST1.Data.Models.Categories;
 using PaginaEEST1.Data.Models.PhysicalObjects;
 using PaginaEEST1.Data.ViewModels;
 using System.Text;
@@ -50,7 +51,9 @@ namespace PaginaEEST1.Services
                 Type = item.Type,
                 Name = item.Name,
                 Description = item.Description,
-                Category = item.Category?.Name ?? "Sin categoría", // Manejo de categoría nula
+                Category = _context.Categories.AsNoTracking()
+                .OfType<ItemCategory>()
+                .Where(c => c.Items.Any(a => a.Id == item.Id)).SingleOrDefault()?.Name ?? "",
                 Code = item.Code
             }).ToList();
         }

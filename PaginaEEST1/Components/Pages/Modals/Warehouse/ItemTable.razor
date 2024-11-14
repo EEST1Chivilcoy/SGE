@@ -56,7 +56,7 @@
                 <Space>
                     <SpaceItem>
                         <Button Type="primary" OnClick="() => OpenDetails(context.ID)">
-                            <Icon Type="desktop" /> Detalles
+                            <Icon Type="info-circle" Theme="fill" /> Detalles
                         </Button>
                         <Button OnClick="() => openEdit(context.ID)">
                             <Icon Type="edit" /> Editar
@@ -86,14 +86,12 @@
 @if (VisEdit == true)
 {
     <Modal Visible="VisEdit" Footer="null" OnCancel="() => closeModals(false)">
-        <EditComputer OnClose="closeModals" ID="ItemSelID" />
     </Modal>
 }
 
 @if (VisDetails == true)
 {
     <Modal Visible="VisDetails" Footer="null" OnCancel="() => {VisDetails = false;}">
-        <DetailsComputer ID="ItemSelID" />
     </Modal>
 }
 
