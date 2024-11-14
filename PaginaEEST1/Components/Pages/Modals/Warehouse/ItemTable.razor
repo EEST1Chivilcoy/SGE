@@ -3,7 +3,10 @@
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
 @using PaginaEEST1.Shared
+@using PaginaEEST1.Data.Models.PhysicalObjects
 @inject IItemService ItemService
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
 
 <style>
     .template {
@@ -44,6 +47,10 @@
                             Property="@(i => i.Name)"
                             Sortable />
 
+            <Column Title="Foto" Width="100" TData="ItemViewModel">
+                <Image Src="@context.ImageUrl" />
+            </Column>
+
             <Column Title="Categoria" TData="string">
                 <Tag Color="blue">@context.Category</Tag>
             </Column>
@@ -56,12 +63,12 @@
                 <Space>
                     <SpaceItem>
                         <Button Type="primary" OnClick="() => OpenDetails(context.ID)">
-                            <Icon Type="desktop" /> Detalles
+                            <Icon Type="info-circle" Theme="fill" /> Detalles
                         </Button>
                         <Button OnClick="() => openEdit(context.ID)">
                             <Icon Type="edit" /> Editar
                         </Button>
-                        <Popconfirm Title="¿Remover este Ordenador?"
+                        <Popconfirm Title="¿Remover este Item?"
                                     OnConfirm="() => DelItem(context.ID)"
                                     OkText="Si"
                                     CancelText="No">
@@ -86,14 +93,12 @@
 @if (VisEdit == true)
 {
     <Modal Visible="VisEdit" Footer="null" OnCancel="() => closeModals(false)">
-        <EditComputer OnClose="closeModals" ID="ItemSelID" />
     </Modal>
 }
 
 @if (VisDetails == true)
 {
     <Modal Visible="VisDetails" Footer="null" OnCancel="() => {VisDetails = false;}">
-        <DetailsComputer ID="ItemSelID" />
     </Modal>
 }
 

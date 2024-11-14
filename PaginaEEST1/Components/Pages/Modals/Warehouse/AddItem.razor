@@ -20,8 +20,12 @@
                 <EnumSelect TEnum="TypeItem" @bind-Value="@ItemVM.Type" />
             </FormItem>
 
+            <FormItem Label="Subir Foto">
+                <ImageInput @ref="ImageUpload" ImageType="TypeImage.ItemImage" />
+            </FormItem>
+
             <FormItem Label="Categoria">
-                <AutoComplete @bind-Value="@ItemVM.Category" Options="@CategoryOptions" Style="min-width:200px" />
+                <AutoComplete @bind-Value="@ItemCategory" Options="@CategoryOptions" Style="min-width:200px" />
             </FormItem>
 
             <FormItem Label="Codigo">
@@ -48,6 +52,10 @@
     //Variables
     private ItemViewModel ItemVM = new();
     private List<string> CategoryOptions = new();
+    private string? ItemCategory;
+    private ItemCategory? ItemCategorySave;
+    private ImageInput? ImageUpload { get; set; }
+    private Item? ItemSave;
 
     // Funciones
     protected override async Task OnInitializedAsync()
@@ -63,6 +71,13 @@
 
     private async Task OnFinish()
     {
+        if (!string.IsNullOrEmpty(ItemCategory))
+        {
+            Category? category = await CategoryService.SaveCategory(TypeCategory.ItemCategory, ItemCategory);
+            if (category != null && category is ItemCategory itemCategory)
+                ItemCategorySave = itemCategory;
+        }
+
         if (ItemVM.Type == TypeItem.ReturnableItem)
         {
             ReturnableItem item = new()
@@ -70,9 +85,10 @@
                     Name = ItemVM.Name,
                     Code = ItemVM.Code,
                     Description = ItemVM.Description,
-                    Owner = OwnerItem
+                    Owner = OwnerItem,
+                    Category = ItemCategorySave
                 };
-            await ItemService.SaveItem(item);
+            ItemSave = await ItemService.SaveItem(item);
         }
 
         else if (ItemVM.Type == TypeItem.ConsumableItem)
@@ -82,13 +98,22 @@
                     Name = ItemVM.Name,
                     Code = ItemVM.Code,
                     Description = ItemVM.Description,
-                    Owner = OwnerItem
+                    Owner = OwnerItem,
+                    Category = ItemCategorySave
                 };
-            await ItemService.SaveItem(item);
+            ItemSave = await ItemService.SaveItem(item);
         }
 
-        ItemVM = new();
-        await OnClose.InvokeAsync(true);
-        StateHasChanged();
+        if (ItemSave != null)
+        {
+            if(ImageUpload != null)
+                await ImageUpload.SaveImage(ItemSave.Id);
+            ItemVM = new();
+            await OnClose.InvokeAsync(true);
+            await message.Success("Se registro el Item");
+            StateHasChanged();
+        }
+        else
+            await message.Error("Error inesperado al guardar el Item");
     }
 }

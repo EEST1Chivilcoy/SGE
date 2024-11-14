@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PaginaEEST1.Data;
 using PaginaEEST1.Data.Enums;
+using PaginaEEST1.Data.Models.Categories;
 using PaginaEEST1.Data.Models.PhysicalObjects;
 using PaginaEEST1.Data.ViewModels;
 using System.Text;
@@ -10,7 +11,7 @@ namespace PaginaEEST1.Services
     public interface IItemService
     {
         Task<List<ItemViewModel?>> GetListItems(EducationalGuidance Owner);
-        Task<bool> SaveItem(Item Item);
+        Task<Item?> SaveItem(Item Item);
         Task DeleteItem(int ID);
         Task<string> GenerateUniqueCodeAsync();
     }
@@ -50,23 +51,27 @@ namespace PaginaEEST1.Services
                 Type = item.Type,
                 Name = item.Name,
                 Description = item.Description,
-                Category = item.Category?.Name ?? "Sin categoría", // Manejo de categoría nula
-                Code = item.Code
+                Category = _context.Categories.AsNoTracking()
+                .OfType<ItemCategory>()
+                .Where(c => c.Items.Any(a => a.Id == item.Id)).SingleOrDefault()?.Name ?? "Sin Categoría",
+                Code = item.Code,
+                IdImageItem = item.ItemImage?.Id
             }).ToList();
         }
 
-        public async Task<bool> SaveItem(Item save)
+        public async Task<Item?> SaveItem(Item save)
         {
             try
             {
                 _context.Items.Add(save);
                 await _context.SaveChangesAsync();
-                return true;
+
+                return _context.Items.Where(a => a == save).SingleOrDefault();
             }
             catch (DbUpdateException ex)
             {
                 Console.WriteLine(ex.Message);
-                return false;
+                return null;
             }
         }
 

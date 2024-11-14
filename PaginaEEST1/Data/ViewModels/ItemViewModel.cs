@@ -26,5 +26,13 @@ namespace PaginaEEST1.Data.ViewModels
         /// Categoria del Objeto
         /// </summary>
         public string? Category { get; set; }
+        /// <summary>
+        /// ID de la Imagen relacionada con el Item
+        /// </summary>
+        public int? IdImageItem { get; set; }
+        /// <summary>
+        /// URL de la Imagen relacionada con el Item
+        /// </summary>
+        public string ImageUrl => IdImageItem.HasValue ? $"/api/Images/{IdImageItem}" : "/Images/default_item.png";
     }
 }
