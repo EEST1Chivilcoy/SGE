@@ -20,6 +20,10 @@
                 <EnumSelect TEnum="TypeItem" @bind-Value="@ItemVM.Type" />
             </FormItem>
 
+            <FormItem Label="Subir Foto">
+                <ImageInput @ref="ImageUpload" ImageType="TypeImage.ItemImage" />
+            </FormItem>
+
             <FormItem Label="Categoria">
                 <AutoComplete @bind-Value="@ItemCategory" Options="@CategoryOptions" Style="min-width:200px" />
             </FormItem>
@@ -50,6 +54,8 @@
     private List<string> CategoryOptions = new();
     private string? ItemCategory;
     private ItemCategory? ItemCategorySave;
+    private ImageInput? ImageUpload { get; set; }
+    private Item? ItemSave;
 
     // Funciones
     protected override async Task OnInitializedAsync()
@@ -82,7 +88,7 @@
                     Owner = OwnerItem,
                     Category = ItemCategorySave
                 };
-            await ItemService.SaveItem(item);
+            ItemSave = await ItemService.SaveItem(item);
         }
 
         else if (ItemVM.Type == TypeItem.ConsumableItem)
@@ -95,12 +101,19 @@
                     Owner = OwnerItem,
                     Category = ItemCategorySave
                 };
-            await ItemService.SaveItem(item);
+            ItemSave = await ItemService.SaveItem(item);
         }
 
-        ItemVM = new();
-        await OnClose.InvokeAsync(true);
-        await message.Success("Se registro el Item");
-        StateHasChanged();
+        if (ItemSave != null)
+        {
+            if(ImageUpload != null)
+                await ImageUpload.SaveImage(ItemSave.Id);
+            ItemVM = new();
+            await OnClose.InvokeAsync(true);
+            await message.Success("Se registro el Item");
+            StateHasChanged();
+        }
+        else
+            await message.Error("Error inesperado al guardar el Item");
     }
 }
