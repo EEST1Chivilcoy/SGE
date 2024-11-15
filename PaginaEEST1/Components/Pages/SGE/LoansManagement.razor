@@ -10,7 +10,31 @@
 @layout SGELayout
 @page "/SGE/Prestamos_Netbooks"
 
-@attribute [Authorize (Roles = "EMATP")]
+@attribute [Authorize (Roles = "Profesores, EMATP")]
+
+<style>
+.card-button {
+    color: #595959;
+    font-size: 22px;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.return-button:hover {
+    color: #18ff3e;
+    transform: scale(1.1);
+}
+
+.details-button:hover {
+    color: #1890ff;
+    transform: scale(1.1);
+}
+
+.cancel-button:hover {
+    color: #ff1818;
+    transform: scale(1.1);
+}
+</style>
 
 <Flex Justify="center" Align="center" Style="height: 100%; width:100%;">
     <div class="template">
@@ -30,7 +54,7 @@
         </div>
         <div class="loans-display">
             <Table TItem="NetbookLoanViewModel"
-                   DataSource="@loans"
+                   DataSource="@loans.Where(l => l.Status != LoanStatus.Returned)"
                    PageIndex="1"
                    PageSize="6"
                    Responsive>
@@ -45,18 +69,10 @@
                 </TitleTemplate>
                 <ColumnDefinitions>
                     @* Datos *@
-                    <PropertyColumn Title="Estado"
-                                    Property="@(v => v.Status.GetDisplayName())"
-                                    Sortable />
-                    <PropertyColumn Title="Fecha requerido"
-                                    Property="@(v => v.RequiredDate)"
-                                    Sortable />
-                    <PropertyColumn Title="Hora de inicio y entrega"
-                                    Property="@(v => v.StartTime + " a " + v.FinishTime)"
-                                    Sortable />
-                    <PropertyColumn Title="Curso"
-                                    Property="@(v => v.SchoolGrade)"
-                                    Sortable />
+                    <PropertyColumn Title="Estado" Property="@(v => v.Status.GetDisplayName())" Sortable />
+                    <PropertyColumn Title="Fecha requerido" Property="@(v => v.RequiredDate)" Sortable/>
+                    <PropertyColumn Title="Hora de inicio y entrega" Property="@(v => v.StartTime + " a " + v.FinishTime)" Sortable />
+                    <PropertyColumn Title="Curso" Property="@(v => v.SchoolGrade)" Sortable />
                     <ActionColumn Title="Netbooks solicitadas" Align="ColumnAlign.Center">
                         <Dropdown Id="@($"dropdown_{context.Id}")" Trigger="new Trigger[] { Trigger.Click }">
                             <Overlay>
@@ -92,6 +108,30 @@
                             </ChildContent>
                         </Dropdown>
                     </ActionColumn>
+                    <!-- Acciones de EMATP -->
+                    <AuthorizeView Roles="EMATP, Directivo">
+                        <Authorized Context="auth_context">
+                            <ActionColumn>
+                                <Popover Title="Marcar como entregado" Trigger="new Trigger[] { Trigger.Hover }">
+                                    <Icon Type="check-circle" Theme="outline" Class="card-button return-button"
+                                        OnClick="() => updateStatus(context.Id)" />
+                                </Popover>
+                                <Popover Title="Ver detalles" Trigger="new Trigger[] { Trigger.Hover }">
+                                    <Icon Type="question-circle" Theme="outline" Class="card-button details-button"
+                                        OnClick="() => {}" />
+                                </Popover>
+                                <Popconfirm Title="¿Caneclar esta Solicitud?"
+                                        OnConfirm="() => cancelLoan(context.Id)"
+                                        OkText="Si"
+                                        CancelText="No"
+                                    >
+                                    <Popover Title="Cancelar" Trigger="new Trigger[] { Trigger.Hover }">
+                                        <Icon Type="close-circle" Theme="outline" Class="card-button cancel-button"/>
+                                    </Popover>
+                                </Popconfirm>
+                            </ActionColumn>
+                        </Authorized>
+                    </AuthorizeView>
                 </ColumnDefinitions>
             </Table>
         </div>
@@ -111,6 +151,18 @@
     private bool visAdd = false;
 
     // Funciones
+    private async Task updateStatus(int Id)
+    {
+        await LoanService.UpdateStatus(Id, LoanStatus.Returned);
+        await OnInitializedAsync();
+        return;
+    }
+    private async Task cancelLoan(int Id)
+    {
+        await LoanService.CancelLoan(Id);
+        await OnInitializedAsync();
+        return;
+    }
     private async Task closeModals(bool success)
     {
         visAdd = false;

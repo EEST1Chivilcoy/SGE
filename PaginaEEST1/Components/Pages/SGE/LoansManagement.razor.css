@@ -38,3 +38,11 @@
 .loans-display{
     margin-top: 20px;
 }
+
+/* Acciones de EMATP */
+.card-buttons {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    border-top: 1px solid #e0e0e0;
+}

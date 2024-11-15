@@ -14,7 +14,7 @@ namespace PaginaEEST1.Services
         Task<bool> SaveComputer(Computer computer);
         Task<Computer?> EditComputer(Computer NewPC);
         Task DelComputer(int ID);
-        Task<List<ComputerViewModel>> GetListComputerDevices();
+        Task<List<ComputerViewModel>> GetListComputerDevices(TypeComputer? computerType = null);
     }
 
     public class ComputerService : IComputerService
@@ -99,19 +99,19 @@ namespace PaginaEEST1.Services
             }
         }
 
-        public async Task<List<ComputerViewModel>> GetListComputerDevices()
+        public async Task<List<ComputerViewModel>> GetListComputerDevices(TypeComputer? computerType = null)
         {
             List<Computer> computers = await _context.Computers.Where(c => c != null).ToListAsync();
 
-            return computers.Select(computer => new ComputerViewModel
+            switch(computerType)
             {
-                ID = computer.Id,
-                Type = computer.Type,
-                Status = computer.Status,
-                DeviceName = computer.DeviceName,
-                OperatingSystem = computer.OperatingSystem,
-                Logo = computer.Type == TypeComputer.Computer ? "Images/Logo_Desktop.png" : "Images/Logo_Netbook.png"
-            }).ToList();
+                case(TypeComputer.Netbook):
+                    return computers.Where(computer => computer is Netbook).Select(computer => GetComputerVM(computer)).ToList();
+                case(TypeComputer.Computer):
+                    return computers.Where(computer => computer is Computer).Select(computer => GetComputerVM(computer)).ToList();
+                default:
+                    return computers.Select(computer => GetComputerVM(computer)).ToList();    
+            }
         }
         private ComputerViewModel GetComputerVM(Computer computer){
 

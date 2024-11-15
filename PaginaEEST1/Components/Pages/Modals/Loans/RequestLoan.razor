@@ -1,12 +1,15 @@
 ﻿@using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Loan
 @using PaginaEEST1.Data.Models.PhysicalObjects
+@using System.ComponentModel.DataAnnotations
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
 @using System.Security.Claims
 @using PaginaEEST1.Services
 @using PaginaEEST1.Shared
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IComputerService ComputerService
 @inject ILoanService LoanService
+@inject IMessageService message
 
 <Form Model="@netbookLoanVM" OnFinish="OnFinish">
     <FormItem Label="Día de uso">
@@ -21,21 +24,24 @@
         <TimePicker @bind-Value="netbookLoanVM.FinishTime" Format="HH:mm" AllowClear="false" />
     </FormItem>
 
-    <FormItem Label="Grado y División">
-        <Input @bind-Value="netbookLoanVM.SchoolGrade" Placeholder="Ej. 5to B" />
-    </FormItem>
-
     <FormItem Label="Seleccione las netbooks solicitadas">
         <Select Mode="multiple"
                 Placeholder="Selecciona las netbooks requeridas"
                 @bind-Values="@netbookLoanVM.NetbooksIds"
-                TItemValue="int?"
-                TItem="Netbook"
+                TItemValue="int"
+                TItem="ComputerViewModel"
                 DataSource="@netbooks"
                 LabelName="@nameof(Netbook.DeviceName)"
                 ValueName="@nameof(Netbook.Id)" />
     </FormItem>
+    <FormItem Label="Ingrese la cantidad para seleccionar automaticamente" LabelStyle="color: grey; font-size: 13px;">
+        <AntDesign.InputNumber TValue="int" @bind-Value="selectedQuantity" Min="1" Max="@netbooks.Count" OnChange="OnQuantityChange" />
+    </FormItem>
 
+    <FormItem Label="Grado y División">
+        <Input @bind-Value="netbookLoanVM.SchoolGrade" Placeholder="Ej. 5to B" />
+    </FormItem>
+    
     <FormItem>
         <Button Type="primary" HtmlType="submit">Solicitar</Button>
     </FormItem>
@@ -46,24 +52,40 @@
     public EventCallback<bool> OnClose { get; set; }
 
     // Variables
-    private List<Netbook> netbooks = new();
-    private NetbookLoanVM netbookLoanVM { get; set; } = new();    
+    private List<ComputerViewModel> netbooks = new();
+    private NetbookLoanVM netbookLoanVM { get; set; } = new();
+    private int selectedQuantity = 0;
 
     // View Model
     public class NetbookLoanVM
     {
+        [Required]
         public DateOnly RequiredDate { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly FinishTime { get; set; }
         public string? SchoolGrade { get; set; }
-        public IEnumerable<int?> NetbooksIds = new List<int?>();
+        [Required]
+        public IEnumerable<int> NetbooksIds = new List<int>();
     }
 
     // Funciones
+    private void OnQuantityChange(int quantity)
+    {
+        selectedQuantity = quantity;
+
+        netbookLoanVM.NetbooksIds = netbooks.Take(quantity).Select(n => n.ID).Cast<int>().ToList();
+    }
     private async Task OnFinish()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
+
+        if (!netbookLoanVM.NetbooksIds.Any())
+        {
+            await message.Error("No se solicitaron netbooks");
+            return;
+        }
+
         NetbookLoan newLoan = new()
         {
             Status = LoanStatus.Pending,
@@ -72,16 +94,18 @@
             StartTime = netbookLoanVM.StartTime,
             FinishTime = netbookLoanVM.FinishTime,
             SchoolGrade = netbookLoanVM.SchoolGrade,
-            ProfessorId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value,
-            Netbooks = netbooks.Where(x => netbookLoanVM.NetbooksIds.Contains(x.Id)).ToList()
+            ProfessorId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "",
+            Netbooks = netbookLoanVM.NetbooksIds.Select(n => new Netbook { Id = n } ).ToList()
         };
         await LoanService.SaveLoan(newLoan);
         await OnClose.InvokeAsync(true);
+        await message.Success("Solicitud registrada");
     }
 
     // Init
     protected override async Task OnInitializedAsync()
     {
-        netbooks = await LoanService.GetListNetbooks();
+
+        netbooks = await ComputerService.GetListComputerDevices(TypeComputer.Netbook);
     }
 }

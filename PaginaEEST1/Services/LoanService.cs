@@ -1,29 +1,32 @@
 using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Loan;
-using Microsoft.EntityFrameworkCore;
-using PaginaEEST1.Data;
-using PaginaEEST1.Data.Enums;
+using Microsoft.AspNetCore.Components.Authorization;
 using PaginaEEST1.Data.Models.PhysicalObjects;
 using PaginaEEST1.Data.Models.Personal;
-using PaginaEEST1.Data.Models.Categories;
-using static PaginaEEST1.Components.Pages.Modals.Loans.RequestLoan;
+using Microsoft.EntityFrameworkCore;
 using PaginaEEST1.Data.ViewModels;
+using PaginaEEST1.Data.Enums;
+using System.Security.Claims;
+using PaginaEEST1.Data;
 
 namespace PaginaEEST1.Services
 {
     public interface ILoanService
     {
         Task<List<NetbookLoanViewModel>> GetNetbookLoans();
-        Task<List<Netbook>> GetListNetbooks();
         Task<Loan> SaveLoan(Loan save);
+        Task<LoanStatus?> UpdateStatus(int Id, LoanStatus status);
+        Task CancelLoan(int Id);
     }
 
     public class LoanService : ILoanService
     {
+        private readonly AuthenticationStateProvider _authenticationStateProvider;
         private readonly PaginaDbContext _context;
 
-        public LoanService(PaginaDbContext context)
+        public LoanService(PaginaDbContext context, AuthenticationStateProvider authenticationStateProvider)
         {
             _context = context;
+            _authenticationStateProvider = authenticationStateProvider;
         }
         public async Task<Loan> SaveLoan(Loan save)
         {
@@ -49,11 +52,16 @@ namespace PaginaEEST1.Services
         }
         public async Task<List<NetbookLoanViewModel>> GetNetbookLoans()
         {
+            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            var personIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userRole = user.FindFirst(ClaimTypes.Role)?.Value;
+
             // Cargar los préstamos y sus netbooks relacionados en una sola consulta
             var loans = await _context.Loans
                 .OfType<NetbookLoan>()
                 .AsNoTracking()
-                .Include(loan => loan.Netbooks) 
+                .Include(loan => loan.Netbooks)
                 .Select(loan => new 
                 {
                     Id = loan.Id,
@@ -66,6 +74,11 @@ namespace PaginaEEST1.Services
                     Netbooks = loan.Netbooks.Select(n => n.DeviceName).ToList()
                 })
                 .ToListAsync();
+
+            // Si es un profesor, evitar recibir otros prestamos
+            if (userRole == "Profesores"){
+                loans = loans.Where(l => l.ProfessorId == personIdClaim).ToList();
+            }
 
             // Transformar a ViewModel
             return loans.Select(loan => new NetbookLoanViewModel
@@ -80,13 +93,43 @@ namespace PaginaEEST1.Services
                 Netbooks = loan.Netbooks.Distinct().ToList()
             }).ToList();
         }
-        public async Task<List<Netbook>> GetListNetbooks()
+        public async Task<LoanStatus?> UpdateStatus(int Id, LoanStatus status )
         {
-            return await _context.Computers.AsNoTracking()
-                .OfType<Netbook>()
-                .Where(n => n.IsAvailable == true)
-                .ToListAsync();
+            Loan? loan = await _context.Loans.Where(l => l.Id == Id).SingleOrDefaultAsync();
+
+            if (loan == null || loan.Status == status) return null;
+
+            loan.Status = status;
+
+            if (status == LoanStatus.Returned && loan is NetbookLoan netbookLoan && netbookLoan.Netbooks != null)
+            {
+                foreach(Netbook netbook in netbookLoan.Netbooks)
+                {
+                    netbook.IsAvailable = true;
+                }
+            }
+
+            _context.SaveChanges();
+            return loan.Status;
+        }
+        public async Task CancelLoan(int Id)
+        {
+            Loan? loan = await _context.Loans.Where(l => l.Id == Id).SingleOrDefaultAsync();
+
+            if (loan == null) return;
+
+            if(loan is NetbookLoan netbookLoan && netbookLoan.Netbooks != null)
+            {
+                foreach(Netbook netbook in netbookLoan.Netbooks)
+                {
+                    netbook.IsAvailable = true;
+                }
+            }
+
+            _context.Loans.Remove(loan);
+            _context.SaveChanges();
+
+            return;
         }
     }
-
 }
