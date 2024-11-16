@@ -118,7 +118,7 @@
                                 </Popover>
                                 <Popover Title="Ver detalles" Trigger="new Trigger[] { Trigger.Hover }">
                                     <Icon Type="question-circle" Theme="outline" Class="card-button details-button"
-                                        OnClick="() => {}" />
+                                        OnClick="() => {idDetails = context.Id; visDetails = true;}" />
                                 </Popover>
                                 <Popconfirm Title="¿Caneclar esta Solicitud?"
                                         OnConfirm="() => cancelLoan(context.Id)"
@@ -145,10 +145,15 @@
     </Modal>
 }
 
+<Modal Title="Detalles del Prestamo" Visible="visDetails" Footer="null" OnCancel="() => { visDetails = false; }" >
+    <DetailsLoan Id="idDetails" />
+</Modal>
+
 @code{
     // Variables
     List<NetbookLoanViewModel> loans = new();
-    private bool visAdd = false;
+    private int idDetails { get; set; }
+    private bool visAdd, visDetails = false;
 
     // Funciones
     private async Task updateStatus(int Id)

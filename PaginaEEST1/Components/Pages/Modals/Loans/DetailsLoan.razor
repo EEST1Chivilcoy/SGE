@@ -1,0 +1,33 @@
+﻿@using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Loan
+@using PaginaEEST1.Data.Models.PhysicalObjects
+@using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Services
+@using PaginaEEST1.Shared
+@inject ILoanService LoanService
+
+@if (loan != null)
+{
+    <p><b>Tipo de prestamo: </b>@loan.Type.GetDisplayName()</p>
+    <p><b>Estado: </b>@loan.Status.GetDisplayName()</p>
+    <p><b>Fecha Solicitado: </b>@loan.SubmitDate.ToShortDateString()</p>
+    <p><b>Fecha Requerido: </b>@loan.RequiredDate.ToShortDateString()</p>
+    <p><b>Horario: </b>@loan.StartTime.ToShortTimeString() hasta @loan.FinishTime.ToShortTimeString()</p>
+    <p><b>Grado y División: </b>@loan.SchoolGrade</p>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Loan loan { get; set; } = null!;
+
+    // Init
+    protected override async Task OnParametersSetAsync()
+    {
+        loan = await LoanService.GetLoanById(Id) ?? 
+            throw new Exception("No se encontro el Prestamo");
+
+        StateHasChanged();
+    }
+}

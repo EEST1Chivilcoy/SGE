@@ -9,7 +9,6 @@ namespace PaginaEEST1.Data.Models.PhysicalObjects
     {
         public string? Model { get; set; }
         public bool IsAvailable { get; set; }
-        public int? LoanId { get; set; }
-        public NetbookLoan? Loan { get; set; }
+        public List<NetbookLoan>? Loans { get; set; }
     }
 }

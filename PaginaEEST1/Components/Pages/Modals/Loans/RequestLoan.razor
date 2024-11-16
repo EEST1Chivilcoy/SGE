@@ -13,7 +13,7 @@
 
 <Form Model="@netbookLoanVM" OnFinish="OnFinish">
     <FormItem Label="Día de uso">
-        <DatePicker @bind-Value="netbookLoanVM.RequiredDate" Format="dd-MM-yyyy" AllowClear="false" />
+        <DatePicker @bind-Value="netbookLoanVM.RequiredDate" Format="dd-MM-yyyy" AllowClear="false" @bind-Value:after="HandleDate" />
     </FormItem>
 
     <FormItem Label="Hora de inicio">
@@ -32,10 +32,11 @@
                 TItem="ComputerViewModel"
                 DataSource="@netbooks"
                 LabelName="@nameof(Netbook.DeviceName)"
-                ValueName="@nameof(Netbook.Id)" />
+                ValueName="@nameof(Netbook.Id)"
+                Disabled = "_disabledNetbooks"/>
     </FormItem>
     <FormItem Label="Ingrese la cantidad para seleccionar automaticamente" LabelStyle="color: grey; font-size: 13px;">
-        <AntDesign.InputNumber TValue="int" @bind-Value="selectedQuantity" Min="1" Max="@netbooks.Count" OnChange="OnQuantityChange" />
+        <AntDesign.InputNumber Disabled="_disabledNetbooks" TValue="int" @bind-Value="selectedQuantity" Min="1" Max="@netbooks.Count" OnChange="OnQuantityChange" />
     </FormItem>
 
     <FormItem Label="Grado y División">
@@ -54,6 +55,7 @@
     // Variables
     private List<ComputerViewModel> netbooks = new();
     private NetbookLoanVM netbookLoanVM { get; set; } = new();
+    private bool _disabledNetbooks = true;
     private int selectedQuantity = 0;
 
     // View Model
@@ -75,6 +77,24 @@
 
         netbookLoanVM.NetbooksIds = netbooks.Take(quantity).Select(n => n.ID).Cast<int>().ToList();
     }
+    private async Task HandleDate()
+    {
+        DateOnly date = netbookLoanVM.RequiredDate;
+        netbooks = await ComputerService.GetListComputerDevices(TypeComputer.Netbook);
+
+        var borrowedDeviceNames = (await LoanService.GetNetbookLoans())
+            .Where(loan => loan.RequiredDate == date)
+            .SelectMany(loan => loan.Netbooks)
+            .ToHashSet();
+
+        // Filtrar las netbooks que no están prestadas en la misma fecha
+        netbooks = netbooks
+            .Where(netbook => !borrowedDeviceNames.Contains(netbook.DeviceName))
+            .ToList();
+
+        _disabledNetbooks = false;
+    }
+
     private async Task OnFinish()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -106,6 +126,5 @@
     protected override async Task OnInitializedAsync()
     {
 
-        netbooks = await ComputerService.GetListComputerDevices(TypeComputer.Netbook);
     }
 }
