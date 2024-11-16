@@ -6,7 +6,7 @@
 @inject KickService KickService
 
 <header>
-    <nav>
+    <nav class="navbar">
         <div class="logo">
             <a href="/">
                 <img src="Images/School_Logo.png" alt="Logo Escuela" />
@@ -37,38 +37,6 @@
         }
     </nav>
 </header>
-
-<style>
-    .btn-login {
-        border-radius: 0.5vw;
-        text-decoration: none;
-        background: none;
-        color: white;
-        border: 2px solid white;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-        .btn-login:hover {
-            background-color: white;
-            color: black;
-        }
-
-    .btn-radio {
-        border-radius: 0.5vw;
-        text-decoration: none;
-        background: #FF5733;
-        color: white;
-        border: 2px solid #FF5733;
-        transition: background-color 0.3s ease, color 0.3s ease;
-        margin-left: 20px;
-    }
-
-        .btn-radio:hover {
-            background-color: white;
-            color: #FF5733;
-            border: 2px solid #FF5733 !important;
-        }
-</style>
 
 @code {
     private bool _showRadioButton = false;
