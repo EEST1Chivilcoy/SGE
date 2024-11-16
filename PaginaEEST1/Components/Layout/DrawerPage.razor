@@ -6,7 +6,7 @@
 @inject KickService KickService
 
 <header>
-    <nav style="padding: 30px;">
+    <nav class="navbar-mobile">
         <Flex Align="center" Justify="space-between" Style="margin: 10px; max-height: 250px; width: 100%">
             <div class="logo">
                 <a href="/">
@@ -20,18 +20,13 @@
             </div>
         </Flex>
     </nav>
-</Header>
+</header>
 <Drawer @bind-Visible="_Visible" Placement="right"
-        BodyStyle="display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    justify-content: flex-start;
-    border-radius: 0.6vw;
-    background-color: #A2C1DD;"
+        BodyStyle="display: flex; flex-direction: column; min-height: 100vh; justify-content: flex-start; border-radius: 0.6vw; background: linear-gradient(135deg, #A2C1DD 0%, #096dd9 100%);"
         HeaderStyle="display: none;">
     <div class="drawer-content">
         <div class="d-logo">
-            <img src="Images/School_Logo.png" alt="Logo Escuela"/>
+            <img src="Images/School_Logo.png" alt="Logo Escuela" />
             <h1><b> EEST1</b></h1>
         </div>
         <div>
@@ -47,7 +42,7 @@
             </ul>
         </div>
         <div style="margin-top: auto; padding: 20px 0;">
-            @if(_showRadioButton)
+            @if (_showRadioButton)
             {
                 <Button Class="btn-radio-drawer" OnClick="NavigateToRadio">Radio en Vivo</Button>
             }
@@ -62,40 +57,6 @@
         </div>
     </div>
 </Drawer>
-
-<style>
-    .btn-login {
-        border-radius: 0.5vw;
-        text-decoration: none;
-        background: none;
-        color: white;
-        border: 2px solid white;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-        .btn-login:hover {
-            background-color: white;
-            color: black;
-        }
-
-    .btn-radio-drawer {
-        border-radius: 0.5vw;
-        text-decoration: none;
-        background: #FF5733;
-        color: white;
-        border: 2px solid #FF5733;
-        transition: background-color 0.3s ease, color 0.3s ease;
-        margin-top: 10px; /* Añadir margen superior */
-        margin-bottom: 10px; /* Añadir margen inferior */
-    }
-
-    .btn-radio-drawer:hover {
-        background-color: white;
-        color: #FF5733;
-        border: 2px solid #FF5733 !important;
-    }
-</style>
-
 
 @code {
     private bool _Visible = false;
