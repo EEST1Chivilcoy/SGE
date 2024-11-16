@@ -14,6 +14,7 @@ namespace PaginaEEST1.Services
     {
         Task<List<NetbookLoanViewModel>> GetNetbookLoans();
         Task<Loan> SaveLoan(Loan save);
+        Task<Loan?> GetLoanById(int Id);
         Task<LoanStatus?> UpdateStatus(int Id, LoanStatus status);
         Task CancelLoan(int Id);
     }
@@ -37,10 +38,6 @@ namespace PaginaEEST1.Services
                     .OfType<Netbook>()
                     .Where(c => netbookLoan.Netbooks.Select(n => n.Id).Contains(c.Id))
                     .ToListAsync();
-                foreach(Netbook netbook in netbooks)
-                {
-                    netbook.IsAvailable = false;
-                }
                 netbookLoan.Netbooks = netbooks;
                 _context.Loans.Add(netbookLoan);
                 await _context.SaveChangesAsync();
@@ -49,6 +46,15 @@ namespace PaginaEEST1.Services
             _context.Loans.Add(save);
             await _context.SaveChangesAsync();
             return save;
+        }
+        public async Task<Loan?> GetLoanById(int Id)
+        {
+            Loan? loan = await _context.Loans.AsNoTracking().Where(l => l.Id == Id).SingleOrDefaultAsync();
+
+            if (loan == null)
+                throw new InvalidOperationException("No se encontró el Prestamo.");
+
+            return loan;
         }
         public async Task<List<NetbookLoanViewModel>> GetNetbookLoans()
         {
@@ -101,7 +107,8 @@ namespace PaginaEEST1.Services
 
             loan.Status = status;
 
-            if (status == LoanStatus.Returned && loan is NetbookLoan netbookLoan && netbookLoan.Netbooks != null)
+            if (status == LoanStatus.Returned && loan.RequiredDate == DateOnly.FromDateTime(DateTime.Now)
+                && loan is NetbookLoan netbookLoan && netbookLoan.Netbooks != null)
             {
                 foreach(Netbook netbook in netbookLoan.Netbooks)
                 {
@@ -118,7 +125,8 @@ namespace PaginaEEST1.Services
 
             if (loan == null) return;
 
-            if(loan is NetbookLoan netbookLoan && netbookLoan.Netbooks != null)
+            if(loan is NetbookLoan netbookLoan && loan.RequiredDate == DateOnly.FromDateTime(DateTime.Now)
+                && netbookLoan.Netbooks != null)
             {
                 foreach(Netbook netbook in netbookLoan.Netbooks)
                 {
