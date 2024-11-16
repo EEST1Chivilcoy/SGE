@@ -1,64 +1,62 @@
 ﻿@page "/Solicitud/CuentaEscolar"
-@using PaginaEEST1.Services
 @using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request
+@using System.ComponentModel.DataAnnotations
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Services
 @inject IRequestService RequestService
 @inject IMessageService message
 
-<Flex Vertical Align="center" Justify="space-between" Style="padding: 32px; width: 100%;">
+<Flex Vertical Align="center" Justify="space-between" Style="padding: 16px; width: 100%; max-width: 1200px; margin: auto;">
     <h1 class="top-intro"><b>Te damos la bienvenida. 👋</b></h1>
     <Paragraph Class="top-intro">A continuación comenzaras con la solicitud de tu cuenta estudiantil.</Paragraph>
     <Paragraph Class="top-intro">Esta cuenta te dara la posibilidad de contar con multiples beneficios en diversas paginas que lo ofrezcan.</Paragraph>
     <br />
-    <Card Style="min-width: 800px; height: auto; background-color: #F0F7FD; border-radius: 1vw;">
+    <Card Style="width: 100%; background-color: #F0F7FD; border-radius: 1vw; padding: 16px;">
         <Steps Current="current" Class="site-navigation-steps">
-            <Step Title="Personal"/>
-            <Step Title="Contacto"/>
-            <Step Title="Curso"/>
+            <Step Title="Personal" />
+            <Step Title="Contacto" />
+            <Step Title="Curso" />
         </Steps>
         <br />
-        <Form Model="RequestVM" OnFinish="OnFinish" >
+        <Form Model="RequestVM" OnFinish="OnFinish">
             @switch (current)
             {
                 case 0:
-                    @* Información General *@
                     <div class="@animationClass">
                         <h3>Información personal</h3>
                         <hr /> <br />
-                        <FormItem Label="Nombre">
-                            <Input @bind-Value="@RequestVM.StudentSurname" />
-                        </FormItem>
-                        <FormItem Label="Apellido">
+                        <FormItem Label="Nombre" For="@(() => RequestVM.StudentName)">
                             <Input @bind-Value="@RequestVM.StudentName" />
                         </FormItem>
-                        <FormItem Label="DNI">
+                        <FormItem Label="Apellido" For="@(() => RequestVM.StudentSurname)">
+                            <Input @bind-Value="@RequestVM.StudentSurname" />
+                        </FormItem>
+                        <FormItem Label="DNI" For="@(() => RequestVM.DNI)">
                             <Input @bind-Value="@RequestVM.DNI" />
                         </FormItem>
                     </div>
                     break;
                 case 1:
-                    @* Información de Contacto *@
                     <div class="@animationClass">
                         <h3>Información de contacto</h3>
                         <hr /> <br />
-                        <FormItem Label="Correo electrónico">
+                        <FormItem Label="Correo electrónico" For="@(() => RequestVM.StudentEmail)">
                             <Input @bind-Value="@RequestVM.StudentEmail" />
                         </FormItem>
-                        <FormItem Label="Numero de teléfono">
+                        <FormItem Label="Número de teléfono" For="@(() => RequestVM.StudentCellPhoneNumber)">
                             <Input @bind-Value="@RequestVM.StudentCellPhoneNumber" />
                         </FormItem>
                     </div>
                     break;
                 case 2:
-                    @* Información de Curso *@
                     <div class="@animationClass">
                         <h3>Información de curso</h3>
                         <hr /> <br />
-                        <FormItem Label="Año cursando">
+                        <FormItem Label="Año cursando" For="@(() => RequestVM.SchoolYear)">
                             <Input @bind-Value="@RequestVM.SchoolYear" />
                         </FormItem>
-                        <FormItem Label="División de curso">
+                        <FormItem Label="División de curso" For="@(() => RequestVM.SchoolDivision)">
                             <Input @bind-Value="@RequestVM.SchoolDivision" />
                         </FormItem>
                     </div>
@@ -67,14 +65,14 @@
                     <p>Cargando . . .</p>
                     break;
             }
-            <Flex Align = "center" Justify="space-between" Style="width: 100%; max-height: 300px;">
-                @if(current > 0)
+            <Flex Align="center" Justify="space-between" Style="width: 100%; flex-wrap: wrap; gap: 10px;">
+                @if (current > 0)
                 {
-                    <Button OnClick="() => {current --;}">Anterior</Button>
+                    <Button OnClick="OnPrevious">Anterior</Button>
                 }
                 @if (current < 2)
                 {
-                    <Button OnClick="() => {current ++;}">Siguiente</Button>
+                    <Button OnClick="OnNext">Siguiente</Button>
                 }
                 @if (current == 2)
                 {
@@ -89,28 +87,100 @@
        Visible="@_visible"
        OnCancel="@(args => _visible = false)">
     <Result Status="success"
-            Title="Se cargo tu solicitud correctamente."
+            Title="Se cargó tu solicitud correctamente."
             SubTitle="Ya puedes cerrar esta ventana.">
     </Result>
 </Modal>
 
 @code {
-    // Informacion de Steps
     private int current { get; set; }
     private string? animationClass { get; set; }
     private bool _visible = false;
 
-    // Variables
-    private StudentAccountRequest RequestVM = new();
+    private StudentAccountRequestViewModel RequestVM = new();
 
-    // Funciones
     private async Task OnFinish()
     {
-        RequestVM.Type = TypeRequest.SolicitudCuenta;
-        RequestVM.RequestDate = DateTime.Now;
-        await RequestService.SaveRequest(RequestVM);
+        StudentAccountRequest Request = new()
+            {
+                Type = TypeRequest.SolicitudCuenta,
+                RequestDate = DateTime.Now,
+                StudentName = RequestVM.StudentName,
+                StudentSurname = RequestVM.StudentSurname,
+                StudentEmail = RequestVM.StudentEmail,
+                StudentCellPhoneNumber = RequestVM.StudentCellPhoneNumber,
+                SchoolYear = RequestVM.SchoolYear,
+                SchoolDivision = RequestVM.SchoolDivision,
+                DNI = RequestVM.DNI
+            };
+        await RequestService.SaveRequest(Request);
         _visible = true;
         RequestVM = new();
         StateHasChanged();
+    }
+
+    private void OnNext()
+    {
+        if (ValidateCurrentStep())
+        {
+            current++;
+        }
+    }
+
+    private void OnPrevious()
+    {
+        current--;
+    }
+
+    private bool ValidateCurrentStep()
+    {
+        switch (current)
+        {
+            case 0:
+                return ValidateStep1();
+            case 1:
+                return ValidateStep2();
+            case 2:
+                return ValidateStep3();
+            default:
+                return false;
+        }
+    }
+
+    private bool ValidateStep1()
+    {
+        return !string.IsNullOrWhiteSpace(RequestVM.StudentName) &&
+               !string.IsNullOrWhiteSpace(RequestVM.StudentSurname) &&
+               RequestVM.DNI.HasValue;
+    }
+
+    private bool ValidateStep2()
+    {
+        return !string.IsNullOrWhiteSpace(RequestVM.StudentEmail) &&
+               !string.IsNullOrWhiteSpace(RequestVM.StudentCellPhoneNumber);
+    }
+
+    private bool ValidateStep3()
+    {
+        return !string.IsNullOrWhiteSpace(RequestVM.SchoolYear) &&
+               !string.IsNullOrWhiteSpace(RequestVM.SchoolDivision);
+    }
+
+    private class StudentAccountRequestViewModel
+    {
+        [Required]
+        public string? StudentName { get; set; }
+        [Required]
+        public string? StudentSurname { get; set; }
+        [Required]
+        public string? StudentEmail { get; set; }
+        [Required]
+        public string? StudentCellPhoneNumber { get; set; }
+        [Required]
+        public string? SchoolYear { get; set; }
+        [Required]
+        public string? SchoolDivision { get; set; }
+        [Required]
+        public int? DNI { get; set; }
     }
 }

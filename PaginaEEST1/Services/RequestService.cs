@@ -87,8 +87,10 @@ namespace PaginaEEST1.Services
         {
             try
             {
-                RequestEMATP request = await _context.ComputerRequests.FindAsync(Id);
+                RequestEMATP? request = await _context.ComputerRequests.FindAsync(Id);
                 request.Status = status;
+                if (status == RequestStatus.Completada)
+                    request.EstimatedCompletionDate = DateTime.Now;
                 await _context.SaveChangesAsync();
                 return true;
             }
