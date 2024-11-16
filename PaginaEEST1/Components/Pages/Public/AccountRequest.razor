@@ -5,7 +5,6 @@
 @using PaginaEEST1.Data.Enums
 @using PaginaEEST1.Services
 @inject IRequestService RequestService
-@inject IMessageService message
 
 <Flex Vertical Align="center" Justify="space-between" Style="padding: 16px; width: 100%; max-width: 1200px; margin: auto;">
     <h1 class="top-intro"><b>Te damos la bienvenida. 👋</b></h1>
@@ -23,40 +22,40 @@
             @switch (current)
             {
                 case 0:
-                    <div class="@animationClass">
+                    <div>
                         <h3>Información personal</h3>
                         <hr /> <br />
-                        <FormItem Label="Nombre" For="@(() => RequestVM.StudentName)">
+                        <FormItem Label="Nombre">
                             <Input @bind-Value="@RequestVM.StudentName" />
                         </FormItem>
-                        <FormItem Label="Apellido" For="@(() => RequestVM.StudentSurname)">
+                        <FormItem Label="Apellido">
                             <Input @bind-Value="@RequestVM.StudentSurname" />
                         </FormItem>
-                        <FormItem Label="DNI" For="@(() => RequestVM.DNI)">
+                        <FormItem Label="DNI">
                             <Input @bind-Value="@RequestVM.DNI" />
                         </FormItem>
                     </div>
                     break;
                 case 1:
-                    <div class="@animationClass">
+                    <div>
                         <h3>Información de contacto</h3>
                         <hr /> <br />
-                        <FormItem Label="Correo electrónico" For="@(() => RequestVM.StudentEmail)">
+                        <FormItem Label="Correo electrónico">
                             <Input @bind-Value="@RequestVM.StudentEmail" />
                         </FormItem>
-                        <FormItem Label="Número de teléfono" For="@(() => RequestVM.StudentCellPhoneNumber)">
+                        <FormItem Label="Número de teléfono">
                             <Input @bind-Value="@RequestVM.StudentCellPhoneNumber" />
                         </FormItem>
                     </div>
                     break;
                 case 2:
-                    <div class="@animationClass">
+                    <div>
                         <h3>Información de curso</h3>
                         <hr /> <br />
-                        <FormItem Label="Año cursando" For="@(() => RequestVM.SchoolYear)">
+                        <FormItem Label="Año cursando">
                             <Input @bind-Value="@RequestVM.SchoolYear" />
                         </FormItem>
-                        <FormItem Label="División de curso" For="@(() => RequestVM.SchoolDivision)">
+                        <FormItem Label="División de curso">
                             <Input @bind-Value="@RequestVM.SchoolDivision" />
                         </FormItem>
                     </div>
@@ -68,11 +67,11 @@
             <Flex Align="center" Justify="space-between" Style="width: 100%; flex-wrap: wrap; gap: 10px;">
                 @if (current > 0)
                 {
-                    <Button OnClick="OnPrevious">Anterior</Button>
+                    <Button OnClick="() => {current --;}">Anterior</Button>
                 }
                 @if (current < 2)
                 {
-                    <Button OnClick="OnNext">Siguiente</Button>
+                    <Button OnClick="() => {current ++;}">Siguiente</Button>
                 }
                 @if (current == 2)
                 {
@@ -94,7 +93,6 @@
 
 @code {
     private int current { get; set; }
-    private string? animationClass { get; set; }
     private bool _visible = false;
 
     private StudentAccountRequestViewModel RequestVM = new();
@@ -117,53 +115,6 @@
         _visible = true;
         RequestVM = new();
         StateHasChanged();
-    }
-
-    private void OnNext()
-    {
-        if (ValidateCurrentStep())
-        {
-            current++;
-        }
-    }
-
-    private void OnPrevious()
-    {
-        current--;
-    }
-
-    private bool ValidateCurrentStep()
-    {
-        switch (current)
-        {
-            case 0:
-                return ValidateStep1();
-            case 1:
-                return ValidateStep2();
-            case 2:
-                return ValidateStep3();
-            default:
-                return false;
-        }
-    }
-
-    private bool ValidateStep1()
-    {
-        return !string.IsNullOrWhiteSpace(RequestVM.StudentName) &&
-               !string.IsNullOrWhiteSpace(RequestVM.StudentSurname) &&
-               RequestVM.DNI.HasValue;
-    }
-
-    private bool ValidateStep2()
-    {
-        return !string.IsNullOrWhiteSpace(RequestVM.StudentEmail) &&
-               !string.IsNullOrWhiteSpace(RequestVM.StudentCellPhoneNumber);
-    }
-
-    private bool ValidateStep3()
-    {
-        return !string.IsNullOrWhiteSpace(RequestVM.SchoolYear) &&
-               !string.IsNullOrWhiteSpace(RequestVM.SchoolDivision);
     }
 
     private class StudentAccountRequestViewModel
