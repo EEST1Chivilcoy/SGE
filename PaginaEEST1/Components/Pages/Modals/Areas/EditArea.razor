@@ -1,4 +1,5 @@
-﻿@using PaginaEEST1.Data.Models.SchoolArea
+﻿@using System.ComponentModel.DataAnnotations
+@using PaginaEEST1.Data.Models.SchoolArea
 @using PaginaEEST1.Data.Models.Categories
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
@@ -21,7 +22,7 @@
             </FormItem>
             @* Categoría *@
             <FormItem Label="Seleccione la categoría">
-                <AutoComplete @bind-Value="@AreaCategory" Options="@categories" Style="min-width:200px" />
+                <AutoComplete @bind-Value="@areaVM.Category" Options="@categories" Style="min-width:200px" />
             </FormItem>
             <FormItem Label="Orientación del Área">
                 <EnumSelect TEnum="EducationalGuidance" @bind-Value="@areaVM.AreaGuidance" />
@@ -37,9 +38,8 @@
 @code {
     [Parameter] public EventCallback<bool> OnClose { get; set; }
     [Parameter] public int ID { get; set; }
-    private Area areaVM { get; set; } = new();
+    private AreaViewModel areaVM { get; set; } = new();
     private List<string> categories = new();
-    private string? AreaCategory { get; set; }
 
     // Funciones
     private async Task HandleClose()
@@ -50,12 +50,20 @@
     {
         try
         {
-            if (!string.IsNullOrEmpty(AreaCategory)){
-                Category? category = await CategoryService.SaveCategory(TypeCategory.AreaCategory, AreaCategory);
+            Area area = new()
+                {
+                    Id = areaVM.Id,
+                    Name = areaVM.Name ?? "Salón sin nombre",
+                    Location = areaVM.Location ?? "Sin especificar",
+                    AreaType = areaVM.AreaType,
+                    AreaGuidance = areaVM.AreaGuidance
+                };
+            if (!string.IsNullOrEmpty(areaVM.Category)){
+                Category? category = await CategoryService.SaveCategory(TypeCategory.AreaCategory, areaVM.Category);
                 if (category != null && category is AreaCategory areaCategory)
-                    areaVM.Category = areaCategory;
+                    area.Category = areaCategory;
             }
-            await AreaService.EditArea(areaVM);
+            await AreaService.EditArea(area);
             await OnClose.InvokeAsync(true);
             StateHasChanged();
             await message.Success("Ordenador editado con exito");
@@ -72,8 +80,15 @@
             var area = await AreaService.GetArea(ID);
             if (area != null)
             {
-                areaVM = area;
-                AreaCategory = area.Category?.Name ?? null;
+                areaVM = new()
+                {
+                    Id = area.Id,
+                    Name = area.Name,
+                    Location = area.Location,
+                    AreaType = area.AreaType,
+                    AreaGuidance = area.AreaGuidance,
+                    Category = area.Category?.Name ?? ""
+                };
             }
             categories = await CategoryService.GetListCategories(TypeCategory.AreaCategory);
         }
@@ -82,5 +97,19 @@
             await message.Error(ex.Message);
         }
         StateHasChanged();
+    }
+
+
+    // View Model
+    private class AreaViewModel()
+    {
+        public int Id { get; set; }
+        [Required]
+        public string? Name { get; set; }
+        [Required]
+        public string? Location { get; set; }
+        public TypeArea AreaType { get; set; }
+        public string? Category { get; set; }
+        public EducationalGuidance AreaGuidance { get; set; }
     }
 }

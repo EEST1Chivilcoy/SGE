@@ -62,6 +62,15 @@ namespace PaginaEEST1.Services
             if (computer == null)
                 throw new InvalidOperationException("No se encontró la Computadora.");
 
+            if (computer is Desktop)
+            {
+                return _context.Computers
+                    .OfType<Desktop>()
+                    .Include(c => c.Location)
+                    .Where(c => c == computer)
+                    .SingleOrDefault();
+            }
+
             return computer;
         }
 

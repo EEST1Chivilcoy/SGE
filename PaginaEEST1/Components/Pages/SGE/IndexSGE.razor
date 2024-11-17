@@ -40,22 +40,20 @@
                     <Icon Type="tags" Theme="fill" />
                     Prestamos
                 </Button>
-            </div>
-            <div class="sge-actions-card__row">
                 <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/DepositoInformatica"))">
                     <Icon Type="dropbox-square" Theme="fill" />
                     Deposito
                 </Button>
-                <AuthorizeView Roles="Directivo">
-                    <Authorized>
-                        <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Directivo/GestionSalones"))">
-                            <Icon Type="home" Theme="fill"/>
-                            Gestión de Salones
-                        </Button>
-                    </Authorized>
-                </AuthorizeView>
             </div>
             <QRAccountRequest />
+            <AuthorizeView Roles="Directivo">
+                <Authorized>
+                    <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Directivo/GestionSalones"))">
+                        <Icon Type="home" Theme="fill" />
+                        Gestión de Salones
+                    </Button>
+                </Authorized>
+            </AuthorizeView>
             
         </div>
         @if (isRendered && ShouldShowAttendanceCard())

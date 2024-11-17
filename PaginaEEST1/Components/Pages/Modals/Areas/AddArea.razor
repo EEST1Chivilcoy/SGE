@@ -1,7 +1,8 @@
-﻿@using PaginaEEST1.Services
-@using PaginaEEST1.Data.Enums
+﻿@using System.ComponentModel.DataAnnotations
 @using PaginaEEST1.Data.Models.Categories
 @using PaginaEEST1.Data.Models.SchoolArea
+@using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Services
 
 @*Servicios Utilizados*@
 @inject IMessageService message
@@ -25,7 +26,7 @@
             </FormItem>
             @* Categoría *@
             <FormItem Label="Seleccione la categoría">
-                <AutoComplete @bind-Value="@AreaCategory" Options="@categories" Style="min-width:200px" />
+                <AutoComplete @bind-Value="@areaVM.Category" Options="@categories" Style="min-width:200px" />
             </FormItem>
             <FormItem Label="Orientación del Área">
                 <EnumSelect TEnum="EducationalGuidance" @bind-Value="@areaVM.AreaGuidance" />
@@ -44,9 +45,8 @@
 
     // Variables
     private List<string> categories = new();
-    private Area areaVM = new();
+    private AreaViewModel areaVM = new();
     private ImageInput? ImageUpload { get; set; }
-    private string? AreaCategory { get; set; }
 
     // Funciones
     private async Task HandleClose()
@@ -55,13 +55,20 @@
     }
     private async Task OnFinish()
     {
-        if (!string.IsNullOrEmpty(AreaCategory)){
-            Category? category = await CategoryService.SaveCategory(TypeCategory.AreaCategory, AreaCategory);
+        Area area = new()
+            {
+                Name = areaVM.Name ?? "Salón sin nombre",
+                Location = areaVM.Location ?? "Sin especificar",
+                AreaType = areaVM.AreaType,
+                AreaGuidance = areaVM.AreaGuidance
+            };
+        if (!string.IsNullOrEmpty(areaVM.Category)){
+            Category? category = await CategoryService.SaveCategory(TypeCategory.AreaCategory, areaVM.Category);
             if (category != null && category is AreaCategory areaCategory)
-                areaVM.Category = areaCategory;
+                area.Category = areaCategory;
         }
 
-        Area? save = await AreaService.SaveArea(areaVM);
+        Area? save = await AreaService.SaveArea(area);
 
         if (save != null)
         {
@@ -82,5 +89,17 @@
     {
         categories = await CategoryService.GetListCategories(TypeCategory.AreaCategory);
         StateHasChanged();
+    }
+
+    // View Model
+    private class AreaViewModel()
+    {
+        [Required]
+        public string? Name { get; set; }
+        [Required]
+        public string? Location { get; set; }
+        public TypeArea AreaType { get; set; }
+        public string? Category { get; set; }
+        public EducationalGuidance AreaGuidance { get; set; }
     }
 }

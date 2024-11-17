@@ -7,6 +7,7 @@
 @inject IAreaService AreaService
 
 <div clas="container">
+    @if (computerVM == null) return;
     <Form Model="@computerVM" OnFinish="OnFinish">
         <div clas="form-grid">
             <FormItem Label="Estado del Ordenador">
@@ -38,11 +39,10 @@
             <FormItem Label="Tipo de almacenamiento">
                 <EnumSelect TEnum="TypeStorage" @bind-Value="@computerVM.typeStorage" />
             </FormItem>
-            @if (computerVM is Desktop desktop)
+            @if (computerVM.Type == TypeComputer.Computer)
             {
                 <FormItem Label="Ubicación dentro de la Institución">
-                    <Select
-                        @bind-Value="@desktop.LocationId"
+                    <Select @bind-Value="@computerVM.LocationId"
                         DataSource="@areas"
                         TItem="AreaViewModel"
                         TItemValue="int"
@@ -53,13 +53,13 @@
                         />
                 </FormItem>
             }
-            @if (computerVM is Netbook netbook)
+            @if (computerVM.Type == TypeComputer.Netbook)
             {
                 <FormItem Label="Modelo de la Netbook">
-                    <Input @bind-Value="@netbook.Model" />
+                    <Input @bind-Value="@computerVM.Model" />
                 </FormItem>
                 <FormItem Label="Disponibilidad de la Netbook">
-                    <Switch @bind-Value="@netbook.IsAvailable" />
+                    <Switch @bind-Value="@computerVM.IsAvailable" />
                 </FormItem>
             }
             <FormItem>
@@ -73,7 +73,7 @@
 @code {
     [Parameter] public EventCallback<bool> OnClose { get; set; }
     [Parameter] public int ID { get; set; }
-    private Computer? computerVM { get; set; }
+    private ComputerViewModel computerVM { get; set; } = new();
     private List<AreaViewModel> areas = new();
 
     // Funciones
@@ -85,7 +85,43 @@
     {
         try
         {
-            await ComputerService.EditComputer(computerVM);
+            if (computerVM.Type == TypeComputer.Computer)
+            {
+                await ComputerService.EditComputer(
+                    new Desktop()
+                    {
+                        Id = computerVM.Id,
+                        DeviceName = computerVM.DeviceName,
+                        Type = computerVM.Type,
+                        Status = computerVM.Status,
+                        OperatingSystem = computerVM.OperatingSystem,
+                        Processor = computerVM.Processor,
+                        RAM = computerVM.RAM,
+                        Storage = computerVM.Storage,
+                        typeStorage = computerVM.typeStorage,
+                        LocationId = computerVM.LocationId
+                    }
+                );
+            }
+            else if (computerVM.Type == TypeComputer.Netbook)
+            {
+                await ComputerService.EditComputer(
+                    new Netbook()
+                    {
+                        Id = computerVM.Id,
+                        DeviceName = computerVM.DeviceName,
+                        Type = computerVM.Type,
+                        Status = computerVM.Status,
+                        OperatingSystem = computerVM.OperatingSystem,
+                        Processor = computerVM.Processor,
+                        RAM = computerVM.RAM,
+                        Storage = computerVM.Storage,
+                        typeStorage = computerVM.typeStorage,
+                        Model = computerVM.Model,
+                        IsAvailable = computerVM.IsAvailable
+                    }
+                );
+            }
             await OnClose.InvokeAsync(true);
             StateHasChanged();
             await message.Success("Ordenador editado con exito");
@@ -99,8 +135,47 @@
     {
         var computer = await ComputerService.GetComputer(ID);
         if (computer != null)
-            computerVM = computer;
+        {
+            computerVM = new()
+                {
+                    Id = computer.Id,
+                    DeviceName = computer.DeviceName,
+                    Type = computer.Type,
+                    Status = computer.Status,
+                    OperatingSystem = computer.OperatingSystem,
+                    Processor = computer.Processor,
+                    RAM = computer.RAM,
+                    Storage = computer.Storage,
+                    typeStorage = computer.typeStorage
+                };
+            if (computer is Desktop desktop)
+            {
+                computerVM.LocationId = (desktop.Location?.Id == null) ? 0 : desktop.Location.Id;
+            }
+            if (computer is Netbook netbook)
+            {
+                computerVM.Model = netbook.Model;
+                computerVM.IsAvailable = netbook.IsAvailable;
+            }
+        }
         areas = await AreaService.GetListAreas();
         StateHasChanged();
+    }
+
+    // View Model
+    private class ComputerViewModel
+    {
+        public int Id { get; set; }
+        public string? DeviceName { get; set; }
+        public TypeComputer Type { get; set; }
+        public ComputerStatus Status { get; set; }
+        public string? OperatingSystem { get; set; }
+        public string? Processor { get; set; }
+        public int? RAM { get; set; }
+        public int? Storage { get; set; }
+        public TypeStorage typeStorage { get; set; }
+        public string? Model { get; set; }
+        public bool IsAvailable { get; set; }
+        public int LocationId { get; set; }
     }
 }
