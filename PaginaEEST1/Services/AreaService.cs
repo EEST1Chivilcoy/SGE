@@ -101,8 +101,8 @@ namespace PaginaEEST1.Services
         }
         public async Task<Area?> GetArea(int ID)
         {
-            Area? area = await _context.Areas.FindAsync(ID);
-            
+            Area? area = await _context.Areas.Include(a => a.Category).Where(a => a.Id == ID).SingleOrDefaultAsync();
+
             if (area == null)
                 throw new InvalidOperationException("No se encontró el salón.");
 

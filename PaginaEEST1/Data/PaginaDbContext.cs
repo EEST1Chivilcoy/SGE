@@ -60,6 +60,7 @@ namespace PaginaEEST1.Data
                 .HasForeignKey<ItemImage_Item>(ii => ii.ItemId); // Clave foránea en ItemImage
 
             // Foraneas n:n con una tabla intermedia implícita
+
             modelBuilder.Entity<NetbookLoan>()
                 .HasMany(l => l.Netbooks)
                 .WithMany(n => n.Loans)
@@ -67,6 +68,14 @@ namespace PaginaEEST1.Data
                     "Netbook_NetbookLoan",
                     j => j.HasOne<Netbook>().WithMany().HasForeignKey("Netbookid"),
                     j => j.HasOne<NetbookLoan>().WithMany().HasForeignKey("LoanId"));
+
+            modelBuilder.Entity<ItemLoan>()
+                .HasMany(l => l.Items)
+                .WithMany(n => n.Loans)
+                .UsingEntity<Dictionary<string, object>>(
+                    "Item_ItemLoan",
+                    j => j.HasOne<ReturnableItem>().WithMany().HasForeignKey("ItemId"),
+                    j => j.HasOne<ItemLoan>().WithMany().HasForeignKey("LoanId"));
 
             // Enums
 

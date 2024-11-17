@@ -5,7 +5,6 @@
 @using PaginaEEST1.Data.Enums
 @using PaginaEEST1.Shared
 @inject IMessageService message
-@inject IComputerService ComputerService
 @inject IRequestService RequestService
 
 <p><b>Tipo:</b> @RequestSelect?.Type.GetDisplayName()</p>
@@ -17,14 +16,14 @@
 @if (RequestSelect is FailureRequest failure)
 {
     <h3><u>Datos del dispositivo</u></h3>
-    <p><b>Nombre/Codigo del dispositivo:</b> @ComputerName</p>
+    <p><b>Nombre/Codigo del dispositivo:</b> @failure.Computer.DeviceName</p>
     <p><b>Descripción del Fallo:</b> @failure.FailureDescription</p>
     <p><b>Nivel de Prioridad:</b> @failure.Preority</p>
 }
 else if (RequestSelect is InstallationRequest installation)
 {
     <h3><u>Datos del dispositivo</u></h3>
-    <p><b>Nombre/Codigo del dispositivo:</b> @ComputerName</p>
+    <p><b>Nombre/Codigo del dispositivo:</b> @installation.Computer.DeviceName</p>
     <p><b>Nombre del Programa:</b> @installation.NameProgram</p>
     <p><b>Versión del Programa:</b> @installation.VersionProgram</p>
 }
@@ -105,11 +104,10 @@ else if (RequestSelect is StudentAccountRequest account)
     protected override async Task OnInitializedAsync()
     {
         RequestSelect = await RequestService.GetRequest(ID);
+
         if (RequestSelect is RequestComputer _request)
-        {
-            Computer? relatedDevice = await ComputerService.GetComputer(_request.ComputerId);
-            ComputerName = relatedDevice.DeviceName;
-        }
+            ComputerName = _request.Computer.DeviceName;
+
         StateHasChanged();
     }
 }

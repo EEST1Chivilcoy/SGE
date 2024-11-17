@@ -66,8 +66,25 @@ namespace PaginaEEST1.Services
         }
         public async Task<RequestEMATP?> GetRequest(int Id)
         {
-            return await _context.ComputerRequests.FindAsync(Id);
+            RequestEMATP? request = await _context.ComputerRequests
+                .Where(r => r.Id == Id)
+                .SingleOrDefaultAsync();
+
+            if (request == null)
+                throw new InvalidOperationException("No se encontró el reporte.");
+
+            if (request is RequestComputer computerRequest)
+            {
+                await _context.Entry(computerRequest)
+                    .Reference(cr => cr.Computer)
+                    .LoadAsync();
+
+                return computerRequest;
+            }
+
+            return request;
         }
+
         public async Task DelRequest(int Id)
         {
             try

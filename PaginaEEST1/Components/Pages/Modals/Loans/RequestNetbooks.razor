@@ -82,9 +82,9 @@
         DateOnly date = netbookLoanVM.RequiredDate;
         netbooks = await ComputerService.GetListComputerDevices(TypeComputer.Netbook);
 
-        var borrowedDeviceNames = (await LoanService.GetNetbookLoans())
-            .Where(loan => loan.RequiredDate == date)
-            .SelectMany(loan => loan.Netbooks)
+        var borrowedDeviceNames = (await LoanService.GetLoanList(TypeLoan.NetbookLoan, true))
+            .Where(loan => loan.RequiredDate == date && loan.Status != LoanStatus.Returned)
+            .SelectMany(loan => loan.Assets)
             .ToHashSet();
 
         // Filtrar las netbooks que no están prestadas en la misma fecha
@@ -120,11 +120,5 @@
         await LoanService.SaveLoan(newLoan);
         await OnClose.InvokeAsync(true);
         await message.Success("Solicitud registrada");
-    }
-
-    // Init
-    protected override async Task OnInitializedAsync()
-    {
-
     }
 }

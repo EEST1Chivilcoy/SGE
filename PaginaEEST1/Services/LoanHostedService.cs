@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PaginaEEST1.Data;
+using PaginaEEST1.Data.Enums;
 using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Loan;
 using System;
 using System.Linq;
@@ -9,24 +10,24 @@ using System.Threading.Tasks;
 
 namespace PaginaEEST1.Services
 {
-    public class NetbookLoanHostedService : IHostedService, IDisposable
+    public class LoanHostedService : IHostedService, IDisposable
     {
         private Timer? _timer;
         private readonly IServiceProvider _serviceProvider;
 
-        public NetbookLoanHostedService(IServiceProvider serviceProvider)
+        public LoanHostedService(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            // Configurar el temporizador para ejecutar CheckNetbookLoans cada 24 horas
-            _timer = new Timer(CheckNetbookLoans, null, TimeSpan.Zero, TimeSpan.FromDays(1));
+            // Configurar el temporizador para ejecutar CheckLoans cada 24 horas
+            _timer = new Timer(CheckLoans, null, TimeSpan.Zero, TimeSpan.FromDays(1));
             return Task.CompletedTask;
         }
 
-        private void CheckNetbookLoans(object? state)
+        private void CheckLoans(object? state)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
@@ -36,31 +37,41 @@ namespace PaginaEEST1.Services
 
                     // Obtener la fecha actual
                     var currentDate = DateOnly.FromDateTime(DateTime.Now);
+                    var twoWeeksAgo = currentDate.AddDays(-14);
 
-                    // Buscar los préstamos que han alcanzado su fecha requerida
+                    // Actualizar préstamos cuyo RequiredDate sea igual a la fecha actual
                     var loansToUpdate = dbContext.Loans
-                        .OfType<NetbookLoan>()
-                        .Include(nl => nl.Netbooks)
-                        .Where(nl => nl.RequiredDate == currentDate)
+                        .Where(l => l.RequiredDate == currentDate)
                         .ToList();
 
-                    if (loansToUpdate != null && loansToUpdate.Any())
+                    foreach (var loan in loansToUpdate)
                     {
-                        foreach (var loan in loansToUpdate)
-                        {
-                            // Actualizar el estado de disponibilidad de todas las netbooks
-                            foreach (var netbook in loan.Netbooks)
-                            {
-                                netbook.IsAvailable = false;
-                            }
-                        }
+                        loan.Status = LoanStatus.Busy;
 
-                        dbContext.SaveChanges();
+                        // Actualizar disponibilidad de activos asociados (si aplica)
+                        if (loan is NetbookLoan netbookLoan)
+                        {
+                            NetbookLoan includeLoan = dbContext.Loans.OfType<NetbookLoan>()
+                                .Include(l => l.Netbooks)
+                                .Where(l => l == netbookLoan)
+                                .SingleOrDefault() ??
+                                throw new InvalidOperationException("Error inesperado al actualizar la disponibilidad.");
+                            includeLoan.Netbooks.ForEach(n => n.IsAvailable = false);
+                        }
                     }
+
+                    // Eliminar préstamos con RequestDate hace más de 2 semanas
+                    var loansToDelete = dbContext.Loans
+                        .Where(l => l.RequiredDate < twoWeeksAgo)
+                        .ToList();
+
+                    dbContext.Loans.RemoveRange(loansToDelete);
+
+                    dbContext.SaveChanges();
                 }
                 catch (Exception ex)
                 {
-                    throw new InvalidOperationException("No se pudo actualizar el estado de las netbooks.", ex);
+                    throw new InvalidOperationException("Error al procesar préstamos.", ex);
                 }
             }
         }

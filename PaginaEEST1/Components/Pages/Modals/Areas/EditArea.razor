@@ -37,7 +37,7 @@
 @code {
     [Parameter] public EventCallback<bool> OnClose { get; set; }
     [Parameter] public int ID { get; set; }
-    private Area areaVM { get; set; } = null!;
+    private Area areaVM { get; set; } = new();
     private List<string> categories = new();
     private string? AreaCategory { get; set; }
 
@@ -67,11 +67,20 @@
     }
     protected override async Task OnInitializedAsync()
     {
-        var area = await AreaService.GetArea(ID);
-        AreaCategory = await CategoryService.GetCategoryByReference(TypeCategory.AreaCategory, ID);
-        if (area != null)
-            areaVM = area;
-        categories = await CategoryService.GetListCategories(TypeCategory.AreaCategory);
+        try
+        {
+            var area = await AreaService.GetArea(ID);
+            if (area != null)
+            {
+                areaVM = area;
+                AreaCategory = area.Category?.Name ?? null;
+            }
+            categories = await CategoryService.GetListCategories(TypeCategory.AreaCategory);
+        }
+        catch(Exception ex)
+        {
+            await message.Error(ex.Message);
+        }
         StateHasChanged();
     }
 }

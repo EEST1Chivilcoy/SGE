@@ -1,0 +1,115 @@
+﻿@using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Loan
+@using PaginaEEST1.Data.Models.PhysicalObjects
+@using System.ComponentModel.DataAnnotations
+@using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Enums
+@using System.Security.Claims
+@using PaginaEEST1.Services
+@using PaginaEEST1.Shared
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IItemService ItemService
+@inject ILoanService LoanService
+@inject IMessageService message
+
+<Form Model="@itemLoanVM" OnFinish="OnFinish">
+    <FormItem Label="Día de uso">
+        <DatePicker @bind-Value="itemLoanVM.RequiredDate" Format="dd-MM-yyyy" AllowClear="false" @bind-Value:after="HandleDate" />
+    </FormItem>
+
+    <FormItem Label="Hora de inicio">
+        <TimePicker @bind-Value="itemLoanVM.StartTime" Format="HH:mm" AllowClear="false" />
+    </FormItem>
+
+    <FormItem Label="Hora de entrega">
+        <TimePicker @bind-Value="itemLoanVM.FinishTime" Format="HH:mm" AllowClear="false" />
+    </FormItem>
+
+    <FormItem Label="Seleccione los objetos para solicitar">
+        <Select Mode="multiple"
+                Placeholder="Selecciona los objetos requeridos"
+                @bind-Values="@itemLoanVM.ItemsIds"
+                TItemValue="int"
+                TItem="ItemViewModel"
+                DataSource="@items"
+                LabelName="@nameof(Item.Name)"
+                ValueName="@nameof(Item.Id)"
+                Disabled="_disabledItems"
+                EnableSearch/>
+    </FormItem>
+
+    <FormItem Label="Grado y División">
+        <Input @bind-Value="itemLoanVM.SchoolGrade" Placeholder="Ej. 5to B" />
+    </FormItem>
+    
+    <FormItem>
+        <Button Type="primary" HtmlType="submit">Solicitar</Button>
+    </FormItem>
+</Form>
+
+@code {
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+
+    // Variables
+    private bool _disabledItems = true;
+    private List<ItemViewModel?> items = new();
+    private ItemLoanVM itemLoanVM { get; set; } = new();
+
+    // View Model
+    public class ItemLoanVM
+    {
+        [Required]
+        public DateOnly RequiredDate { get; set; }
+        public TimeOnly StartTime { get; set; }
+        public TimeOnly FinishTime { get; set; }
+        public string? SchoolGrade { get; set; }
+        [Required]
+        public IEnumerable<int> ItemsIds = new List<int>();
+    }
+
+    // Funciones
+    private async Task HandleDate()
+    {
+        DateOnly date = itemLoanVM.RequiredDate;
+        items = await ItemService.GetListItems(EducationalGuidance.Computing) ?? new();
+
+        var borrowedItemNames = (await LoanService.GetLoanList(TypeLoan.ItemLoan))
+            .Where(loan => loan.RequiredDate == date && loan.Status != LoanStatus.Returned)
+            .SelectMany(loan => loan.Assets)
+            .ToHashSet();
+
+        // Filtrar los objetos que no están prestadas en la misma fecha
+        items = items
+            .Where(item => !borrowedItemNames.Contains(item.Name))
+            .ToList();
+
+        _disabledItems = false;
+    }
+
+    private async Task OnFinish()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (!itemLoanVM.ItemsIds.Any())
+        {
+            await message.Error("No se solicitaron objetos");
+            return;
+        }
+
+        ItemLoan newLoan = new()
+        {
+            Status = LoanStatus.Pending,
+            SubmitDate = DateTime.Now,
+            RequiredDate = itemLoanVM.RequiredDate,
+            StartTime = itemLoanVM.StartTime,
+            FinishTime = itemLoanVM.FinishTime,
+            SchoolGrade = itemLoanVM.SchoolGrade,
+            ProfessorId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "",
+            Items = itemLoanVM.ItemsIds.Select(n => new ReturnableItem { Id = n } ).ToList()
+        };
+        await LoanService.SaveLoan(newLoan);
+        await OnClose.InvokeAsync(true);
+        await message.Success("Solicitud registrada");
+    }
+}

@@ -7,6 +7,7 @@
 @using PaginaEEST1.Shared
 @using PaginaEEST1.Components.Layout.SGE
 @inject ILoanService LoanService
+@inject IMessageService message
 @layout SGELayout
 @page "/SGE/Prestamos_Netbooks"
 
@@ -41,19 +42,19 @@
         <div class="header-content">
             <div class="square">
                 <p>Prestamos pendientes:</p>
-                <p>@loans.Where(l => l.Status == LoanStatus.Pending).ToList().Count()</p>
+                <p><b>@loans.Where(l => l.Status == LoanStatus.Pending).ToList().Count()</b></p>
             </div>
             <div class="square">
                 <p>Prestamos en uso:</p>
-                <p>@loans.Where(l => l.Status == LoanStatus.Busy).ToList().Count()</p>
+                <p><b>@loans.Where(l => l.Status == LoanStatus.Busy).ToList().Count()</b></p>
             </div>
             <div class="square">
                 <p>Prestamos entregados:</p>
-                <p>@loans.Where(l => l.Status == LoanStatus.Returned).ToList().Count()</p>
+                <p><b>@loans.Where(l => l.Status == LoanStatus.Returned).ToList().Count()</b></p>
             </div>
         </div>
         <div class="loans-display">
-            <Table TItem="NetbookLoanViewModel"
+            <Table TItem="LoanViewModel"
                    DataSource="@loans.Where(l => l.Status != LoanStatus.Returned)"
                    PageIndex="1"
                    PageSize="6"
@@ -61,8 +62,17 @@
                 <TitleTemplate>
                     <Flex Justify="space-between" Align="center" Style="width:100%;">
                         <h3 style="font-family: Arial;">Lista de prestamos</h3>
+                        <div class="type-square @(selectedType == TypeLoan.ItemLoan ? "selected" : "")" @onclick="() => FilterLoans(TypeLoan.ItemLoan)">
+                            <h4>Netbooks</h4>
+                            <img src="/Images/Logo_Netbook.png" alt="Netbook" />
+                        </div>
+                        <div class="type-square @(selectedType == TypeLoan.NetbookLoan ? "selected" : "")" @onclick="() => FilterLoans(TypeLoan.NetbookLoan)">
+                            <h4>Deposito</h4>
+                            <img src="/Images/Logo_Items.png" alt="Netbook" />
+                        </div>
                         <Button Type="primary"
-                                OnClick="() => {visAdd = true;}">
+                                OnClick="() => {visAdd = true;}"
+                                Disabled="@(selectedType == null)">
                             <Icon Type="plus" /> Solicitar un Prestamo
                         </Button>
                     </Flex>
@@ -73,40 +83,15 @@
                     <PropertyColumn Title="Fecha requerido" Property="@(v => v.RequiredDate)" Sortable/>
                     <PropertyColumn Title="Hora de inicio y entrega" Property="@(v => v.StartTime + " a " + v.FinishTime)" Sortable />
                     <PropertyColumn Title="Curso" Property="@(v => v.SchoolGrade)" Sortable />
-                    <ActionColumn Title="Netbooks solicitadas" Align="ColumnAlign.Center">
-                        <Dropdown Id="@($"dropdown_{context.Id}")" Trigger="new Trigger[] { Trigger.Click }">
-                            <Overlay>
-                                <Menu Id="@($"menu_{context.Id}")">
-                                    @if (context.Netbooks != null && context.Netbooks.Any())
-                                    {
-                                        @foreach (var name in context.Netbooks)
-                                        {
-                                            <MenuItem>
-                                                <Space>
-                                                    <SpaceItem>
-                                                        <Icon Type="laptop" />
-                                                    </SpaceItem>
-                                                    <SpaceItem>
-                                                        @name
-                                                    </SpaceItem>
-                                                </Space>
-                                            </MenuItem>
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <MenuItem>
-                                            <Empty />
-                                        </MenuItem>
-                                    }
-                                </Menu>
-                            </Overlay>
-                            <ChildContent>
-                                <Button Type="link" Class="ant-dropdown-link">
-                                    Netbooks (@(context.Netbooks?.Count ?? 0)) <Icon Type="down" />
-                                </Button>
-                            </ChildContent>
-                        </Dropdown>
+                    <ActionColumn Title="Solicitudes" Align="ColumnAlign.Center">
+                        @if (context.Type == TypeLoan.NetbookLoan)
+                        {
+                            @NetbooksDropdown(context)
+                        }
+                        else if (context.Type == TypeLoan.ItemLoan)
+                        {
+                            @ItemsDropdown(context)
+                        }
                     </ActionColumn>
                     <!-- Acciones de EMATP -->
                     <AuthorizeView Roles="EMATP, Directivo">
@@ -141,7 +126,14 @@
 @if (visAdd == true)
 {
     <Modal Title="Solicitar un prestamo" Visible="visAdd" Footer="null" OnCancel="() => closeModals(false)">
-        <RequestLoan OnClose="closeModals" />
+        @if (selectedType != TypeLoan.NetbookLoan)
+        {
+            <RequestNetbooks OnClose="closeModals" />
+        }
+        else
+        {
+            <RequestItems OnClose="closeModals" />
+        }
     </Modal>
 }
 
@@ -151,7 +143,8 @@
 
 @code{
     // Variables
-    List<NetbookLoanViewModel> loans = new();
+    List<LoanViewModel> unfilterLoans = new();
+    List<LoanViewModel> loans = new();
     private int idDetails { get; set; }
     private bool visAdd, visDetails = false;
 
@@ -177,11 +170,95 @@
         }
         StateHasChanged();
     }
+    private TypeLoan? selectedType;
+    void FilterLoans(TypeLoan? option)
+    {
+        selectedType = (selectedType == option) ? null : option;
+        loans = unfilterLoans.Where(l => l.Type != selectedType).ToList();
+        StateHasChanged();
+    }
 
     // Init
     protected override async Task OnInitializedAsync()
     {
-        loans = await LoanService.GetNetbookLoans();
+        unfilterLoans = await LoanService.GetLoanList(TypeLoan.NetbookLoan);
+        unfilterLoans.AddRange(await LoanService.GetLoanList(TypeLoan.ItemLoan));
+        FilterLoans(selectedType);
         StateHasChanged();
     }
+
+    // Dropdowns
+    private RenderFragment<LoanViewModel> NetbooksDropdown = context => __builder =>
+    {
+        <Dropdown Id="@($"dropdown_{context.Id}")" Trigger="new Trigger[] { Trigger.Click }">
+            <Overlay>
+                <Menu Id="@($"menu_{context.Id}")">
+                    @if (context.Assets != null && context.Assets.Any())
+                    {
+                        foreach (var name in context.Assets)
+                        {
+                            <MenuItem>
+                                <Space>
+                                    <SpaceItem>
+                                        <Icon Type="laptop" />
+                                    </SpaceItem>
+                                    <SpaceItem>
+                                        @name
+                                    </SpaceItem>
+                                </Space>
+                            </MenuItem>
+                        }
+                    }
+                    else
+                    {
+                        <MenuItem>
+                            <Empty />
+                        </MenuItem>
+                    }
+                </Menu>
+            </Overlay>
+            <ChildContent>
+                <Button Type="link" Class="ant-dropdown-link">
+                    Netbooks (@(context.Assets?.Count ?? 0)) <Icon Type="down" />
+                </Button>
+            </ChildContent>
+        </Dropdown>
+    };
+
+    private RenderFragment<LoanViewModel> ItemsDropdown = context => __builder =>
+    {
+        <Dropdown Id="@($"dropdown_{context.Id}")" Trigger="new Trigger[] { Trigger.Click }">
+            <Overlay>
+                <Menu Id="@($"menu_{context.Id}")">
+                    @if (context.Assets != null && context.Assets.Any())
+                    {
+                        foreach (var item in context.Assets)
+                        {
+                            <MenuItem>
+                                <Space>
+                                    <SpaceItem>
+                                        <Icon Type="tool" Theme="outline" />
+                                    </SpaceItem>
+                                    <SpaceItem>
+                                        @item
+                                    </SpaceItem>
+                                </Space>
+                            </MenuItem>
+                        }
+                    }
+                    else
+                    {
+                        <MenuItem>
+                            <Empty />
+                        </MenuItem>
+                    }
+                </Menu>
+            </Overlay>
+            <ChildContent>
+                <Button Type="link" Class="ant-dropdown-link">
+                    Items (@(context.Assets?.Count ?? 0)) <Icon Type="down" />
+                </Button>
+            </ChildContent>
+        </Dropdown>
+    };
 }

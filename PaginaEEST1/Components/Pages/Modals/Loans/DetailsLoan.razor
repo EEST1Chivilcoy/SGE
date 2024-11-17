@@ -8,12 +8,21 @@
 
 @if (loan != null)
 {
+    <p><b>Responsable: </b>@loan.Professor.Name  @loan.Professor.Surname</p>
     <p><b>Tipo de prestamo: </b>@loan.Type.GetDisplayName()</p>
     <p><b>Estado: </b>@loan.Status.GetDisplayName()</p>
     <p><b>Fecha Solicitado: </b>@loan.SubmitDate.ToShortDateString()</p>
     <p><b>Fecha Requerido: </b>@loan.RequiredDate.ToShortDateString()</p>
     <p><b>Horario: </b>@loan.StartTime.ToShortTimeString() hasta @loan.FinishTime.ToShortTimeString()</p>
     <p><b>Grado y División: </b>@loan.SchoolGrade</p>
+    @if (loan is NetbookLoan netbookLoan)
+    {
+        <p><b>Netbooks Solicitadas: </b>@string.Join(", ", netbookLoan.Netbooks.Select(n => n.DeviceName))</p>
+    }
+    else if(loan is ItemLoan itemLoan)
+    {
+        <p><b>Objetos Solicitados: </b>@string.Join(", ", itemLoan.Items.Select(n => n.Name))</p>
+    }
 }
 
 @code {

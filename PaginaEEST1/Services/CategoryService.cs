@@ -9,7 +9,6 @@ namespace PaginaEEST1.Services
     {
         Task<List<string>> GetListCategories(TypeCategory typeCategory);
         Task<Category?> SaveCategory(TypeCategory typeCategory, string name);
-        Task<string?> GetCategoryByReference(TypeCategory typeCategory, int ReferenceId);
     }
 
     public class CategoryService : ICategoryService
@@ -20,29 +19,6 @@ namespace PaginaEEST1.Services
         {
             _context = context;
         }
-        public async Task<string?> GetCategoryByReference(TypeCategory typeCategory, int ReferenceId)
-        {
-            if (typeCategory == TypeCategory.AreaCategory)
-            {
-                AreaCategory? category = _context.Categories
-                    .AsNoTracking()
-                    .OfType<AreaCategory>()
-                    .Where(c => c.Areas.Any(a => a.Id == ReferenceId)).SingleOrDefault();
-                
-                return category?.Name;
-            }
-            else if (typeCategory == TypeCategory.ItemCategory)
-            {
-                return await _context.Categories
-                    .AsNoTracking()
-                    .OfType<ItemCategory>()
-                    .Where(c => c.Items.Any(a => a.Id == ReferenceId))
-                    .Select(c => c.Name)
-                    .SingleOrDefaultAsync();
-            }
-            return null;
-        }
-
         public async Task<List<string>> GetListCategories(TypeCategory typeCategory)
         {
 
