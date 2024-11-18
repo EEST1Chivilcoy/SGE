@@ -7,7 +7,7 @@ namespace PaginaEEST1.Data.Models.PhysicalObjects
 {
     public class Desktop : Computer
     {
-        public int LocationId { get; set; }
+        public int? LocationId { get; set; }
         [ForeignKey(nameof(LocationId))]
         public Area? Location { get; set; }
     }

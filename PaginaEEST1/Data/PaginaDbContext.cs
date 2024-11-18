@@ -59,6 +59,13 @@ namespace PaginaEEST1.Data
                 .WithOne(ii => ii.Item)
                 .HasForeignKey<ItemImage_Item>(ii => ii.ItemId); // Clave foránea en ItemImage
 
+            // Foraneas 1:n
+            modelBuilder.Entity<Desktop>()
+                .HasOne(d => d.Location)
+                .WithMany() // No agregamos una colección en Area
+                .HasForeignKey(d => d.LocationId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             // Foraneas n:n con una tabla intermedia implícita
 
             modelBuilder.Entity<NetbookLoan>()

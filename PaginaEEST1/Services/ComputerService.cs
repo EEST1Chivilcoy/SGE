@@ -30,7 +30,7 @@ namespace PaginaEEST1.Services
         {
             try
             {
-                if (save is Desktop desktop)
+                if (save is Desktop desktop && desktop.LocationId != 0)
                 {
                     desktop.Location = await _context.Areas.FindAsync(desktop.LocationId);
                 }

@@ -1,7 +1,8 @@
-﻿@using PaginaEEST1.Services
-@using PaginaEEST1.Data.Enums
-@using PaginaEEST1.Data.Models.PhysicalObjects
+﻿@using PaginaEEST1.Data.Models.PhysicalObjects
+@using System.ComponentModel.DataAnnotations
 @using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Services
 @inject IMessageService message
 @inject IAreaService AreaService
 @inject IComputerService ComputerService
@@ -58,7 +59,7 @@
                         @bind-Value="@computerVM.LocationId"
                         DataSource="@areas"
                         TItem="AreaViewModel"
-                        TItemValue="int"
+                        TItemValue="int?"
                         LabelName="@nameof(AreaViewModel.Name)"
                         ValueName="@nameof(AreaViewModel.Id)"
                         DefaultActiveFirstOption = "true"
@@ -149,6 +150,7 @@
     // View Model
     private class ComputerViewModel
     {
+        [Required]
         public string? DeviceName { get; set; }
         public TypeComputer Type { get; set; }
         public ComputerStatus Status { get; set; }
@@ -159,6 +161,6 @@
         public TypeStorage typeStorage { get; set; }
         public string? Model { get; set; }
         public bool IsAvailable { get; set; }
-        public int LocationId { get; set; }
+        public int? LocationId { get; set; }
     }
 }

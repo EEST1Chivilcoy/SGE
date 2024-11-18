@@ -1,10 +1,10 @@
-﻿@using PaginaEEST1.Services
+﻿@using PaginaEEST1.Data.Models.PhysicalObjects
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
-@using PaginaEEST1.Data.Models.PhysicalObjects
-@inject IMessageService message
+@using PaginaEEST1.Services
 @inject IComputerService ComputerService
 @inject IAreaService AreaService
+@inject IMessageService message
 
 <div clas="container">
     @if (computerVM == null) return;
@@ -150,7 +150,7 @@
                 };
             if (computer is Desktop desktop)
             {
-                computerVM.LocationId = (desktop.Location?.Id == null) ? 0 : desktop.Location.Id;
+                computerVM.LocationId = (desktop.Location == null) ? 0 : desktop.Location.Id;
             }
             if (computer is Netbook netbook)
             {

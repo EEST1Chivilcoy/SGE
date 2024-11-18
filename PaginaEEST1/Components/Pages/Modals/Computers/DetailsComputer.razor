@@ -1,11 +1,10 @@
-﻿@using PaginaEEST1.Services
+﻿@using PaginaEEST1.Data.Models.PhysicalObjects
+@using PaginaEEST1.Data.Models.SchoolArea
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Services
 @using PaginaEEST1.Shared
-@using PaginaEEST1.Data.Models.PhysicalObjects
-@using PaginaEEST1.Data.Models.SchoolArea
 @inject IComputerService ComputerService
-@inject IAreaService AreaService
 @inject IQRService QRService
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
@@ -95,7 +94,7 @@
         QRLink = $"{baseUrl}/Computadora_VistaQR_{ID}";
         QRCode = await QRService.LoadQR(QRLink);
         if (computer is Desktop desktop){
-            Location = desktop.LocationId != 0 ? (await AreaService.GetArea(desktop.LocationId))?.Name : 
+            Location = desktop.Location != null ? desktop.Location.Name : 
                 "Sin especificar";
         }
     }
