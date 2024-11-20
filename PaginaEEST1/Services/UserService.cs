@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PaginaEEST1.Data;
 using PaginaEEST1.Data.Enums;
+using PaginaEEST1.Data.Models.People;
 using PaginaEEST1.Data.Models.Personal;
 using System.Data;
 using System.Security.Claims;
@@ -12,6 +13,7 @@ namespace PaginaEEST1.Services
     {
         Task SynchronizeUser(ClaimsIdentity user);
     }
+
     public class UserService : IUserService
     {
         private readonly PaginaDbContext _context;
@@ -29,15 +31,10 @@ namespace PaginaEEST1.Services
                 var userName = user.FindFirst(ClaimTypes.GivenName)?.Value;
                 var userSurname = user.FindFirst(ClaimTypes.Surname)?.Value;
                 var userEmail = user.FindFirst(ClaimTypes.Email)?.Value;
-
-                /*foreach (var claim in user.Claims)
-                {
-                    Console.WriteLine($"Type: {claim.Type}, Value: {claim.Value}");
-                } <-- Para probar los datos obtenidos del Usuario*/
+                var userRole = user.FindFirst(ClaimTypes.Role)?.Value;
 
                 // Validar valores obtenidos
-
-                if (string.IsNullOrEmpty(personIdClaim) || string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(userSurname))
+                if (string.IsNullOrEmpty(personIdClaim) || string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(userSurname) || string.IsNullOrEmpty(userEmail) || string.IsNullOrEmpty(userRole))
                 {
                     Console.WriteLine("Información insuficiente del usuario.");
                     return;
@@ -48,37 +45,32 @@ namespace PaginaEEST1.Services
 
                 if (userExisting == null)
                 {
-                    // Determinar roles
-                    var isProfesor = user.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Profesor");
-                    var isEMATP = user.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "EMATP");
-
-                    // Crear la entidad correcta
-                    if (isProfesor)
+                    var newEmployee = new SchoolEmployee
                     {
-                        var newProfessor = new Professor
-                        {
-                            PersonId = personIdClaim,
-                            Name = userName,
-                            Surname = userSurname,
-                            Gender = TypeGender.Other,
-                            Email = userEmail
-                        };
+                        PersonId = personIdClaim,
+                        Name = userName,
+                        Surname = userSurname,
+                        Gender = TypeGender.Other,
+                        Email = userEmail
+                    };
 
-                        _context.People.Add(newProfessor);
-                    }
-
-                    if (isEMATP)
+                    switch (userRole)
                     {
-                        var newEMATP = new EMATP
-                        {
-                            PersonId = personIdClaim,
-                            Name = userName,
-                            Surname = userSurname,
-                            Gender = TypeGender.Other,
-                            Email = userEmail
-                        };
-
-                        _context.People.Add(newEMATP);
+                        case "Profesor":
+                            if (newEmployee is Professor newProfessor)
+                                _context.People.Add(newProfessor);
+                            break;
+                        case "EMATP":
+                            if (newEmployee is EMATP newEMATP) 
+                                _context.People.Add(newEMATP);
+                            break;
+                        case "Directivo":
+                            if (newEmployee is SchoolPrincipal newSchoolPrincipal)
+                                _context.People.Add(newSchoolPrincipal);
+                            break;
+                        default:
+                            Console.WriteLine("Rol de usuario no reconocido.");
+                            break;
                     }
 
                     // Guardar los cambios en una transacción
@@ -105,6 +97,7 @@ namespace PaginaEEST1.Services
                 else
                 {
                     Console.WriteLine("El usuario ya existe en la base de datos.");
+                    // Implementar Sincronización (Esto para cuando se actualize desde Entra ID)
                 }
             }
             else

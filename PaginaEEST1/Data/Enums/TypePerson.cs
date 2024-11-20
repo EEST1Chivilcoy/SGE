@@ -15,6 +15,8 @@ namespace PaginaEEST1.Data.Enums
         [Display(Name = "Profesor")]
         Teacher = 4,
         [Display(Name = "Alumno")]
-        Student = 5
+        Student = 5,
+        [Display(Name = "Empleado de la Escuela")]
+        SchoolEmployee = 6
     }
 }

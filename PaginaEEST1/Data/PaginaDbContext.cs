@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PaginaEEST1.Data.Models.Categories;
 using PaginaEEST1.Data.Models.Images;
+using PaginaEEST1.Data.Models.People;
 
 namespace PaginaEEST1.Data
 {
@@ -181,7 +182,8 @@ namespace PaginaEEST1.Data
                 .HasValue<EMATP>(TypePerson.EMATP)
                 .HasValue<Storeroom>(TypePerson.Warehouse)
                 .HasValue<Professor>(TypePerson.Teacher)
-                .HasValue<Student>(TypePerson.Student);
+                .HasValue<Student>(TypePerson.Student)
+                .HasValue<SchoolEmployee>(TypePerson.SchoolEmployee);
 
             modelBuilder
                 .Entity<Computer>()

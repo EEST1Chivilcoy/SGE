@@ -2,14 +2,14 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.Contracts;
 using PaginaEEST1.Data.Enums;
+using PaginaEEST1.Data.Models.People;
 using PaginaEEST1.Data.Models.People.PeopleAssets;
 
 namespace PaginaEEST1.Data.Models.Personal
 {
-    public class Professor : Person
+    public class Professor : SchoolEmployee
     {
         [StringLength(255)]
         public EducationLevels? EducationLevel { get; set; }
-        public List<Attendance> Attendances { get; set; } = new List<Attendance>();
     }
 }
