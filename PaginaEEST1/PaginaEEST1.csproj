@@ -9,7 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AntDesign" Version="1.0.0" />
+		<PackageReference Include="AntDesign" Version="1.0.1" />
 		<PackageReference Include="AntDesign.Charts" Version="0.5.6" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
