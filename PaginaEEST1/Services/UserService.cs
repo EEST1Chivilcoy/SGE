@@ -58,16 +58,40 @@ namespace PaginaEEST1.Services
                     switch (userRole)
                     {
                         case "Profesor":
-                            if (newEmployee is Professor newProfessor)
-                                _context.People.Add(newProfessor);
+                            var newProfessor = new Professor
+                            {
+                                PersonId = newEmployee.PersonId,
+                                Name = newEmployee.Name,
+                                Surname = newEmployee.Surname,
+                                Gender = newEmployee.Gender,
+                                Email = newEmployee.Email,
+                                EntraIDRole = newEmployee.EntraIDRole
+                            };
+                            _context.People.Add(newProfessor);
                             break;
                         case "EMATP":
-                            if (newEmployee is EMATP newEMATP) 
-                                _context.People.Add(newEMATP);
+                            var newEMATP = new EMATP
+                            {
+                                PersonId = newEmployee.PersonId,
+                                Name = newEmployee.Name,
+                                Surname = newEmployee.Surname,
+                                Gender = newEmployee.Gender,
+                                Email = newEmployee.Email,
+                                EntraIDRole = newEmployee.EntraIDRole
+                            };
+                            _context.People.Add(newEMATP);
                             break;
                         case "Directivo":
-                            if (newEmployee is SchoolPrincipal newSchoolPrincipal)
-                                _context.People.Add(newSchoolPrincipal);
+                            var newSchoolPrincipal = new SchoolPrincipal
+                            {
+                                PersonId = newEmployee.PersonId,
+                                Name = newEmployee.Name,
+                                Surname = newEmployee.Surname,
+                                Gender = newEmployee.Gender,
+                                Email = newEmployee.Email,
+                                EntraIDRole = newEmployee.EntraIDRole
+                            };
+                            _context.People.Add(newSchoolPrincipal);
                             break;
                         default:
                             Console.WriteLine("Rol de usuario no reconocido.");
@@ -113,8 +137,7 @@ namespace PaginaEEST1.Services
                         _context.People.Remove(userExisting);
 
                         // Crear nuevamente el usuario con el nuevo rol
-
-                        var newEmployee = new SchoolEmployee
+                        var updateEmployee = new SchoolEmployee
                         {
                             PersonId = personIdClaim,
                             Name = userName,
@@ -127,42 +150,65 @@ namespace PaginaEEST1.Services
                         switch (userRole)
                         {
                             case "Profesor":
-                                if (newEmployee is Professor newProfessor)
-                                    _context.People.Add(newProfessor);
+                                var newProfessor = new Professor
+                                {
+                                    PersonId = updateEmployee.PersonId,
+                                    Name = updateEmployee.Name,
+                                    Surname = updateEmployee.Surname,
+                                    Gender = updateEmployee.Gender,
+                                    Email = updateEmployee.Email,
+                                    EntraIDRole = updateEmployee.EntraIDRole
+                                };
+                                _context.People.Add(newProfessor);
                                 break;
                             case "EMATP":
-                                if (newEmployee is EMATP newEMATP)
-                                    _context.People.Add(newEMATP);
+                                var newEMATP = new EMATP
+                                {
+                                    PersonId = updateEmployee.PersonId,
+                                    Name = updateEmployee.Name,
+                                    Surname = updateEmployee.Surname,
+                                    Gender = updateEmployee.Gender,
+                                    Email = updateEmployee.Email,
+                                    EntraIDRole = updateEmployee.EntraIDRole
+                                };
+                                _context.People.Add(newEMATP);
                                 break;
                             case "Directivo":
-                                if (newEmployee is SchoolPrincipal newSchoolPrincipal)
-                                    _context.People.Add(newSchoolPrincipal);
+                                var newSchoolPrincipal = new SchoolPrincipal
+                                {
+                                    PersonId = updateEmployee.PersonId,
+                                    Name = updateEmployee.Name,
+                                    Surname = updateEmployee.Surname,
+                                    Gender = updateEmployee.Gender,
+                                    Email = updateEmployee.Email,
+                                    EntraIDRole = updateEmployee.EntraIDRole
+                                };
+                                _context.People.Add(newSchoolPrincipal);
                                 break;
                             default:
                                 Console.WriteLine("Rol de usuario no reconocido.");
                                 break;
                         }
-                    }
 
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        Console.WriteLine("Usuario actualizado correctamente.");
-                    }
-                    catch (DbUpdateException dbEx)
-                    {
-                        Console.WriteLine($"Error al actualizar los cambios en la base de datos: {dbEx.Message}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error inesperado: {ex.Message}");
+                        try
+                        {
+                            await _context.SaveChangesAsync();
+                            Console.WriteLine("Usuario actualizado correctamente.");
+                        }
+                        catch (DbUpdateException dbEx)
+                        {
+                            Console.WriteLine($"Error al actualizar los cambios en la base de datos: {dbEx.Message}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error inesperado: {ex.Message}");
+                        }
                     }
                 }
             }
             else
-            {
                 Console.WriteLine("No se encontró el ID del usuario en los claims.");
-            }
         }
     }
 }
+
