@@ -25,27 +25,34 @@
     </div>
     <div class="sge-layout__content">
         <div class="sge-actions-card">
-            <div class="sge-actions-card__row">
-                <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionOrdenadores"))">
-                    <Icon Type="desktop" Theme="outline" />
-                    Gestión de Ordenadores
-                </Button>
-                <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionSolicitudes"))">
-                    <Icon Type="schedule" Theme="fill" />
-                    Gestión de Peticiones
-                </Button>
-            </div>
-            <div class="sge-actions-card__row">
-                <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Prestamos_Netbooks"))">
-                    <Icon Type="tags" Theme="fill" />
-                    Prestamos
-                </Button>
-                <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/DepositoInformatica"))">
-                    <Icon Type="dropbox-square" Theme="fill" />
-                    Deposito
-                </Button>
-            </div>
-            <QRAccountRequest />
+
+            <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Prestamos"))">
+                <Icon Type="tags" Theme="fill" />
+                Prestamos
+            </Button>
+
+            <AuthorizeView Roles="EMATP">
+                <Authorized>
+                    <div class="sge-actions-card__row">
+                        <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionOrdenadores"))">
+                            <Icon Type="desktop" Theme="outline" />
+                            Gestión de Ordenadores
+                        </Button>
+                        <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionSolicitudes"))">
+                            <Icon Type="schedule" Theme="fill" />
+                            Gestión de Peticiones
+                        </Button>
+                    </div>
+                    <div class="sge-actions-card__row">
+                        <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/DepositoInformatica"))">
+                            <Icon Type="dropbox-square" Theme="fill" />
+                            Deposito
+                        </Button>
+                        <QRAccountRequest />
+                    </div>
+                </Authorized>
+            </AuthorizeView>
+
             <AuthorizeView Roles="Directivo">
                 <Authorized>
                     <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Directivo/GestionSalones"))">
@@ -54,7 +61,7 @@
                     </Button>
                 </Authorized>
             </AuthorizeView>
-            
+
         </div>
         @if (isRendered && ShouldShowAttendanceCard())
         {
@@ -69,7 +76,7 @@
 </div>
 
 <style>
-    .page{
+    .page {
         flex-direction: column !important;
     }
 

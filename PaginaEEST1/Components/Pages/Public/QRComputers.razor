@@ -1,8 +1,8 @@
 ﻿@using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request
 @using PaginaEEST1.Data.Models.PhysicalObjects
-@using PaginaEEST1.Services
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Services
 @inject IComputerService ComputerService
 @inject IRequestService RequestService
 @inject IMessageService message
@@ -27,7 +27,7 @@
                     <li><b>Tipo de almacenamiento: </b> @QRComputer.typeStorage</li>
                     @if (QRComputer is Desktop desktop)
                     {
-                        <li><b>Ubicación: </b> @desktop.Location</li>
+                        <li><b>Ubicación: </b> @(desktop.Location?.Name ?? "Sin especificar.")</li>
                     }
                     @if (QRComputer is Netbook netbook)
                     {
@@ -53,13 +53,11 @@
                                 <div class="request-title">
                                     <h3>Reportar una solicitud</h3>
                                     <FormItem Label="Tipo" Class="bold-label">
-                                        <Select
-                                        TItemValue="@TypeRequest"
-                                        TItem="@TypeRequest"
-                                        DefaultValue="@TypeRequest.Instalacion"
-                                        Value = "@RequestVM.Type"
-                                        ValueChanged = "@(value => RequestVM.Type = value)"
-                                        >
+                                        <Select TItemValue="@TypeRequest"
+                                                TItem="@TypeRequest"
+                                                DefaultValue="@TypeRequest.Instalacion"
+                                                Value="@RequestVM.Type"
+                                                ValueChanged="@(value => RequestVM.Type = value)">
                                             <SelectOptions>
                                                 <SelectOption Value="@TypeRequest.Instalacion" Label="Instalación de un programa" />
                                                 <SelectOption Value="@TypeRequest.ReporteFallo" Label="Reporte de fallos" />
@@ -104,6 +102,17 @@
             </div>
             <img src="@(QRComputer?.Type == TypeComputer.Computer ? "Images/Logo_Desktop.png" : "Images/Logo_Netbook.png")" class="pc-logo" />
         </div>
+    }
+    else
+    {
+        <Card Title="Ordenador no encontrado" Style="width: 100%; max-width: 800px; height: auto; margin-bottom: 10px;">
+            <Body>
+                <Result Status="error"
+                        Title="No se pudo localizar el ordenador solicitado"
+                        SubTitle="Por favor, verifica el QR escaneado o contacta a soporte si el problema persiste.">
+                </Result>
+            </Body>
+        </Card>
     }
 </Flex>
 

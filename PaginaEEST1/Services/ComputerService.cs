@@ -58,9 +58,6 @@ namespace PaginaEEST1.Services
         public async Task<Computer?> GetComputer(int ID)
         {
             Computer? computer = await _context.Computers.FindAsync(ID);
-            
-            if (computer == null)
-                throw new InvalidOperationException("No se encontró la Computadora.");
 
             if (computer is Desktop)
             {
