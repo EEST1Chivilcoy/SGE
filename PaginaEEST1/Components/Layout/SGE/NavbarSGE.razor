@@ -33,11 +33,20 @@
     <div>
         <ul class="d-links">
             <li><a href="/SGE/index">Inicio</a></li>
-            <li><a href="/SGE/EMATP/GestionOrdenadores">Gestión de Ordenadores</a></li>
-            <li><a href="/SGE/EMATP/GestionSolicitudes">Gestión de Peticiones</a></li>
             <li><a href="/SGE/Prestamos">Prestamos</a></li>
-            <li><a href="/SGE/EMATP/DepositoInformatica">Deposito</a></li>
-            <li><a href="/SGE/Directivo/GestionSalones">Gestión de Salones</a></li>
+            <li><a href="/SGE/Mis_Peticiones">Mis peticiones</a></li>
+            <AuthorizeView Roles="EMATP">
+                <Authorized>
+                    <li><a href="/SGE/EMATP/GestionOrdenadores">Gestión de Ordenadores</a></li>
+                    <li><a href="/SGE/EMATP/GestionSolicitudes">Gestión de Peticiones</a></li>
+                    <li><a href="/SGE/EMATP/DepositoInformatica">Deposito</a></li>
+                </Authorized>
+            </AuthorizeView>
+            <AuthorizeView Roles="Directivo">
+                <Authorized>
+                    <li><a href="/SGE/Directivo/GestionSalones">Gestión de Salones</a></li>
+                </Authorized>
+            </AuthorizeView>
         </ul>
     </div>
 </Drawer>
@@ -118,8 +127,8 @@
         .d-logo h1 {
             font-family: 'Poppins', sans-serif;
             font-size: 16px;
-            color: #0c2c45;
-            -webkit-text-stroke: 1px #030c11;
+            color: #1f74b7;
+            -webkit-text-stroke: 1px #0c2c45;
             margin-left: 10px;
             line-height: 1.2;
             text-align: center;

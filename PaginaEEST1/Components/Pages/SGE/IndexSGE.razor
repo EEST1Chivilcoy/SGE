@@ -8,7 +8,7 @@
 @using PaginaEEST1.Components.Layout.SGE
 @layout SGELayout
 
-@attribute [Authorize(Roles = "EMATP,Profesores,Directivo")]
+@attribute [Authorize(Roles = "Profesores,EMATP,Directivo")]
 
 <div class="sge-layout">
     <div class="sge-layout__profile">
@@ -25,43 +25,44 @@
     </div>
     <div class="sge-layout__content">
         <div class="sge-actions-card">
-
-            <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Prestamos"))">
-                <Icon Type="tags" Theme="fill" />
-                Prestamos
-            </Button>
-
-            <AuthorizeView Roles="EMATP">
-                <Authorized>
-                    <div class="sge-actions-card__row">
-                        <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionOrdenadores"))">
-                            <Icon Type="desktop" Theme="outline" />
-                            Gestión de Ordenadores
+            <div class="sge-actions-card__row">
+                <!-- General -->
+                <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Prestamos"))">
+                    <Icon Type="tags" Theme="fill" />
+                    Prestamos
+                </Button>
+                <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Mis_Peticiones"))">
+                    <Icon Type="contacts" Theme="outline" />
+                    Mis Peticiones
+                </Button>
+                <!-- EMATP -->
+                <AuthorizeView Roles="EMATP">
+                    <Authorized>
+                            <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionOrdenadores"))">
+                                <Icon Type="desktop" Theme="outline" />
+                                Gestión de Ordenadores
+                            </Button>
+                            <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionSolicitudes"))">
+                                <Icon Type="schedule" Theme="fill" />
+                                Gestión de Peticiones
+                            </Button>
+                            <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/DepositoInformatica"))">
+                                <Icon Type="dropbox-square" Theme="fill" />
+                                Deposito
+                            </Button>
+                            <QRAccountRequest />
+                    </Authorized>
+                </AuthorizeView>
+                <!-- Directivo -->
+                <AuthorizeView Roles="Directivo">
+                    <Authorized>
+                        <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Directivo/GestionSalones"))">
+                            <Icon Type="home" Theme="fill" />
+                            Gestión de Salones
                         </Button>
-                        <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionSolicitudes"))">
-                            <Icon Type="schedule" Theme="fill" />
-                            Gestión de Peticiones
-                        </Button>
-                    </div>
-                    <div class="sge-actions-card__row">
-                        <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/DepositoInformatica"))">
-                            <Icon Type="dropbox-square" Theme="fill" />
-                            Deposito
-                        </Button>
-                        <QRAccountRequest />
-                    </div>
-                </Authorized>
-            </AuthorizeView>
-
-            <AuthorizeView Roles="Directivo">
-                <Authorized>
-                    <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Directivo/GestionSalones"))">
-                        <Icon Type="home" Theme="fill" />
-                        Gestión de Salones
-                    </Button>
-                </Authorized>
-            </AuthorizeView>
-
+                    </Authorized>
+                </AuthorizeView>
+            </div>
         </div>
         @if (isRendered && ShouldShowAttendanceCard())
         {

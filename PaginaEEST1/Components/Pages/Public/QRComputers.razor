@@ -2,7 +2,9 @@
 @using PaginaEEST1.Data.Models.PhysicalObjects
 @using PaginaEEST1.Data.ViewModels
 @using PaginaEEST1.Data.Enums
+@using System.Security.Claims
 @using PaginaEEST1.Services
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IComputerService ComputerService
 @inject IRequestService RequestService
 @inject IMessageService message
@@ -134,6 +136,8 @@
 
     private async Task OnFinish()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
         try
         {
             //Agregqar conversion
@@ -147,7 +151,8 @@
                         ComputerId = ID_Computadora,
                         RequestDate = DateTime.Now,
                         FailureDescription = RequestVM.FailureDescription ?? "No se específico la falla",
-                        Preority = RequestVM.Preority
+                        Preority = RequestVM.Preority,
+                        ProfessorId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? ""
                     };
                 saved = await RequestService.SaveRequest(save);
             }
@@ -160,7 +165,8 @@
                         ComputerId = ID_Computadora,
                         RequestDate = DateTime.Now,
                         NameProgram = RequestVM.NameProgram ?? "No se específico el nombre del programa.",
-                        VersionProgram = RequestVM.VersionProgram
+                        VersionProgram = RequestVM.VersionProgram,
+                        ProfessorId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? ""
                     };
                 saved = await RequestService.SaveRequest(save);
             }

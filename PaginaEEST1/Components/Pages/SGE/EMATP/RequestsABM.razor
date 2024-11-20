@@ -196,7 +196,7 @@
     // Init
     protected override async Task OnInitializedAsync()
     {
-        _requests = await RequestService.GetListRequests();
+        _requests = await RequestService.GetListRequests(true);
         StateHasChanged();
     }
 }

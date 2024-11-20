@@ -11,7 +11,7 @@
 @layout SGELayout
 @page "/SGE/Prestamos"
 
-@attribute [Authorize (Roles = "Profesores, EMATP")]
+@attribute [Authorize (Roles = "Profesores,EMATP,Directivo")]
 
 <style>
 .card-button {
@@ -94,7 +94,7 @@
                         }
                     </ActionColumn>
                     <!-- Acciones de EMATP -->
-                    <AuthorizeView Roles="EMATP, Directivo">
+                    <AuthorizeView Roles="EMATP">
                         <Authorized Context="auth_context">
                             <ActionColumn>
                                 <Popover Title="Marcar como entregado" Trigger="new Trigger[] { Trigger.Hover }">

@@ -1,0 +1,75 @@
+﻿@page "/SGE/Mis_Peticiones"
+@using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request
+@using PaginaEEST1.Components.Layout.SGE
+@using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Services
+@using PaginaEEST1.Shared
+@inject IMessageService message
+@inject IRequestService RequestService
+@layout SGELayout
+@attribute [Authorize(Roles = "Profesores,EMATP,Directivo")]
+
+<Flex Justify="center" Align="center" Style="height: 100%; width:100%;">
+    <div class="template">
+        <Row>
+            <Col Span="6">
+            <div class="section">
+                <div class="section-title">Tipo de Petición</div>
+                <div class="@($"type-square {(selectedType == TypeRequest.Instalacion ? "selected" : "")}")" @onclick="() => FilterLoans(TypeRequest.Instalacion)">
+                    <img src="/Images/Logo_Desktop.png" alt="PC" />
+                    <h4> Instalación de un Programa</h4>
+                </div>
+                <div class="@($"type-square {(selectedType == TypeRequest.ReporteFallo ? "selected" : "")}")" @onclick="() => FilterLoans(TypeRequest.ReporteFallo)">
+                    <img src="/Images/Logo_Desktop.png" alt="PC" />
+                    <h4> Reporte de Fallos</h4>
+                </div>
+            </div>
+            </Col>
+            <Col Span="18">
+            <div class="section">
+                <div class="section-title">Peticiones</div>
+                <Table TItem="RequestViewModel"
+                       DataSource="@requests"
+                       PageIndex="1"
+                       PageSize="6"
+                       Responsive>
+                    <ColumnDefinitions>
+                        <PropertyColumn Title="Fecha reportado"
+                                        Property="@(i => i.RequestDate)"
+                                        Sortable />
+                        <PropertyColumn Title="Descripción"
+                                        Property="@(i => i.ShortDescription)"
+                                        Sortable />
+                        <PropertyColumn Title="Estado"
+                                        Property="@(i => i.Status.GetDisplayName())"
+                                        Sortable />
+                    </ColumnDefinitions>
+                </Table>
+            </div>
+            </Col>
+        </Row>
+    </div>
+</Flex>
+
+@code {
+    // Variables
+    private List<RequestViewModel?> unfilteredRequests = new();
+    private List<RequestViewModel?> requests = new();
+
+    // Funciones de Visibilidad 
+    private TypeRequest selectedType = TypeRequest.Instalacion;
+    void FilterLoans(TypeRequest option)
+    {
+        selectedType = option;
+        requests = unfilteredRequests.Where(l => l.Type == option).ToList();
+        StateHasChanged();
+    }
+
+    // Init
+    protected override async Task OnInitializedAsync()
+    {
+        unfilteredRequests = await RequestService.GetListRequests();
+        FilterLoans(TypeRequest.Instalacion);
+    }
+}

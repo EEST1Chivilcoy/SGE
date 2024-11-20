@@ -1,14 +1,14 @@
-﻿using PaginaEEST1.Data.Models.PhysicalObjects;
-using PaginaEEST1.Data;
+﻿using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request;
+using Microsoft.AspNetCore.Components.Authorization;
+using PaginaEEST1.Data.Models.PhysicalObjects;
+using PaginaEEST1.Data.Models.Personal;
 using Microsoft.EntityFrameworkCore;
 using PaginaEEST1.Data.ViewModels;
-using QRCoder;
 using PaginaEEST1.Data.Enums;
-using AntDesign;
-using System.Reflection;
+using System.Security.Claims;
+using PaginaEEST1.Data;
+using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Loan;
 using Azure.Core;
-using PaginaEEST1.Data.Models.PhysicalObjects.PhysicalAssets.Request;
-using PaginaEEST1.Components.Pages.SGE.EMATP;
 
 namespace PaginaEEST1.Services
 {
@@ -20,15 +20,17 @@ namespace PaginaEEST1.Services
         Task<bool> UpdateDate(int Id, DateTime estimated);
         Task<RequestEMATP?> GetRequest(int Id);
         Task DelRequest(int Id);
-        Task<List<RequestViewModel?>> GetListRequests();
+        Task<List<RequestViewModel?>> GetListRequests(bool? forManagement = false);
     }
 
     public class RequestService : IRequestService
     {
+        private readonly AuthenticationStateProvider _authenticationStateProvider;
         private readonly PaginaDbContext _context;
-        public RequestService(PaginaDbContext context)
+        public RequestService(PaginaDbContext context, AuthenticationStateProvider authenticationStateProvider)
         {
             _context = context;
+            _authenticationStateProvider = authenticationStateProvider;
         }
         public async Task<bool> SaveRequest(RequestEMATP request)
         {
@@ -38,6 +40,7 @@ namespace PaginaEEST1.Services
                 {
                     if (request is FailureRequest failure)
                     {
+                        failure.Professor = _context.People.OfType<Professor>().Where(p => p.PersonId == failure.ProfessorId).SingleOrDefault();
                         Computer? computer = await _context.Computers.FindAsync(failure.ComputerId);
                         if (computer != null){
                             failure.Computer = computer;
@@ -47,6 +50,7 @@ namespace PaginaEEST1.Services
                     }
                     if (request is InstallationRequest installation)
                     {
+                        installation.Professor = _context.People.OfType<Professor>().Where(p => p.PersonId == installation.ProfessorId).SingleOrDefault();
                         installation.Computer = await _context.Computers.FindAsync(installation.ComputerId);
                         _context.ComputerRequests.Add(installation);
                     }
@@ -131,8 +135,14 @@ namespace PaginaEEST1.Services
                 return false;
             }
         }
-        public async Task<List<RequestViewModel?>> GetListRequests()
+        public async Task<List<RequestViewModel?>> GetListRequests(bool? forManagement = false)
         {
+            // Autenticación 
+            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            var personIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userRole = user.FindFirst(ClaimTypes.Role)?.Value;
+
             List<RequestViewModel?> requests = new();
 
             foreach (RequestEMATP i in await _context.ComputerRequests
@@ -145,10 +155,17 @@ namespace PaginaEEST1.Services
                     ShortDescription = i.ShortDescription,
                     RequestDate = i.RequestDate,
                     Type = i.Type,
-                    Status = i.Status
+                    Status = i.Status,
+                    ProfessorId = i is RequestComputer computerRequest
+                          ? computerRequest.ProfessorId
+                          : null
                 };
                 requests.Add(add);
             }
+
+            if(forManagement == false)
+                requests = requests.Where(l => l.ProfessorId == personIdClaim).ToList();
+
             return requests;
         }
     }

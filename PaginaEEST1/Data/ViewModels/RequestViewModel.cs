@@ -9,5 +9,6 @@ namespace PaginaEEST1.Data.ViewModels
         public string? ShortDescription { get; set; }
         public DateTime RequestDate { get; set; } 
         public RequestStatus Status { get; set; }
+        public string? ProfessorId { get; set; }
     }
 }
