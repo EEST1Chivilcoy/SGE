@@ -10,8 +10,7 @@
 @inject NavigationManager NavigationManager
 
 <style>
-    .pc-logo
-    {
+    .pc-logo {
         width: 100px;
         height: auto;
         right: 3%;
@@ -29,8 +28,8 @@
             <p><b>Estado</b>: @computer.Status.GetDisplayName()</p>
             <p><b>Sistema Operativo</b>: @computer.OperatingSystem</p>
             <p><b>Procesador</b>: @computer.Processor</p>
-            <p><b>Memoria RAM</b>: @computer.RAM</p>
-            <p><b>Almacenamiento</b>: @computer.Storage</p>
+            <p><b>Memoria RAM</b>: @($"{computer.RAM} GB")</p>
+            <p><b>Almacenamiento</b>: @($"{computer.Storage} GB")</p>
             <p><b>Tipo de Almacenamiento</b>: @computer.typeStorage.GetDisplayName()</p>
             @if (computer is Desktop desktop)
             {
@@ -93,8 +92,9 @@
         var baseUrl = NavigationManager.BaseUri.TrimEnd('/');
         QRLink = $"{baseUrl}/Computadora_VistaQR_{ID}";
         QRCode = await QRService.LoadQR(QRLink);
-        if (computer is Desktop desktop){
-            Location = desktop.Location != null ? desktop.Location.Name : 
+        if (computer is Desktop desktop)
+        {
+            Location = desktop.Location != null ? desktop.Location.Name :
                 "Sin especificar";
         }
     }
