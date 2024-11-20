@@ -16,11 +16,11 @@
             <Col Span="6">
             <div class="section">
                 <div class="section-title">Tipo de Petición</div>
-                <div class="@($"type-square {(selectedType == TypeRequest.Instalacion ? "selected" : "")}")" @onclick="() => FilterLoans(TypeRequest.Instalacion)">
+                <div class="@($"type-square {(selectedType == TypeRequest.ProgramInstallation ? "selected" : "")}")" @onclick="() => FilterLoans(TypeRequest.ProgramInstallation)">
                     <img src="/Images/Logo_Desktop.png" alt="PC" />
                     <h4> Instalación de un Programa</h4>
                 </div>
-                <div class="@($"type-square {(selectedType == TypeRequest.ReporteFallo ? "selected" : "")}")" @onclick="() => FilterLoans(TypeRequest.ReporteFallo)">
+                <div class="@($"type-square {(selectedType == TypeRequest.FailureReport ? "selected" : "")}")" @onclick="() => FilterLoans(TypeRequest.FailureReport)">
                     <img src="/Images/Logo_Desktop.png" alt="PC" />
                     <h4> Reporte de Fallos</h4>
                 </div>
@@ -58,7 +58,7 @@
     private List<RequestViewModel?> requests = new();
 
     // Funciones de Visibilidad 
-    private TypeRequest selectedType = TypeRequest.Instalacion;
+    private TypeRequest selectedType = TypeRequest.ProgramInstallation;
     void FilterLoans(TypeRequest option)
     {
         selectedType = option;
@@ -70,6 +70,6 @@
     protected override async Task OnInitializedAsync()
     {
         unfilteredRequests = await RequestService.GetListRequests();
-        FilterLoans(TypeRequest.Instalacion);
+        FilterLoans(TypeRequest.ProgramInstallation);
     }
 }

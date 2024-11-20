@@ -57,12 +57,12 @@
                                     <FormItem Label="Tipo" Class="bold-label">
                                         <Select TItemValue="@TypeRequest"
                                                 TItem="@TypeRequest"
-                                                DefaultValue="@TypeRequest.Instalacion"
+                                                DefaultValue="@TypeRequest.ProgramInstallation"
                                                 Value="@RequestVM.Type"
                                                 ValueChanged="@(value => RequestVM.Type = value)">
                                             <SelectOptions>
-                                                <SelectOption Value="@TypeRequest.Instalacion" Label="Instalación de un programa" />
-                                                <SelectOption Value="@TypeRequest.ReporteFallo" Label="Reporte de fallos" />
+                                                <SelectOption Value="@TypeRequest.ProgramInstallation" Label="Instalación de un programa" />
+                                                <SelectOption Value="@TypeRequest.FailureReport" Label="Reporte de fallos" />
                                             </SelectOptions>
                                         </Select>
                                     </FormItem>
@@ -72,7 +72,7 @@
                                     <FormItem Label="Descripción corta de la solicitud" Class="bold-label" LabelCol="new ColLayoutParam { Span = 24 }">
                                         <Input @bind-Value="@RequestVM.ShortDescription" />
                                     </FormItem>
-                                    @if (RequestVM.Type == TypeRequest.Instalacion)
+                                    @if (RequestVM.Type == TypeRequest.ProgramInstallation)
                                     {
                                         <FormItem Label="Nombre del Programa" Class="bold-label" LabelCol="new ColLayoutParam { Span = 24 }">
                                             <Input TValue="string" @bind-value="@RequestVM.NameProgram" />
@@ -81,7 +81,7 @@
                                             <Input TValue="string" @bind-value="@RequestVM.VersionProgram" />
                                         </FormItem>
                                     }
-                                    @if (RequestVM.Type == TypeRequest.ReporteFallo)
+                                    @if (RequestVM.Type == TypeRequest.FailureReport)
                                     {
                                         <FormItem Label="Descripción del Fallo" Class="bold-label" LabelCol="new ColLayoutParam { Span = 24 }">
                                             <Input TValue="string" @bind-value="@RequestVM.FailureDescription" />
@@ -142,7 +142,7 @@
         {
             //Agregqar conversion
             bool saved = false;
-            if (RequestVM.Type == TypeRequest.ReporteFallo)
+            if (RequestVM.Type == TypeRequest.FailureReport)
             {
                 FailureRequest save = new()
                     {
@@ -156,7 +156,7 @@
                     };
                 saved = await RequestService.SaveRequest(save);
             }
-            else if (RequestVM.Type == TypeRequest.Instalacion)
+            else if (RequestVM.Type == TypeRequest.ProgramInstallation)
             {
                 InstallationRequest save = new()
                     {

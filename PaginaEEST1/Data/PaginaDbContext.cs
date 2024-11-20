@@ -194,9 +194,9 @@ namespace PaginaEEST1.Data
             modelBuilder
                 .Entity<RequestEMATP>()
                 .HasDiscriminator(s => s.Type)
-                .HasValue<InstallationRequest>(TypeRequest.Instalacion)
-                .HasValue<FailureRequest>(TypeRequest.ReporteFallo)
-                .HasValue<StudentAccountRequest>(TypeRequest.SolicitudCuenta);
+                .HasValue<InstallationRequest>(TypeRequest.ProgramInstallation)
+                .HasValue<FailureRequest>(TypeRequest.FailureReport)
+                .HasValue<StudentAccountRequest>(TypeRequest.StudentAccountRequest);
 
             modelBuilder
                 .Entity<Loan>()
