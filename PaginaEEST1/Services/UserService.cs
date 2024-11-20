@@ -51,7 +51,8 @@ namespace PaginaEEST1.Services
                         Name = userName,
                         Surname = userSurname,
                         Gender = TypeGender.Other,
-                        Email = userEmail
+                        Email = userEmail,
+                        EntraIDRole = userRole
                     };
 
                     switch (userRole)
@@ -80,7 +81,7 @@ namespace PaginaEEST1.Services
                         {
                             await _context.SaveChangesAsync();
                             await transaction.CommitAsync();
-                            Console.WriteLine("Usuario sincronizado correctamente.");
+                            Console.WriteLine("Usuario guardado correctamente.");
                         }
                         catch (DbUpdateException dbEx)
                         {
@@ -97,7 +98,65 @@ namespace PaginaEEST1.Services
                 else
                 {
                     Console.WriteLine("El usuario ya existe en la base de datos.");
-                    // Implementar Sincronización (Esto para cuando se actualize desde Entra ID)
+
+                    // Actualizar campos del usuario existente
+                    userExisting.Name = userName;
+                    userExisting.Surname = userSurname;
+                    userExisting.Email = userEmail;
+
+                    // Manejar la posible actualización del rol
+                    if (userExisting.EntraIDRole != userRole)
+                    {
+                        Console.WriteLine("Actualización del Rol del usuario ya existe en la base de datos.");
+
+                        // Eliminar el usuario existente
+                        _context.People.Remove(userExisting);
+
+                        // Crear nuevamente el usuario con el nuevo rol
+
+                        var newEmployee = new SchoolEmployee
+                        {
+                            PersonId = personIdClaim,
+                            Name = userName,
+                            Surname = userSurname,
+                            Gender = TypeGender.Other,
+                            Email = userEmail,
+                            EntraIDRole = userRole
+                        };
+
+                        switch (userRole)
+                        {
+                            case "Profesor":
+                                if (newEmployee is Professor newProfessor)
+                                    _context.People.Add(newProfessor);
+                                break;
+                            case "EMATP":
+                                if (newEmployee is EMATP newEMATP)
+                                    _context.People.Add(newEMATP);
+                                break;
+                            case "Directivo":
+                                if (newEmployee is SchoolPrincipal newSchoolPrincipal)
+                                    _context.People.Add(newSchoolPrincipal);
+                                break;
+                            default:
+                                Console.WriteLine("Rol de usuario no reconocido.");
+                                break;
+                        }
+                    }
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        Console.WriteLine("Usuario actualizado correctamente.");
+                    }
+                    catch (DbUpdateException dbEx)
+                    {
+                        Console.WriteLine($"Error al actualizar los cambios en la base de datos: {dbEx.Message}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error inesperado: {ex.Message}");
+                    }
                 }
             }
             else

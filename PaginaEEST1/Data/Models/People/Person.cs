@@ -15,8 +15,10 @@ namespace PaginaEEST1.Data.Models.Personal
         public string? Name { get; set; }
         [Required, StringLength(255)]
         public string? Surname { get; set; }
-        [StringLength(255)]
+        [Required, StringLength(255)]
         public string? Email { get; set; }
+        [Required, StringLength(255)]
+        public string? EntraIDRole { get; set; }
         public ProfileImage_Person? ProfileImage { get; set; }
     }
 }
