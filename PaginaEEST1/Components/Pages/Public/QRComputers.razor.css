@@ -1,81 +1,83 @@
 ﻿body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	margin: 0;
+	padding: 0;
+	background-color: #f9f9f9;
+	color: #333;
 }
 
 .pc-container {
-    padding: 3vw;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 1vw;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 auto;
-    max-width: 1200px;
-    position: relative;
+	padding: 2rem;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	border-radius: 0.5rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	margin: 2rem auto;
+	max-width: 1200px;
+	background-color: #fff;
+	position: relative;
 }
 
 .request-container {
-    margin-top: 5vw;
-    padding: 3vw;
-    background-color: #f4f4f4;
-    border-radius: 1vw;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
+	margin-top: 2rem;
+	padding: 2rem;
+	background-color: #f4f4f4;
+	border-radius: 0.5rem;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	width: 100%;
 }
 
 .request-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 1vw;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 1rem;
+	flex-wrap: wrap;
+	gap: 1rem;
 }
 
 ::deep .ant-form-item-label > label {
-    font-weight: bold;
+	font-weight: bold;
 }
 
 .pc-info {
-    flex: 1;
-    margin-bottom: 20px;
-    width: 100%;
+	flex: 1;
+	margin-bottom: 1rem;
+	width: 100%;
 }
 
 .pc-logo {
-    width: 20%;
-    height: auto;
-    object-fit: contain;
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin-top: 20px;
-    margin-right: 20px;
+	width: 15%;
+	height: auto;
+	object-fit: contain;
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
 }
 
 @media (min-width: 768px) {
-    .pc-container {
-        flex-direction: row;
-    }
+	.pc-container {
+		flex-direction: row;
+		padding: 3rem;
+	}
 
-    .pc-logo {
-        width: 30%;
-    }
+	.pc-logo {
+		width: 10%;
+	}
 }
 
 @media (min-width: 1024px) {
-    .pc-container {
-        padding: 2vw;
-    }
+	.pc-container {
+		padding: 4rem;
+	}
 
-    .request-container {
-        padding: 2vw;
-    }
+	.request-container {
+		padding: 3rem;
+	}
 
-    .pc-logo {
-        width: 20%;
-    }
+	.pc-logo {
+		width: 8%;
+	}
 }
