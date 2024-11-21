@@ -10,6 +10,11 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
+using AntDesign;
+using ImageService = PaginaEEST1.Services.ImageService;
+using Microsoft.Extensions.Options;
 
 namespace PaginaEEST1
 {
@@ -58,7 +63,7 @@ namespace PaginaEEST1
             builder.Services.AddControllersWithViews()
                 .AddMicrosoftIdentityUI();
 
-            // Agregar autorizaci�n
+            // Agregar autorización
             builder.Services.AddAuthorization();
 
             // Servicios
@@ -87,6 +92,21 @@ namespace PaginaEEST1
             // Cache
             builder.Services.AddMemoryCache();
 
+            // Configurar la localización
+            builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            builder.Services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new List<CultureInfo>
+                {
+                    new CultureInfo("es-AR")
+                };
+
+                options.DefaultRequestCulture = new RequestCulture("es-AR");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
+
             var app = builder.Build();
 
             // Configurar el pipeline de solicitud HTTP
@@ -96,11 +116,17 @@ namespace PaginaEEST1
                 app.UseHsts();
             }
 
+            //Localizacion AntDesign
+            LocaleProvider.SetLocale("es-Es");
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAntiforgery();
 
-            // Middleware de autenticaci�n y autorizaci�n
+            // Añadir el middleware de localización
+            var localizationOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>()?.Value;
+
+            // Middleware de autenticación y autorización
             app.UseAuthentication();
             app.UseAuthorization();
 
