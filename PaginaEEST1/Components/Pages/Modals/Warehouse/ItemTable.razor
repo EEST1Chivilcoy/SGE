@@ -65,9 +65,6 @@
                         <Button Type="primary" OnClick="() => OpenDetails(context.ID)">
                             <Icon Type="info-circle" Theme="fill" /> Detalles
                         </Button>
-                        <Button OnClick="() => openEdit(context.ID)">
-                            <Icon Type="edit" /> Editar
-                        </Button>
                         <Popconfirm Title="¿Remover este Item?"
                                     OnConfirm="() => DelItem(context.ID)"
                                     OkText="Si"
@@ -99,6 +96,7 @@
 @if (VisDetails == true)
 {
     <Modal Visible="VisDetails" Footer="null" OnCancel="() => {VisDetails = false;}">
+	<DetailsItem ID="@ItemSelID"/>
     </Modal>
 }
 

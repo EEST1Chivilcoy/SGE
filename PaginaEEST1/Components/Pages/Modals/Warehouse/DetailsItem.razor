@@ -1,0 +1,36 @@
+﻿@using PaginaEEST1.Services
+@using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Shared
+@using PaginaEEST1.Data.Models.Categories
+@using PaginaEEST1.Data.Models.PhysicalObjects
+@inject IItemService ItemService
+@inject IQRService QRService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+<Flex Align="left" Justify="left">
+    <div class="area-container">
+        @if (item != null)
+        {
+            <p><b>Nombre del Objeto</b>: @item.Name</p>
+            <p><b>Tipo de Objeto</b>: @item.Type.GetDisplayName()</p>
+            <p><b>Codigo</b>: @item.Code</p>
+            <p><b>Descripción</b>: @item.Description</p>
+            <p><b>Categoria</b>: @(item.Category?.Name ?? "Sin categoria")</p>
+        }
+    </div>
+</Flex>
+
+@code {
+    [Parameter]
+    public int ID { get; set; }
+    private Item? item { get; set; }
+
+    // Init
+    protected override async Task OnInitializedAsync()
+    {
+        item = await ItemService.GetItem(ID);
+        StateHasChanged();
+    }
+}

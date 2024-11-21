@@ -12,6 +12,7 @@ namespace PaginaEEST1.Services
     {
         Task<List<ItemViewModel?>> GetListItems(EducationalGuidance Owner);
         Task<Item?> SaveItem(Item Item);
+        Task<Item?> GetItem(int Id);
         Task DeleteItem(int ID);
         Task<string> GenerateUniqueCodeAsync();
     }
@@ -29,10 +30,19 @@ namespace PaginaEEST1.Services
         {
             var Item = await _context.Items.FindAsync(ID);
             if (Item == null)
-                throw new InvalidOperationException("No se encontró la Computadora.");
+                throw new InvalidOperationException("No se encontró el Objeto.");
 
             _context.Items.Remove(Item);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<Item?> GetItem(int ID)
+        {
+            Item? Item = await _context.Items.Where(i => i.Id == ID).Include(l => l.Category).SingleOrDefaultAsync();
+            if (Item == null)
+                throw new InvalidOperationException("No se encontró el Objeto.");
+
+            return (Item);
         }
 
         public async Task<List<ItemViewModel?>> GetListItems(EducationalGuidance Owner)
