@@ -41,11 +41,7 @@ namespace PaginaEEST1.Services
                     if (request is FailureRequest failure)
                     {
                         failure.Professor = _context.People.OfType<Professor>().Where(p => p.PersonId == failure.ProfessorId).SingleOrDefault();
-                        Computer? computer = await _context.Computers.FindAsync(failure.ComputerId);
-                        if (computer != null){
-                            failure.Computer = computer;
-                            computer.Status = ComputerStatus.Fallas;
-                        }
+                        failure.Computer = await _context.Computers.FindAsync(failure.ComputerId);
                         _context.ComputerRequests.Add(failure);
                     }
                     if (request is InstallationRequest installation)
@@ -58,7 +54,12 @@ namespace PaginaEEST1.Services
                     {
                         _context.ComputerRequests.Add(request);
                     }
+
+                    if (request is RequestComputer requestComputer)
+                        await UpdateComputerStatus(requestComputer.ComputerId);
+
                     await _context.SaveChangesAsync();
+
                     return true;
                 }
                 catch
@@ -94,7 +95,8 @@ namespace PaginaEEST1.Services
             try
             {
                 RequestEMATP? request = await _context.ComputerRequests.FindAsync(Id);
-                if (request != null) { 
+                if (request != null)
+                {
                     request.Status = RequestStatus.Archivada;
                     await _context.SaveChangesAsync();
                 }
@@ -110,8 +112,13 @@ namespace PaginaEEST1.Services
             {
                 RequestEMATP? request = await _context.ComputerRequests.FindAsync(Id);
                 request.Status = status;
+
+                if (request is RequestComputer computerRequest)
+                    await UpdateComputerStatus(computerRequest.ComputerId);
+
                 if (status == RequestStatus.Completada)
                     request.EstimatedCompletionDate = DateTime.Now;
+
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -163,10 +170,38 @@ namespace PaginaEEST1.Services
                 requests.Add(add);
             }
 
-            if(forManagement == false)
+            if (forManagement == false)
                 requests = requests.Where(l => l.ProfessorId == personIdClaim).ToList();
 
             return requests;
         }
+        private async Task UpdateComputerStatus(int computerId)
+        {
+            List<RequestEMATP>? allRequests = await _context.ComputerRequests.ToListAsync();
+
+            List<RequestComputer>? computerRequests = allRequests.OfType<RequestComputer>().Where(r => r.ComputerId == computerId).ToList();
+            if (computerRequests == null || !computerRequests.Any())
+            {
+                (await _context.Computers.FindAsync(computerId)).Status = ComputerStatus.Fallas;
+                return;
+            }
+            // Verificar el estado de las solicitudes
+            if (computerRequests.Any(r => r.Status == RequestStatus.Pendiente))
+            {
+                var computer = await _context.Computers.FindAsync(computerId);
+                if (computer != null) computer.Status = ComputerStatus.Fallas;
+            }
+            else if (computerRequests.Any(r => r.Status == RequestStatus.EnProceso))
+            {
+                var computer = await _context.Computers.FindAsync(computerId);
+                if (computer != null) computer.Status = ComputerStatus.Mantenimiento;
+            }
+            else
+            {
+                var computer = await _context.Computers.FindAsync(computerId);
+                if (computer != null) computer.Status = ComputerStatus.Operativo;
+            }
+        }
+
     }
 }
