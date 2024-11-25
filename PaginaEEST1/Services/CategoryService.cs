@@ -32,6 +32,18 @@ namespace PaginaEEST1.Services
         }
         public async Task<Category?> SaveCategory(TypeCategory typeCategory, string name)
         {
+            // Eliminar espacios al inicio y al final
+            name = name.Trim();
+        
+            // Validar que el nombre no sea vacío o solo contenga espacios
+            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
+                return null;
+        
+            // Validar que no contenga caracteres especiales (solo letras, números y espacios)
+            if (!System.Text.RegularExpressions.Regex.IsMatch(name, @"^[a-zA-Z0-9\s]+$"))
+                return null;
+        
+            // Buscar si ya existe una categoría con el mismo nombre (ignorar espacios y mayúsculas/minúsculas)
             Category? exists = _context.Categories
                 .Where(c => c.Name.Replace(" ", "").ToLower() == name.Replace(" ", "").ToLower())
                 .SingleOrDefault();
