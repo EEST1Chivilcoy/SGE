@@ -48,7 +48,7 @@ namespace PaginaEEST1.Services
         public async Task<List<ItemViewModel?>> GetListItems(EducationalGuidance Owner)
         {
             // Obtener todos los items de la base de datos
-            List<Item> items = await _context.Items.ToListAsync();
+            List<Item> items = await _context.Items.Include(item => item.ItemImage).ToListAsync();
 
             // Filtrar los elementos basándose en el valor del enum y el propietario
             var filteredItems = items

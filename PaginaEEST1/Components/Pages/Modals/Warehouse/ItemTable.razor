@@ -83,7 +83,7 @@
 @if (VisAdd == true)
 {
     <Modal Visible="VisAdd" Footer="null" OnCancel="() => closeModals(false)">
-        <AddItem OnClose="closeModals" OwnerItem="Owner"/>
+        <AddItem OnClose="closeModals" OwnerItem="Owner" />
     </Modal>
 }
 
@@ -96,7 +96,7 @@
 @if (VisDetails == true)
 {
     <Modal Visible="VisDetails" Footer="null" OnCancel="() => {VisDetails = false;}">
-	<DetailsItem ID="@ItemSelID"/>
+        <DetailsItem ID="@ItemSelID" />
     </Modal>
 }
 
