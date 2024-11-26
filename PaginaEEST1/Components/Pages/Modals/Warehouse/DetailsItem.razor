@@ -9,28 +9,29 @@
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
 
-<Flex Align="left" Justify="left">
-    <div class="area-container">
-        @if (item != null)
-        {
-            <p><b>Nombre del Objeto</b>: @item.Name</p>
-            <p><b>Tipo de Objeto</b>: @item.Type.GetDisplayName()</p>
-            <p><b>Codigo</b>: @item.Code</p>
-            <p><b>Descripción</b>: @item.Description</p>
-            <p><b>Categoria</b>: @(item.Category?.Name ?? "Sin categoria")</p>
-        }
-    </div>
+<Flex Align="left" Justify="left" Vertical Style="height: 100%; width:100%">
+    @if (item != null)
+    {
+        <Flex Align="center" Justify="center">
+            <Image Width="200px" Src="@item.ImageUrl" />
+        </Flex>
+        <p><b>Nombre del Objeto</b>: @item.Name</p>
+        <p><b>Tipo de Objeto</b>: @item.Type.GetDisplayName()</p>
+        <p><b>Codigo</b>: @item.Code</p>
+        <p><b>Descripción</b>: @item.Description</p>
+        <p><b>Categoria</b>: @item.Category</p>
+    }
 </Flex>
 
 @code {
     [Parameter]
     public int ID { get; set; }
-    private Item? item { get; set; }
+    private ItemViewModel? item { get; set; }
 
     // Init
     protected override async Task OnInitializedAsync()
     {
-        item = await ItemService.GetItem(ID);
+        item = await ItemService.GetItemViewModel(ID);
         StateHasChanged();
     }
 }

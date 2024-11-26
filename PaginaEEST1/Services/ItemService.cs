@@ -12,7 +12,7 @@ namespace PaginaEEST1.Services
     {
         Task<List<ItemViewModel?>> GetListItems(EducationalGuidance Owner);
         Task<Item?> SaveItem(Item Item);
-        Task<Item?> GetItem(int Id);
+        Task<ItemViewModel?> GetItemViewModel(int Id);
         Task DeleteItem(int ID);
         Task<string> GenerateUniqueCodeAsync();
     }
@@ -36,13 +36,30 @@ namespace PaginaEEST1.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Item?> GetItem(int ID)
+        public async Task<ItemViewModel?> GetItemViewModel(int ID)
         {
-            Item? Item = await _context.Items.Where(i => i.Id == ID).Include(l => l.Category).SingleOrDefaultAsync();
-            if (Item == null)
+            // Obtener el item desde la base de datos con la categoría incluida.
+            Item? SelItem = await _context.Items
+                .Where(i => i.Id == ID)
+                .Include(i => i.Category)
+                .Include(i => i.ItemImage)
+                .SingleOrDefaultAsync();
+
+            // Verificar si el item existe
+            if (SelItem == null)
                 throw new InvalidOperationException("No se encontró el Objeto.");
 
-            return (Item);
+            // Mapear el objeto Item a ItemViewModel
+            return new ItemViewModel
+            {
+                ID = SelItem.Id,
+                Type = SelItem.Type,
+                Name = SelItem.Name,
+                Description = SelItem.Description,
+                Category = SelItem.Category?.Name ?? "Sin Categoría",  // Usar la propiedad Category cargada con Include
+                Code = SelItem.Code,
+                IdImageItem = SelItem.ItemImage?.Id
+            };
         }
 
         public async Task<List<ItemViewModel?>> GetListItems(EducationalGuidance Owner)
