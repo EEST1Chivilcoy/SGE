@@ -91,7 +91,7 @@
         computer = await ComputerService.GetComputer(ID);
         var baseUrl = NavigationManager.BaseUri.TrimEnd('/');
         QRLink = $"{baseUrl}/Computadora_VistaQR_{ID}";
-        QRCode = await QRService.LoadQR(QRLink);
+        QRCode = QRService.GetQRCodeUrl(QRLink);
         if (computer is Desktop desktop)
         {
             Location = desktop.Location != null ? desktop.Location.Name :
