@@ -33,6 +33,6 @@ namespace PaginaEEST1.Data.ViewModels
         /// <summary>
         /// URL de la Imagen relacionada con el Item
         /// </summary>
-        public string ImageUrl => IdImageItem.HasValue ? $"/api/Images/{IdImageItem}" : "/Images/default_item.png";
+        public string ImageUrl => IdImageItem.HasValue ? $"/api/Images/{IdImageItem}" : "/Images/ImageNotFound.png";
     }
 }
