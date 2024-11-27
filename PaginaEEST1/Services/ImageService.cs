@@ -2,7 +2,6 @@
 using PaginaEEST1.Data;
 using Microsoft.EntityFrameworkCore;
 using PaginaEEST1.Data.ViewModels;
-using QRCoder;
 using PaginaEEST1.Data.Enums;
 using System.Reflection;
 using PaginaEEST1.Data.Models.Images;

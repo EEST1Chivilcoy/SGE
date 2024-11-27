@@ -70,7 +70,7 @@
     {
         var baseUrl = NavigationManager.BaseUri.TrimEnd('/');
         QRLink = $"{baseUrl}/Solicitud/CuentaEscolar";
-        QRCode = await QRService.LoadQR(QRLink);
+        QRCode = QRService.GenerateQRWithExternalAPI(QRLink);
         StateHasChanged();
     }
 }
