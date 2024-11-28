@@ -21,6 +21,7 @@ namespace PaginaEEST1.Data
     {
         // Tablas (Entidades)
         public DbSet<Computer> Computers { get; set; }
+        public DbSet<ComputerMonitor> ComputerMonitors { get; set; }
         public DbSet<Person> People { get; set; }
         public DbSet<Area> Areas { get; set; }
         public DbSet<Item> Items { get; set; }
@@ -86,6 +87,24 @@ namespace PaginaEEST1.Data
                     j => j.HasOne<ItemLoan>().WithMany().HasForeignKey("LoanId"));
 
             // Enums
+
+            modelBuilder
+            .Entity<ComputerMonitor>()
+                .Property(cm => cm.Resolution)
+                .HasConversion<string>()
+                .HasMaxLength(255);
+
+            modelBuilder
+            .Entity<ComputerMonitor>()
+                .Property(cm => cm.AspectRatio)
+                .HasConversion<string>()
+                .HasMaxLength(255);
+
+            modelBuilder
+            .Entity<ComputerMonitor>()
+                .Property(cm => cm.ConnectionTypes)
+                .HasConversion<string>()
+                .HasMaxLength(255);
 
             modelBuilder
             .Entity<AttendanceRecord>()
