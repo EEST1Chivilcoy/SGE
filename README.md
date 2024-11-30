@@ -15,7 +15,6 @@
 ---
 
 ### Estado del Proyecto
-![Build Status](https://github.com/EEST1Chivilcoy/7B-2024-PDISC-G2/actions/workflows/main_paginaeest1.yml/badge.svg)
 ![Issue Open](https://img.shields.io/github/issues/EEST1Chivilcoy/7B-2024-PDISC-G2.svg)
 
 ---
