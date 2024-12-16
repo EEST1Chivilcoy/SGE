@@ -19,6 +19,14 @@
 
 ---
 
+### Equipo del Proyecto
+
+<a href="https://github.com/EEST1Chivilcoy/SGE/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=EEST1Chivilcoy/SGE" />
+</a>
+
+---
+
 ***Tecnologias Usadas:*** 
 - ![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-%23006B75.svg?style=for-the-badge&logo=aspnetcore&logoColor=white)
 - ![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)
@@ -33,9 +41,3 @@
 - ![DBeaver](https://img.shields.io/badge/DBeaver-1f425f?style=for-the-badge&logo=dbeaver&logoColor=white)
 
 ---
-
-### Equipo del Proyecto
-
-<a href="https://github.com/EEST1Chivilcoy/SGE/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=EEST1Chivilcoy/SGE" />
-</a>
