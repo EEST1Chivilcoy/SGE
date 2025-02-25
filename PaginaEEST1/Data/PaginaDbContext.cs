@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using PaginaEEST1.Data.Models.Categories;
 using PaginaEEST1.Data.Models.Images;
 using PaginaEEST1.Data.Models.People;
+using PaginaEEST1.Data.Models.SchoolArea.Assets;
 
 namespace PaginaEEST1.Data
 {
@@ -37,6 +38,11 @@ namespace PaginaEEST1.Data
 
         // Tabla de Categorias
         public DbSet<Category> Categories { get; set; }
+
+        // Tablas relacionado con lo de Reservas
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<AvailableSchedule> AvailableSchedules { get; set; }
+        public DbSet<ReservableArea> ReservableAreas { get; set; }
 
         public PaginaDbContext(DbContextOptions<PaginaDbContext> options) : base(options)
         {
