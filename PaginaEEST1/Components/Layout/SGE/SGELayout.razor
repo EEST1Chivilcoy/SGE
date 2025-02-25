@@ -1,15 +1,86 @@
-﻿@inherits LayoutComponentBase
+﻿@using AntDesign
+@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
 
-<NavbarSGE/>
+<style>
+	.logo-icon {
+		height: 32px;
+		margin: 16px;
+	}
 
-<div class="page">
-    @Body
-</div>
+	.site-layout .site-layout-background {
+		background: #fff;
+	}
+</style>
+
+<Layout Style="min-height: 100vh; ">
+	<Sider Collapsible>
+		<div class="logo-icon">
+			<img src="Images/System_Logo.jpg" alt="Logo Sistema" />
+		</div>
+		<Menu Theme="MenuTheme.Dark" DefaultSelectedKeys=@(new[]{"1"}) Mode="MenuMode.Inline">
+
+			<MenuItem Key="1">
+				<Icon Type="@IconType.Outline.User" />
+				<span>Inicio</span>
+			</MenuItem>
+
+			<MenuItem Key="2">
+				<Icon Type="@IconType.Outline.AccountBook" />
+				<span>Prestamos</span>
+			</MenuItem>
+
+			<AuthorizeView Roles="EMATP">
+				<Authorized>
+
+					@{
+						RenderFragment sub1Title =
+						@<span>
+							<Icon Type="@IconType.Outline.Desktop" />
+							<span>EMATP</span>
+						</span>;
+					}
+					<SubMenu Key="sub1" TitleTemplate=sub1Title>
+						<MenuItem Key="3">Gestión de Ordenadores</MenuItem>
+						<MenuItem Key="4">Gestión de Peticiones</MenuItem>
+						<MenuItem Key="5">Deposito</MenuItem>
+					</SubMenu>
+
+				</Authorized>
+			</AuthorizeView>
+
+			<AuthorizeView Roles="Directivo">
+				<Authorized>
+					@{
+						RenderFragment sub2Title =
+						@<span>
+							<Icon Type="@IconType.Outline.Team" />
+							<span>Director</span>
+						</span>;
+					}
+
+					<SubMenu Key="sub2" TitleTemplate=sub2Title>
+						<MenuItem Key="6">Gestión de Salones</MenuItem>
+					</SubMenu>
+				</Authorized>
+			</AuthorizeView>
+		</Menu>
+	</Sider>
+	<Layout Class="site-layout">
+		<Content Style="margin:0 16px;">
+			<div class="site-layout-background">
+				<div class="page">
+					@Body
+				</div>
+			</div>
+		</Content>
+	</Layout>
+</Layout>
 
 <script src="js/site.js"></script>
 
 <div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
+	An unhandled error has occurred.
+	<a href="" class="reload">Reload</a>
+	<a class="dismiss">🗙</a>
 </div>
