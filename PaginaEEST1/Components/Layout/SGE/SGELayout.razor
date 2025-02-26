@@ -2,111 +2,135 @@
 @inject NavigationManager NavigationManager
 
 <style>
-    .logo-container {
-        height: 64px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0;
-        padding: 16px;
-    }
+	.logo-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 80px;
+		padding: 16px;
+		background-color: #fff;
+		margin-bottom: 8px;
+	}
 
-    .logo-img {
-        max-height: 32px;
-        max-width: 100%;
-    }
+	.logo-img {
+		height: 60px;
+		width: 60px;
+		object-fit: contain;
+	}
 
-    .site-layout .site-layout-background {
-        background: #fff;
-        padding: 24px;
-        min-height: 280px;
-    }
+	.site-layout .site-layout-background {
+		background: #fff;
+		padding: 24px;
+		min-height: 280px;
+		box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+		border-radius: 4px;
+	}
 
-    #blazor-error-ui {
-        display: none;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        background-color: #ffffe0;
-        border-top: 1px solid #ffd800;
-        padding: 0.6rem 1.25rem;
-        z-index: 1000;
-    }
+	.ant-layout-sider {
+		background: #fff !important;
+	}
 
-        #blazor-error-ui .dismiss {
-            cursor: pointer;
-            position: absolute;
-            right: 0.75rem;
-            top: 0.5rem;
-        }
+	.ant-menu-light {
+		background: #fff;
+		border-right: none;
+	}
+
+	.ant-layout-sider-trigger {
+		background: #1890ff !important;
+	}
+
+	#blazor-error-ui {
+		display: none;
+		position: fixed;
+		bottom: 0;
+		width: 100%;
+		background-color: #ffffe0;
+		border-top: 1px solid #ffd800;
+		padding: 0.6rem 1.25rem;
+		z-index: 1000;
+	}
+
+		#blazor-error-ui .dismiss {
+			cursor: pointer;
+			position: absolute;
+			right: 0.75rem;
+			top: 0.5rem;
+		}
 </style>
 
 <Layout Style="min-height: 100vh;">
-    <Sider Collapsible>
-        <div class="logo-container">
-            <img src="Images/System_Logo.jpg" alt="Logo Sistema" class="logo-img" />
-        </div>
-        <Menu Theme="MenuTheme.Dark" DefaultSelectedKeys=@(new[]{"1"}) Mode="MenuMode.Inline">
-            <MenuItem Key="1" RouterLink="/SGE/index" RouterMatch="NavLinkMatch.All">
-                <Icon Type="user" Theme="outline" />
-                <span>Inicio</span>
-            </MenuItem>
-            <MenuItem Key="2" RouterLink="/SGE/Prestamos" RouterMatch="NavLinkMatch.Prefix">
-                <Icon Type="account-book" Theme="outline" />
-                <span>Prestamos</span>
-            </MenuItem>
-            <MenuItem Key="3" RouterLink="/SGE/Mis_Peticiones" RouterMatch="NavLinkMatch.Prefix">
-                <Icon Type="form" Theme="outline" />
-                <span>Mis peticiones</span>
-            </MenuItem>
-            <AuthorizeView Roles="EMATP">
-                <Authorized>
-                    <SubMenu Key="sub1">
-                        <TitleTemplate>
-                            <Icon Type="desktop" Theme="outline" />
-                            <span>EMATP</span>
-                        </TitleTemplate>
-                        <ChildContent>
-                            <MenuItem Key="4" RouterLink="/SGE/EMATP/GestionOrdenadores">Gestión de Ordenadores</MenuItem>
-                            <MenuItem Key="5" RouterLink="/SGE/EMATP/GestionSolicitudes">Gestión de Peticiones</MenuItem>
-                            <MenuItem Key="6" RouterLink="/SGE/EMATP/DepositoInformatica">Deposito</MenuItem>
-                        </ChildContent>
-                    </SubMenu>
-                </Authorized>
-            </AuthorizeView>
-            <AuthorizeView Roles="Directivo">
-                <Authorized>
-                    <SubMenu Key="sub2">
-                        <TitleTemplate>
-                            <Icon Type="team" Theme="outline" />
-                            <span>Director</span>
-                        </TitleTemplate>
-                        <ChildContent>
-                            <MenuItem Key="7" RouterLink="/SGE/Directivo/GestionSalones">Gestión de Salones</MenuItem>
-                        </ChildContent>
-                    </SubMenu>
-                </Authorized>
-            </AuthorizeView>
-        </Menu>
-    </Sider>
-    <Layout Class="site-layout">
-        <Content Style="margin:16px;">
-            <div class="site-layout-background">
-                @Body
-            </div>
-        </Content>
-    </Layout>
+	<Sider Collapsible Theme="SiderTheme.Light" Width="250" Collapsed="@collapsed" OnCollapse="OnCollapse">
+		<div class="logo-container">
+			<img src="Images/System_Logo.jpg" alt="Logo Sistema" class="logo-img" />
+		</div>
+		<Menu Theme="MenuTheme.Light" DefaultSelectedKeys=@(new[]{"1"}) Mode="MenuMode.Inline">
+			<MenuItem Key="1" RouterLink="/SGE/index" RouterMatch="NavLinkMatch.All">
+				<Icon Type="user" Theme="outline" />
+				<span>Inicio</span>
+			</MenuItem>
+			<MenuItem Key="2" RouterLink="/SGE/Prestamos" RouterMatch="NavLinkMatch.Prefix">
+				<Icon Type="account-book" Theme="outline" />
+				<span>Prestamos</span>
+			</MenuItem>
+			<MenuItem Key="3" RouterLink="/SGE/Mis_Peticiones" RouterMatch="NavLinkMatch.Prefix">
+				<Icon Type="form" Theme="outline" />
+				<span>Mis peticiones</span>
+			</MenuItem>
+			<AuthorizeView Roles="EMATP">
+				<Authorized>
+					<SubMenu Key="sub1">
+						<TitleTemplate>
+							<Icon Type="desktop" Theme="outline" />
+							<span>EMATP</span>
+						</TitleTemplate>
+						<ChildContent>
+							<MenuItem Key="4" RouterLink="/SGE/EMATP/GestionOrdenadores">Gestión de Ordenadores</MenuItem>
+							<MenuItem Key="5" RouterLink="/SGE/EMATP/GestionSolicitudes">Gestión de Peticiones</MenuItem>
+							<MenuItem Key="6" RouterLink="/SGE/EMATP/DepositoInformatica">Deposito</MenuItem>
+						</ChildContent>
+					</SubMenu>
+				</Authorized>
+			</AuthorizeView>
+			<AuthorizeView Roles="Directivo">
+				<Authorized>
+					<SubMenu Key="sub2">
+						<TitleTemplate>
+							<Icon Type="team" Theme="outline" />
+							<span>Director</span>
+						</TitleTemplate>
+						<ChildContent>
+							<MenuItem Key="7" RouterLink="/SGE/Directivo/GestionSalones">Gestión de Salones</MenuItem>
+						</ChildContent>
+					</SubMenu>
+				</Authorized>
+			</AuthorizeView>
+		</Menu>
+	</Sider>
+	<Layout Class="site-layout">
+		<Content Style="margin: 16px;">
+			<div class="site-layout-background">
+				@Body
+			</div>
+		</Content>
+	</Layout>
 </Layout>
 
 <div id="blazor-error-ui">
-    Ha ocurrido un error no controlado.
-    <a href="" class="reload">Recargar</a>
-    <a class="dismiss">🗙</a>
+	Ha ocurrido un error no controlado.
+	<a href="" class="reload">Recargar</a>
+	<a class="dismiss">🗙</a>
 </div>
 
 @code {
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-    }
+	private bool collapsed = true;
+
+	private void OnCollapse(bool collapsed)
+	{
+		this.collapsed = collapsed;
+	}
+
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+	}
 }
