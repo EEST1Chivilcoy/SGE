@@ -1,82 +1,43 @@
 ﻿@inject NavigationManager NavigationManager
 @inject IConfiguration Configuration
-@using AntDesign
-
-@using PaginaEEST1.Services
-@inject KickService KickService
 
 <header>
-    <nav class="navbar">
-        <div class="logo">
-            <a href="/">
-                <img src="Images/School_Logo.webp" alt="Logo Escuela" />
-            </a>
-        </div>
-        <ul class="nav-links">
-            <li><a href="/">Inicio</a></li>
-            <li><a href="/inscripcion">Inscripción</a></li>
-            <li><a href="/equipo-de-gestion">Equipo de Gestión</a></li>
-            <li><a href="https://www.facebook.com/tecnicachivilcoy/">Noticias</a></li>
-            <AuthorizeView>
-                <Authorized>
-                    <li><a href="/SGE/index">Gestión Escolar</a></li>
-                </Authorized>
-            </AuthorizeView>
-        </ul>
-        <AuthorizeView>
-            <NotAuthorized>
-                <Button Class="btn-login" OnClick="Login">Iniciar Sesión</Button>
-            </NotAuthorized>
-            <Authorized>
-                <Button Class="btn-login" OnClick="Logout">Cerrar Sesión</Button>
-            </Authorized>
-        </AuthorizeView>
-        @if (_showRadioButton)
-        {
-            <Button Class="btn-radio" OnClick="NavigateToRadio">Radio en Vivo</Button>
-        }
-    </nav>
+	<nav class="navbar">
+		<div class="logo">
+			<a href="/">
+				<img src="Images/School_Logo.webp" alt="Logo Escuela" />
+			</a>
+		</div>
+		<ul class="nav-links">
+			<li><a href="/">Inicio</a></li>
+			<li><a href="/inscripcion">Inscripción</a></li>
+			<li><a href="/equipo-de-gestion">Equipo de Gestión</a></li>
+			<li><a href="https://www.facebook.com/tecnicachivilcoy/">Noticias</a></li>
+			<AuthorizeView>
+				<Authorized>
+					<li><a href="/SGE/index">Gestión Escolar</a></li>
+				</Authorized>
+			</AuthorizeView>
+		</ul>
+		<AuthorizeView>
+			<NotAuthorized>
+				<Button Class="btn-login" OnClick="Login">Iniciar Sesión</Button>
+			</NotAuthorized>
+			<Authorized>
+				<Button Class="btn-login" OnClick="Logout">Cerrar Sesión</Button>
+			</Authorized>
+		</AuthorizeView>
+	</nav>
 </header>
 
 @code {
-    private bool _showRadioButton = false;
+	private void Login()
+	{
+		NavigationManager.NavigateTo("/Auth/Login", true);
+	}
 
-    protected override void OnInitialized()
-    {
-        // Inicia la verificación del estado del canal de forma asíncrona
-        Task.Run(CheckChannelStatus);
-    }
-
-    private async Task CheckChannelStatus()
-    {
-        try
-        {
-            var isLive = await KickService.IsChannelLiveAsync("radioinduchivilcoy");
-            _showRadioButton = isLive; // Asigna el resultado directamente
-        }
-        catch
-        {
-            // Manejar errores silenciosamente
-            _showRadioButton = false; // O puedes omitir esta línea si quieres mantenerlo en false
-        }
-        finally
-        {
-            StateHasChanged(); // Actualiza la UI para reflejar el estado
-        }
-    }
-
-    private void Login()
-    {
-        NavigationManager.NavigateTo("/Auth/Login", true);
-    }
-
-    private void Logout()
-    {
-        NavigationManager.NavigateTo("/Auth/Logout", true);
-    }
-
-    private void NavigateToRadio()
-    {
-        NavigationManager.NavigateTo("https://kick.com/radioinduchivilcoy", true);
-    }
+	private void Logout()
+	{
+		NavigationManager.NavigateTo("/Auth/Logout", true);
+	}
 }

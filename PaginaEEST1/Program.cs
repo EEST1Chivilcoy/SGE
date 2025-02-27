@@ -87,7 +87,7 @@ namespace PaginaEEST1
             builder.Services.AddScoped<ILoanService, LoanService>();
 
             // Registrar los servicios Singleton
-            builder.Services.AddSingleton<KickService>();
+
 
             // Cache
             builder.Services.AddMemoryCache();
