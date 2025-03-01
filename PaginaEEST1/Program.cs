@@ -85,6 +85,7 @@ namespace PaginaEEST1
             builder.Services.AddScoped<IImageService, ImageService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<ILoanService, LoanService>();
+            builder.Services.AddScoped<ISchoolEnrollmentService, SchoolEnrollmentService>();
 
             // Registrar los servicios Singleton
 

@@ -2,79 +2,92 @@
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 
+@using PaginaEEST1.Services
+@inject ISchoolEnrollmentService EnrollmentService
+
 <head>
-    <title>Inscripción</title>
+	<title>Inscripción</title>
 </head>
 
 <style>
-    .inscripcion-content {
-        width: 100%;
-        max-width: 1140px;
-        margin-left: auto;
-        margin-right: auto;
-        padding-left: 15px;
-        padding-right: 15px;
-        margin-top: 3rem;
-    }
+	.inscripcion-content {
+		width: 100%;
+		max-width: 1140px;
+		margin-left: auto;
+		margin-right: auto;
+		padding-left: 15px;
+		padding-right: 15px;
+		margin-top: 3rem;
+	}
 </style>
 
 <div class="inscripcion-content">
-    <Flex Justify="center" Align="center" Style="height: 100%; width:100%;">
-        <Card Title="Formulario de Inscripción" Style="width: 100%; max-width: 800px; height: auto; margin-bottom: 10px;">
-            <Body>
-                @if (!string.IsNullOrEmpty(googleFormUrl))
-                {
-                    <iframe src="@googleFormUrl" width="100%" height="600px" frameborder="0" marginheight="0" marginwidth="0">Cargando…</iframe>
-                }
-                else
-                {
-                    <Result Status="error"
-                            Title="Las inscripciones no están abiertas"
-                            SubTitle="Por favor, inténtelo más tarde o verifique la disponibilidad de las inscripciones."
-                            Extra="@extra">
-                        <div class="desc">
-                            <Paragraph>
-                                <Text Strong Style="font-size: 16px;">
-                                    Lo sentimos, las inscripciones están cerradas en este momento.
-                                </Text>
-                            </Paragraph>
-                            <Paragraph>
-                                <Icon Type="close-circle" Theme="Outline" Class="site-result-demo-error-icon" />
-                                Si necesitas más información, contacta a soporte.
-                            </Paragraph>
-                        </div>
-                    </Result>
-                }
-            </Body>
-        </Card>
-    </Flex>
+	<Flex Justify="center" Align="center" Style="height: 100%; width:100%;">
+		<Card Title="Formulario de Inscripción" Style="width: 100%; max-width: 800px; height: auto; margin-bottom: 10px;">
+			<Body>
+				@if (IsLoading)
+				{
+					<Skeleton Active />
+				}
+				else if (!string.IsNullOrEmpty(GoogleFormUrl))
+				{
+					<iframe src="@GoogleFormUrl" width="100%" height="600px" frameborder="0" marginheight="0" marginwidth="0">Cargando…</iframe>
+				}
+				else
+				{
+					<Result Status="error"
+							Title="Las inscripciones no están abiertas"
+							SubTitle="Por favor, inténtelo más tarde o verifique la disponibilidad de las inscripciones.">
+						<div class="desc">
+							<Paragraph>
+								<Text Strong Style="font-size: 16px;">
+									Lo sentimos, las inscripciones están cerradas en este momento.
+								</Text>
+							</Paragraph>
+							<Paragraph>
+								<Icon Type="close-circle" Theme="Outline" Class="site-result-demo-error-icon" />
+								Si necesitas más información, contacta con la Escuela al 📞 2346-431330.
+							</Paragraph>
+						</div>
+					</Result>
+				}
+			</Body>
+		</Card>
+	</Flex>
 </div>
 
 @code {
-    private string? googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSc3Tgu73jsDT3skc6wuSzIMlLdd1xFLp_fOSWtFoHh6Yt5Ilw/viewform";
-    private int windowWidth;
-    private bool isRendered;
+	private string? GoogleFormUrl;
+	private bool IsLoading = true;
+	private int WindowWidth;
+	private bool IsRendered;
 
-    RenderFragment extra =
-    @<div>
-        <Button Type="primary">Contactar Soporte</Button>
-        <Button>Ver Más Información</Button>
-    </div>;
+	protected override async Task OnInitializedAsync()
+	{
+		await LoadEnrollment();
+	}
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            // Obtener el ancho de la ventana
-            windowWidth = await JSRuntime.InvokeAsync<int>("getWindowWidth");
-            isRendered = true;
+	private async Task LoadEnrollment()
+	{
+		var enrollment = await EnrollmentService.GetCurrentEnrollmentAsync();
+		GoogleFormUrl = enrollment?.GoogleFormLink;
+		IsLoading = false;
+		StateHasChanged();
+	}
 
-            if (windowWidth < 768 && !string.IsNullOrEmpty(googleFormUrl))
-            {
-                NavigationManager.NavigateTo(googleFormUrl, true);
-            }
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			WindowWidth = await JSRuntime.InvokeAsync<int>("getWindowWidth");
+			IsRendered = true;
 
-            StateHasChanged(); // Forzar una actualización para que el componente se vuelva a renderizar con el valor actualizado
-        }
-    }
+			if (WindowWidth < 768 && !string.IsNullOrEmpty(GoogleFormUrl))
+			{
+				NavigationManager.NavigateTo(GoogleFormUrl, true);
+			}
+
+			StateHasChanged();
+		}
+	}
 }

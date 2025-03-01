@@ -1,0 +1,136 @@
+@using PaginaEEST1.Components.Pages.Modals.Areas
+@using PaginaEEST1.Data.Models.Categories
+@using PaginaEEST1.Data.Models.Images
+@using PaginaEEST1.Data.ViewModels
+@using PaginaEEST1.Data.Enums
+@using PaginaEEST1.Shared
+@using PaginaEEST1.Data.Models
+
+@page "/SGE/Directivo/GestionInscripciones"
+
+@using PaginaEEST1.Components.Layout
+@layout SGELayout
+
+@attribute [Authorize(Roles = "Directivo")]
+
+@using PaginaEEST1.Services
+@inject ISchoolEnrollmentService SchoolEnrollmentService
+@inject INotificationService Notification
+
+<h2>Gestión de Inscripción Escolar</h2>
+
+<Card>
+	<Content>
+		<Button OnClick="OpenModal" Type="Primary">
+			@(CurrentEnrollment == null ? "Crear Inscripción" : "Editar Inscripción")
+		</Button>
+
+		@if (CurrentEnrollment != null)
+		{
+			<Descriptions Title="Inscripción Actual" Layout="DescriptionsLayout.Vertical">
+				<DescriptionsItem Title="Desde">@CurrentEnrollment.StartDate.ToString("dd/MM/yyyy")</DescriptionsItem>
+				<DescriptionsItem Title="Hasta">@CurrentEnrollment.EndDate.ToString("dd/MM/yyyy")</DescriptionsItem>
+				<DescriptionsItem Title="Formulario">
+					<a href="@CurrentEnrollment.GoogleFormLink" target="_blank">Ver Formulario</a>
+				</DescriptionsItem>
+			</Descriptions>
+
+			<Button OnClick="DeleteEnrollment" Type="Danger" Style="margin-top: 10px;">
+				Eliminar Inscripción
+			</Button>
+		}
+	</Content>
+</Card>
+
+<Modal Title="Gestión de Inscripción" Visible="@IsModalOpen" OnCancel="CloseModal" OnOk="SaveEnrollment">
+	<Form Model="@EnrollmentModel" Layout="vertical">
+		<FormItem Label="Fecha Desde">
+			<DatePicker @bind-Value="EnrollmentModel.StartDate" />
+		</FormItem>
+		<FormItem Label="Fecha Hasta">
+			<DatePicker @bind-Value="EnrollmentModel.EndDate" />
+		</FormItem>
+		<FormItem Label="Enlace al Formulario">
+			<Input @bind-Value="EnrollmentModel.GoogleFormLink" />
+		</FormItem>
+	</Form>
+</Modal>
+
+@code {
+	private SchoolEnrollment? CurrentEnrollment;
+	private SchoolEnrollment EnrollmentModel = new();
+	private bool IsModalOpen = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		await LoadEnrollment();
+	}
+
+	private async Task LoadEnrollment()
+	{
+		CurrentEnrollment = await SchoolEnrollmentService.GetCurrentEnrollmentAsync();
+		if (CurrentEnrollment != null)
+		{
+			EnrollmentModel = new SchoolEnrollment
+				{
+					Id = CurrentEnrollment.Id,
+					StartDate = CurrentEnrollment.StartDate,
+					EndDate = CurrentEnrollment.EndDate,
+					GoogleFormLink = CurrentEnrollment.GoogleFormLink
+				};
+		}
+	}
+
+	private void OpenModal()
+	{
+		IsModalOpen = true;
+	}
+
+	private void CloseModal()
+	{
+		IsModalOpen = false;
+	}
+
+	private async Task SaveEnrollment()
+	{
+		try
+		{
+			if (CurrentEnrollment == null)
+			{
+				await SchoolEnrollmentService.CreateEnrollmentAsync(EnrollmentModel);
+				await Notification.Success(new NotificationConfig { Message = "Inscripción creada correctamente" });
+			}
+			else
+			{
+				await SchoolEnrollmentService.UpdateEnrollmentAsync(EnrollmentModel);
+				await Notification.Success(new NotificationConfig { Message = "Inscripción actualizada correctamente" });
+			}
+
+			IsModalOpen = false;
+			await LoadEnrollment();
+		}
+		catch (Exception ex)
+		{
+			await Notification.Error(new NotificationConfig { Message = "Error", Description = ex.Message });
+		}
+	}
+
+	private async Task DeleteEnrollment()
+	{
+		try
+		{
+			if (CurrentEnrollment != null)
+			{
+				await SchoolEnrollmentService.UpdateEnrollmentAsync(new SchoolEnrollment()); // Se podría implementar un método específico para borrar.
+				await Notification.Success(new NotificationConfig { Message = "Inscripción eliminada correctamente" });
+
+				CurrentEnrollment = null;
+				EnrollmentModel = new SchoolEnrollment();
+			}
+		}
+		catch (Exception ex)
+		{
+			await Notification.Error(new NotificationConfig { Message = "Error", Description = ex.Message });
+		}
+	}
+}

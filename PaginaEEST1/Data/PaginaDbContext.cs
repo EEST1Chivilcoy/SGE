@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PaginaEEST1.Data.Models;
 using PaginaEEST1.Data.Models.Categories;
 using PaginaEEST1.Data.Models.Images;
 using PaginaEEST1.Data.Models.People;
@@ -43,6 +44,9 @@ namespace PaginaEEST1.Data
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<AvailableSchedule> AvailableSchedules { get; set; }
         public DbSet<ReservableArea> ReservableAreas { get; set; }
+
+        // Inscripciones
+        public DbSet<SchoolEnrollment> Inscriptions { get; set; }
 
         public PaginaDbContext(DbContextOptions<PaginaDbContext> options) : base(options)
         {
