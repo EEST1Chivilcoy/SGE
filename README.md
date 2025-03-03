@@ -15,7 +15,9 @@
 ---
 
 ### Estado del Proyecto
-![Issue Open](https://img.shields.io/github/issues/EEST1Chivilcoy/7B-2024-PDISC-G2.svg)
+
+[![Build and deploy](https://github.com/EEST1Chivilcoy/SGE/actions/workflows/main_eest1chivilcoy.yml/badge.svg)](https://github.com/EEST1Chivilcoy/SGE/actions/workflows/main_eest1chivilcoy.yml)
+![Issue Open](https://img.shields.io/github/issues/EEST1Chivilcoy/SGE.svg)
 
 ---
 
