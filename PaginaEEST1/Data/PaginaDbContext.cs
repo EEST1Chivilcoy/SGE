@@ -55,6 +55,25 @@ namespace PaginaEEST1.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Relación uno a uno: Area -> ReservableArea (opcional)
+            modelBuilder.Entity<Area>()
+                .HasOne(a => a.ReservableInfo)
+                .WithOne()
+                .HasForeignKey<ReservableArea>(r => r.Id)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Relación uno a muchos: ReservableArea -> AvailableSchedule
+            modelBuilder.Entity<ReservableArea>()
+                .HasMany(r => r.AvailableSchedules)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Relación uno a muchos: ReservableArea -> Reservation
+            modelBuilder.Entity<ReservableArea>()
+                .HasMany(r => r.Reservations)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+
             //Foreaneas 1:1
             modelBuilder.Entity<Person>()
                 .HasOne(p => p.ProfileImage)
