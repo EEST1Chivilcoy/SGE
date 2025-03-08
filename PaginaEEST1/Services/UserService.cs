@@ -69,6 +69,12 @@ namespace PaginaEEST1.Services
                     Console.WriteLine("No se requieren actualizaciones para el usuario.");
                 }
             }
+
+            // Asegurarse de que el rol esté en los claims
+            if (!user.HasClaim(c => c.Type == ClaimTypes.Role))
+            {
+                user.AddClaim(new Claim(ClaimTypes.Role, userRole));
+            }
         }
 
         private async Task CreateUser(string personId, string name, string surname, string email, string role)

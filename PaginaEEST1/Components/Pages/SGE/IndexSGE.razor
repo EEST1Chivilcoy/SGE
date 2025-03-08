@@ -8,7 +8,7 @@
 @using PaginaEEST1.Components.Layout
 @layout SGELayout
 
-@attribute [Authorize(Roles = "Profesores,EMATP,Directivo")]
+@attribute [Authorize(Roles = "EMATP,Profesor,Directivo")]
 
 <div class="sge-layout">
 	<div class="sge-layout__profile">
@@ -26,7 +26,7 @@
 	<div class="sge-layout__content">
 		<div class="sge-actions-card">
 			<div class="sge-actions-card__row">
-				<!-- General -->
+				@*General*@
 				<Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Prestamos"))">
 					<Icon Type="tags" Theme="fill" />
 					Prestamos
@@ -35,7 +35,7 @@
 					<Icon Type="contacts" Theme="outline" />
 					Mis Peticiones
 				</Button>
-				<!-- EMATP -->
+				@*EMATP*@
 				<AuthorizeView Roles="EMATP">
 					<Authorized>
 						<Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionOrdenadores"))">
@@ -53,7 +53,7 @@
 						<QRAccountRequest />
 					</Authorized>
 				</AuthorizeView>
-				<!-- Directivo -->
+				@*Directivo*@ 
 				<AuthorizeView Roles="Directivo">
 					<Authorized>
 						<Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Directivo/GestionSalones"))">
@@ -194,7 +194,7 @@
 		    userRoleName = userRole switch
 			{
 				"Directivo" => "Equipo Directivo",
-				"Profesor" => "Profesores",
+				"Profesor" => "Profesor",
 				"EMATP" => "EMATP",
 				"Preceptor" => "Preceptor",
 				"Panol" => "Pañol",
