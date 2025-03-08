@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <style>
 	.logo-container {
@@ -56,6 +57,16 @@
 			right: 0.75rem;
 			top: 0.5rem;
 		}
+
+	.logout-button {
+		background-color: #ff4d4f;
+		color: black;
+		border: none;
+		width: 100%;
+		text-align: left;
+		padding: 16px;
+		cursor: pointer;
+	}
 </style>
 
 <Layout Style="min-height: 100vh;">
@@ -104,6 +115,14 @@
 					</SubMenu>
 				</Authorized>
 			</AuthorizeView>
+			<AuthorizeView>
+				<Authorized>
+					<MenuItem Key="8" OnClick="() => Logout()" RouterMatch="NavLinkMatch.Prefix" Class="logout-button">
+						<Icon Type="logout" Theme="outline" />
+						<span>Cerrar sesión</span>
+					</MenuItem>
+				</Authorized>
+			</AuthorizeView>
 		</Menu>
 	</Sider>
 	<Layout Class="site-layout">
@@ -127,6 +146,11 @@
 	private void OnCollapse(bool collapsed)
 	{
 		this.collapsed = collapsed;
+	}
+
+	private async Task Logout()
+	{
+		NavigationManager.NavigateTo("/Auth/Logout", true);
 	}
 
 	protected override void OnInitialized()
