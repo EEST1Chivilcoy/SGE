@@ -120,7 +120,7 @@ namespace PaginaEEST1.Services
             return role switch
             {
                 "Profesor" => new Professor { PersonId = personId, Name = name, Surname = surname, Gender = TypeGender.Other, Email = email, EntraIDRole = role },
-                "EMATP" => new EMATP { PersonId = personId, Name = name, Surname = surname, Gender = TypeGender.Other, Email = email, EntraIDRole = role },
+                "Ematp" => new EMATP { PersonId = personId, Name = name, Surname = surname, Gender = TypeGender.Other, Email = email, EntraIDRole = role },
                 "Directivo" => new SchoolPrincipal { PersonId = personId, Name = name, Surname = surname, Gender = TypeGender.Other, Email = email, EntraIDRole = role },
                 "Preceptor" => new Preceptor { PersonId = personId, Name = name, Surname = surname, Gender = TypeGender.Other, Email = email, EntraIDRole = role },
                 "Panol" => new Storeroom { PersonId = personId, Name = name, Surname = surname, Gender = TypeGender.Other, Email = email, EntraIDRole = role },

@@ -36,7 +36,7 @@
 					Mis Peticiones
 				</Button>
 				@*EMATP*@
-				<AuthorizeView Roles="EMATP">
+				<AuthorizeView Roles="Ematp">
 					<Authorized>
 						<Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionOrdenadores"))">
 							<Icon Type="desktop" Theme="outline" />
@@ -190,12 +190,13 @@
 			userEmail = user.FindFirst(ClaimTypes.Email)?.Value;
 			userRole = user.FindFirst(ClaimTypes.Role)?.Value;
 
+			Console.WriteLine($"ClaimTypes Role: {userRole}");
 			// Asignamos el nombre para mostrar según el valor del rol
 		    userRoleName = userRole switch
 			{
 				"Directivo" => "Equipo Directivo",
 				"Profesor" => "Profesor",
-				"EMATP" => "EMATP",
+				"Ematp" => "EMATP",
 				"Preceptor" => "Preceptor",
 				"Panol" => "Pañol",
 				"Secretario" => "Secretari@",
