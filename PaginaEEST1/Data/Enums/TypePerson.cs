@@ -8,15 +8,26 @@ namespace PaginaEEST1.Data.Enums
     {
         [Display(Name = "Directivo")]
         SchoolDirector = 1,
+
         [Display(Name = "EMATP")]
         EMATP = 2,
+
         [Display(Name = "Pañol")]
         Warehouse = 3,
+
         [Display(Name = "Profesor")]
         Teacher = 4,
+
         [Display(Name = "Alumno")]
         Student = 5,
+
         [Display(Name = "Empleado de la Escuela")]
-        SchoolEmployee = 6
+        SchoolEmployee = 6,
+
+        [Display(Name = "Preceptor")]
+        Preceptor = 7,
+
+        [Display(Name = "Secretario")]
+        Secretary = 8
     }
 }

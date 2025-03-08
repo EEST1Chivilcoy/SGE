@@ -231,7 +231,9 @@ namespace PaginaEEST1.Data
                 .HasValue<Storeroom>(TypePerson.Warehouse)
                 .HasValue<Professor>(TypePerson.Teacher)
                 .HasValue<Student>(TypePerson.Student)
-                .HasValue<SchoolEmployee>(TypePerson.SchoolEmployee);
+                .HasValue<SchoolEmployee>(TypePerson.SchoolEmployee)
+                .HasValue<Preceptor>(TypePerson.Preceptor)
+                .HasValue<Secretary>(TypePerson.Secretary);
 
             modelBuilder
                 .Entity<Computer>()
