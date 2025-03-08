@@ -19,7 +19,7 @@
 			<div class="sge-profile-card__info">
 				<h3 class="sge-profile-card__name word-wrap">@userName, @userSurname</h3>
 				<p class="sge-profile-card__email word-wrap">@userEmail</p>
-				<Tag Color="blue" Class="sge-profile-card__role">@userRole</Tag>
+				<Tag Color="blue" Class="sge-profile-card__role">@userRoleName</Tag>
 			</div>
 		</div>
 	</div>
@@ -82,95 +82,95 @@
 
 <style>
 	.page {
-		flex-direction: column !important;
+	flex-direction: column !important;
 	}
 
 	.sge-layout {
-		display: flex;
-		flex-direction: column !important;
-		align-items: center;
-		justify-content: center;
-		min-height: 100vh;
-		padding: 2rem;
+	display: flex;
+	flex-direction: column !important;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+	padding: 2rem;
 	}
 
 	.sge-layout__profile {
-		width: 100%;
-		max-width: 400px;
-		margin-bottom: 2rem;
+	width: 100%;
+	max-width: 400px;
+	margin-bottom: 2rem;
 	}
 
 	.sge-profile-card {
-		background-color: #fff;
-		border-radius: 8px;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-		padding: 2rem;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
+	background-color: #fff;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	padding: 2rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	}
 
 	.sge-profile-card__avatar {
-		margin-bottom: 1rem;
+	margin-bottom: 1rem;
 	}
 
 	.sge-profile-card__info {
-		text-align: center;
+	text-align: center;
 	}
 
 	.sge-profile-card__name {
-		font-size: 1.5rem;
-		font-weight: 600;
-		margin-bottom: 0.5rem;
+	font-size: 1.5rem;
+	font-weight: 600;
+	margin-bottom: 0.5rem;
 	}
 
 	.sge-profile-card__email {
-		color: #666;
-		margin-bottom: 1rem;
+	color: #666;
+	margin-bottom: 1rem;
 	}
 
 	.sge-profile-card__role {
-		font-size: 0.875rem;
+	font-size: 0.875rem;
 	}
 
 	.sge-layout__content {
-		width: 100%;
-		max-width: 800px;
+	width: 100%;
+	max-width: 800px;
 	}
 
 	.sge-actions-card {
-		background-color: #fff;
-		border-radius: 8px;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-		padding: 2rem;
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
+	background-color: #fff;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	padding: 2rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
 	}
 
 	.sge-actions-card__row {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 1rem;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1rem;
 	}
 
 	.sge-attendance-card {
-		background-color: #fff;
-		border-radius: 8px;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-		padding: 2rem;
-		margin-top: 2rem;
+	background-color: #fff;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	padding: 2rem;
+	margin-top: 2rem;
 	}
 
 	.sge-attendance-card__header {
-		font-size: 1.25rem;
-		font-weight: 600;
-		margin-bottom: 1rem;
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin-bottom: 1rem;
 	}
 </style>
 
 @code {
-	private string? userName, userEmail, userSurname, userRole;
+	private string? userName, userEmail, userSurname, userRole, userRoleName;
 	private void NavigateTo(string route)
 	{
 		NavigationManager.NavigateTo(route, true);
@@ -191,7 +191,7 @@
 			userRole = user.FindFirst(ClaimTypes.Role)?.Value;
 
 			// Asignamos el nombre para mostrar según el valor del rol
-		    string userRoleName = userRole switch
+		    userRoleName = userRole switch
 			{
 				"Directivo" => "Equipo Directivo",
 				"Profesor" => "Profesores",
