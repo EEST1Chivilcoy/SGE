@@ -11,200 +11,212 @@
 @attribute [Authorize(Roles = "Profesores,EMATP,Directivo")]
 
 <div class="sge-layout">
-    <div class="sge-layout__profile">
-        <div class="sge-profile-card">
-            <div class="sge-profile-card__avatar">
-                <Avatar Size="80" Icon="user" />
-            </div>
-            <div class="sge-profile-card__info">
-                <h3 class="sge-profile-card__name word-wrap">@userName, @userSurname</h3>
-                <p class="sge-profile-card__email word-wrap">@userEmail</p>
-                <Tag Color="blue" Class="sge-profile-card__role">@userRole</Tag>
-            </div>
-        </div>
-    </div>
-    <div class="sge-layout__content">
-        <div class="sge-actions-card">
-            <div class="sge-actions-card__row">
-                <!-- General -->
-                <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Prestamos"))">
-                    <Icon Type="tags" Theme="fill" />
-                    Prestamos
-                </Button>
-                <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Mis_Peticiones"))">
-                    <Icon Type="contacts" Theme="outline" />
-                    Mis Peticiones
-                </Button>
-                <!-- EMATP -->
-                <AuthorizeView Roles="EMATP">
-                    <Authorized>
-                            <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionOrdenadores"))">
-                                <Icon Type="desktop" Theme="outline" />
-                                Gestión de Ordenadores
-                            </Button>
-                            <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionSolicitudes"))">
-                                <Icon Type="schedule" Theme="fill" />
-                                Gestión de Peticiones
-                            </Button>
-                            <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/DepositoInformatica"))">
-                                <Icon Type="dropbox-square" Theme="fill" />
-                                Deposito
-                            </Button>
-                            <QRAccountRequest />
-                    </Authorized>
-                </AuthorizeView>
-                <!-- Directivo -->
-                <AuthorizeView Roles="Directivo">
-                    <Authorized>
-                        <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Directivo/GestionSalones"))">
-                            <Icon Type="home" Theme="fill" />
-                            Gestión de Salones
-                        </Button>
-                        <Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Directivo/GestionInscripciones"))">
-                            <Icon Type="form" Theme="Outline" />
-                            Administrar Inscripción
-                        </Button>
-                    </Authorized>
-                </AuthorizeView>
-            </div>
-        </div>
-        @if (isRendered && ShouldShowAttendanceCard())
-        {
-            <div class="sge-attendance-card">
-                <div class="sge-attendance-card__header">Asistencias</div>
-                <div class="sge-attendance-card__content">
-                    <Attendance></Attendance>
-                </div>
-            </div>
-        }
-    </div>
+	<div class="sge-layout__profile">
+		<div class="sge-profile-card">
+			<div class="sge-profile-card__avatar">
+				<Avatar Size="80" Icon="user" />
+			</div>
+			<div class="sge-profile-card__info">
+				<h3 class="sge-profile-card__name word-wrap">@userName, @userSurname</h3>
+				<p class="sge-profile-card__email word-wrap">@userEmail</p>
+				<Tag Color="blue" Class="sge-profile-card__role">@userRole</Tag>
+			</div>
+		</div>
+	</div>
+	<div class="sge-layout__content">
+		<div class="sge-actions-card">
+			<div class="sge-actions-card__row">
+				<!-- General -->
+				<Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Prestamos"))">
+					<Icon Type="tags" Theme="fill" />
+					Prestamos
+				</Button>
+				<Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Mis_Peticiones"))">
+					<Icon Type="contacts" Theme="outline" />
+					Mis Peticiones
+				</Button>
+				<!-- EMATP -->
+				<AuthorizeView Roles="EMATP">
+					<Authorized>
+						<Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionOrdenadores"))">
+							<Icon Type="desktop" Theme="outline" />
+							Gestión de Ordenadores
+						</Button>
+						<Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionSolicitudes"))">
+							<Icon Type="schedule" Theme="fill" />
+							Gestión de Peticiones
+						</Button>
+						<Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/DepositoInformatica"))">
+							<Icon Type="dropbox-square" Theme="fill" />
+							Deposito
+						</Button>
+						<QRAccountRequest />
+					</Authorized>
+				</AuthorizeView>
+				<!-- Directivo -->
+				<AuthorizeView Roles="Directivo">
+					<Authorized>
+						<Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Directivo/GestionSalones"))">
+							<Icon Type="home" Theme="fill" />
+							Gestión de Salones
+						</Button>
+						<Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Directivo/GestionInscripciones"))">
+							<Icon Type="form" Theme="Outline" />
+							Administrar Inscripción
+						</Button>
+					</Authorized>
+				</AuthorizeView>
+			</div>
+		</div>
+		@if (isRendered && ShouldShowAttendanceCard())
+		{
+			<div class="sge-attendance-card">
+				<div class="sge-attendance-card__header">Asistencias</div>
+				<div class="sge-attendance-card__content">
+					<Attendance></Attendance>
+				</div>
+			</div>
+		}
+	</div>
 </div>
 
 <style>
-    .page {
-        flex-direction: column !important;
-    }
+	.page {
+		flex-direction: column !important;
+	}
 
-    .sge-layout {
-        display: flex;
-        flex-direction: column !important;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        padding: 2rem;
-    }
+	.sge-layout {
+		display: flex;
+		flex-direction: column !important;
+		align-items: center;
+		justify-content: center;
+		min-height: 100vh;
+		padding: 2rem;
+	}
 
-    .sge-layout__profile {
-        width: 100%;
-        max-width: 400px;
-        margin-bottom: 2rem;
-    }
+	.sge-layout__profile {
+		width: 100%;
+		max-width: 400px;
+		margin-bottom: 2rem;
+	}
 
-    .sge-profile-card {
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        padding: 2rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+	.sge-profile-card {
+		background-color: #fff;
+		border-radius: 8px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+		padding: 2rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
 
-    .sge-profile-card__avatar {
-        margin-bottom: 1rem;
-    }
+	.sge-profile-card__avatar {
+		margin-bottom: 1rem;
+	}
 
-    .sge-profile-card__info {
-        text-align: center;
-    }
+	.sge-profile-card__info {
+		text-align: center;
+	}
 
-    .sge-profile-card__name {
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-    }
+	.sge-profile-card__name {
+		font-size: 1.5rem;
+		font-weight: 600;
+		margin-bottom: 0.5rem;
+	}
 
-    .sge-profile-card__email {
-        color: #666;
-        margin-bottom: 1rem;
-    }
+	.sge-profile-card__email {
+		color: #666;
+		margin-bottom: 1rem;
+	}
 
-    .sge-profile-card__role {
-        font-size: 0.875rem;
-    }
+	.sge-profile-card__role {
+		font-size: 0.875rem;
+	}
 
-    .sge-layout__content {
-        width: 100%;
-        max-width: 800px;
-    }
+	.sge-layout__content {
+		width: 100%;
+		max-width: 800px;
+	}
 
-    .sge-actions-card {
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        padding: 2rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
+	.sge-actions-card {
+		background-color: #fff;
+		border-radius: 8px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+		padding: 2rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
 
-    .sge-actions-card__row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-    }
+	.sge-actions-card__row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+	}
 
-    .sge-attendance-card {
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        padding: 2rem;
-        margin-top: 2rem;
-    }
+	.sge-attendance-card {
+		background-color: #fff;
+		border-radius: 8px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+		padding: 2rem;
+		margin-top: 2rem;
+	}
 
-    .sge-attendance-card__header {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-    }
+	.sge-attendance-card__header {
+		font-size: 1.25rem;
+		font-weight: 600;
+		margin-bottom: 1rem;
+	}
 </style>
 
 @code {
-    private string? userName, userEmail, userSurname, userRole;
-    private void NavigateTo(string route)
-    {
-        NavigationManager.NavigateTo(route, true);
-    }
+	private string? userName, userEmail, userSurname, userRole;
+	private void NavigateTo(string route)
+	{
+		NavigationManager.NavigateTo(route, true);
+	}
 
-    protected override async Task OnInitializedAsync()
-    {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
+	protected override async Task OnInitializedAsync()
+	{
+		var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+		var user = authState.User;
 
-        if (user != null && user.Identity != null && user.Identity.IsAuthenticated)
-        {
-            // Usamos los ClaimTypes estándar para mayor claridad y consistencia
-            var personIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            userName = user.FindFirst(ClaimTypes.GivenName)?.Value;
-            userSurname = user.FindFirst(ClaimTypes.Surname)?.Value;
-            userEmail = user.FindFirst(ClaimTypes.Email)?.Value;
-            userRole = user.FindFirst(ClaimTypes.Role)?.Value;
-        }
-    }
+		if (user != null && user.Identity != null && user.Identity.IsAuthenticated)
+		{
+			// Usamos los ClaimTypes estándar para mayor claridad y consistencia
+			var personIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			userName = user.FindFirst(ClaimTypes.GivenName)?.Value;
+			userSurname = user.FindFirst(ClaimTypes.Surname)?.Value;
+			userEmail = user.FindFirst(ClaimTypes.Email)?.Value;
+			userRole = user.FindFirst(ClaimTypes.Role)?.Value;
 
-    private int windowWidth;
-    private bool isRendered;
+			// Asignamos el nombre para mostrar según el valor del rol
+		    string userRoleName = userRole switch
+			{
+				"Directivo" => "Equipo Directivo",
+				"Profesor" => "Profesores",
+				"EMATP" => "EMATP",
+				"Preceptor" => "Preceptor",
+				"Panol" => "Pañol",
+				"Secretario" => "Secretari@",
+				_ => "Desconocido"
+			};
+		}
+	}
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            // Llamada a JS después de que el componente haya sido renderizado
-            windowWidth = await JSRuntime.InvokeAsync<int>("getWindowWidth");
-            isRendered = true;
-            StateHasChanged(); // Forzar una actualización para que el componente se vuelva a renderizar con el valor actualizado
-        }
-    }
+	private int windowWidth;
+	private bool isRendered;
 
-    private bool ShouldShowAttendanceCard() => windowWidth >= 768;
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			// Llamada a JS después de que el componente haya sido renderizado
+			windowWidth = await JSRuntime.InvokeAsync<int>("getWindowWidth");
+			isRendered = true;
+			StateHasChanged(); // Forzar una actualización para que el componente se vuelva a renderizar con el valor actualizado
+		}
+	}
+
+	private bool ShouldShowAttendanceCard() => windowWidth >= 768;
 }
