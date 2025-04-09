@@ -16,7 +16,6 @@
 
 ### Estado del Proyecto
 
-[![Build and deploy](https://github.com/EEST1Chivilcoy/SGE/actions/workflows/main_eest1chivilcoy.yml/badge.svg)](https://github.com/EEST1Chivilcoy/SGE/actions/workflows/main_eest1chivilcoy.yml)
 ![Issue Open](https://img.shields.io/github/issues/EEST1Chivilcoy/SGE.svg)
 
 ---
