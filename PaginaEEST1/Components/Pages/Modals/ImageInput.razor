@@ -76,7 +76,7 @@
         }
         catch (Exception ex)
         {
-            await message.Error($"Error inesperado al cargar la imagen: {ex.Message}");
+            await message.ErrorAsync($"Error inesperado al cargar la imagen: {ex.Message}");
             return false;
         }
     }

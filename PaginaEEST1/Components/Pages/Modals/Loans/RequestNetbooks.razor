@@ -25,7 +25,7 @@
     </FormItem>
 
     <FormItem Label="Seleccione las netbooks solicitadas">
-        <Select Mode="multiple"
+        <Select Mode="SelectMode.Multiple"
                 Placeholder="Selecciona las netbooks requeridas"
                 @bind-Values="@netbookLoanVM.NetbooksIds"
                 TItemValue="int"
@@ -44,7 +44,7 @@
     </FormItem>
     
     <FormItem>
-        <Button Type="primary" HtmlType="submit">Solicitar</Button>
+        <Button Type="ButtonType.Primary" HtmlType="submit">Solicitar</Button>
     </FormItem>
 </Form>
 
@@ -102,7 +102,7 @@
 
         if (!netbookLoanVM.NetbooksIds.Any())
         {
-            await message.Error("No se solicitaron netbooks");
+            await message.ErrorAsync("No se solicitaron netbooks");
             return;
         }
 
@@ -119,6 +119,6 @@
         };
         await LoanService.SaveLoan(newLoan);
         await OnClose.InvokeAsync(true);
-        await message.Success("Solicitud registrada");
+        await message.SuccessAsync("Solicitud registrada");
     }
 }

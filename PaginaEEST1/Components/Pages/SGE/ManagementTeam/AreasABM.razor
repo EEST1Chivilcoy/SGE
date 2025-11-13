@@ -136,9 +136,9 @@
 </style>
 
 <div class="container">
-    <Flex Vertical Justify="flex-start" Align="center" Style="height: 100%; width:100%;">
+    <Flex Vertical Justify="FlexJustify.FlexStart" Align="FlexAlign.Center" Style="height: 100%; width:100%;">
         <div class="header">
-            <Flex Align="center" Justify="space-between" Style="width: 100%;">
+            <Flex Align="FlexAlign.Center" Justify="FlexJustify.SpaceBetween" Style="width: 100%;">
                 <h1 style="margin: 0; color: #0c2c45;"><b>Salones</b></h1>
                 <div style="display: flex; align-items: center;">
                     <p class="header-text">Filtrar por categoría:</p>
@@ -159,11 +159,11 @@
                 </div>
             </Flex>
         </div>
-        <Flex Justify="flex-start" Align="flex-start" Wrap="wrap" Style="width: 100%;">
+        <Flex Justify="FlexJustify.FlexStart" Align="FlexAlign.FlexStart" Wrap="FlexWrap.Wrap" Style="width: 100%;">
             <!-- Carta / Botón para cargar nuevo salón -->
             <Card Class="area-card add-card">
                 <div @onclick="@(() => visAdd = true)">
-                    <Icon Type="plus-circle" Theme="fill" Class="add-icon"/>
+                    <Icon Type="plus-circle" Theme="IconThemeType.Fill" Class="add-icon"/>
                     <p>Cargar un nuevo salón</p>
                 </div>
             </Card>

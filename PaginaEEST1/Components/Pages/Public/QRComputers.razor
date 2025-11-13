@@ -14,7 +14,7 @@
     <title>Computadora @ID_Computadora</title>
 </head>
 
-<Flex Justify="center" Align="center" Style="height: 100%; width:100%;">
+<Flex Justify="FlexJustify.Center" Align="FlexAlign.Center" Style="height: 100%; width:100%;">
     @if (QRComputer != null)
     {
         <div class="pc-container">
@@ -91,7 +91,7 @@
                                         </FormItem>
                                     }
                                     <FormItem>
-                                        <Button Type="primary" HtmlType="submit">Reportar</Button>
+                                        <Button Type="ButtonType.Primary" HtmlType="submit">Reportar</Button>
                                     </FormItem>
                                 </div>
                             </Form>
@@ -109,7 +109,7 @@
     {
         <Card Title="Ordenador no encontrado" Style="width: 100%; max-width: 800px; height: auto; margin-bottom: 10px;">
             <Body>
-                <Result Status="error"
+                <Result Status="ResultStatus.Error"
                         Title="No se pudo localizar el ordenador solicitado"
                         SubTitle="Por favor, verifica el QR escaneado o contacta a soporte si el problema persiste.">
                 </Result>
@@ -174,16 +174,16 @@
             {
                 RequestVM = new();
                 StateHasChanged();
-                await message.Success("Se registro la solicitud con exito");
+                await message.SuccessAsync("Se registro la solicitud con exito");
             }
             else
             {
-                await message.Error("Error inesperado al guardar la solicitud");
+                await message.ErrorAsync("Error inesperado al guardar la solicitud");
             }
         }
         catch
         {
-            await message.Error("Error inesperado al cargar la solicitud");
+            await message.ErrorAsync("Error inesperado al cargar la solicitud");
         }
     }
 

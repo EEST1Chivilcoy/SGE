@@ -32,7 +32,7 @@
                 <EnumSelect TEnum="EducationalGuidance" @bind-Value="@areaVM.AreaGuidance" />
             </FormItem>
             <FormItem>
-                <Button Type="primary" HtmlType="submit">Guardar</Button>
+                <Button Type="ButtonType.Primary" HtmlType="submit">Guardar</Button>
                 <Button OnClick="HandleClose">Cerrar</Button>
             </FormItem>
         </div>
@@ -77,11 +77,11 @@
             areaVM = new();
             await OnClose.InvokeAsync(true);
             StateHasChanged();
-            await message.Success("Se registro el salón");
+            await message.SuccessAsync("Se registro el salón");
         }
         else
         {
-            await message.Error("Error inesperado al guardar el salón");
+            await message.ErrorAsync("Error inesperado al guardar el salón");
         }
     }
     // Init

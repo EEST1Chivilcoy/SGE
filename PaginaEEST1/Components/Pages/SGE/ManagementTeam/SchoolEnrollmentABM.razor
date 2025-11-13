@@ -21,7 +21,7 @@
 
 <Card>
 	<Content>
-		<Button OnClick="OpenModal" Type="Primary">
+		<Button OnClick="OpenModal" Type="ButtonType.Primary">
 			@(CurrentEnrollment == null ? "Crear Inscripción" : "Editar Inscripción")
 		</Button>
 
@@ -35,7 +35,7 @@
 				</DescriptionsItem>
 			</Descriptions>
 
-			<Button OnClick="DeleteEnrollment" Type="Danger" Style="margin-top: 10px;">
+			<Button OnClick="DeleteEnrollment" Style="margin-top: 10px;" Danger>
 				Eliminar Inscripción
 			</Button>
 		}
@@ -43,7 +43,7 @@
 </Card>
 
 <Modal Title="Gestión de Inscripción" Visible="@IsModalOpen" OnCancel="CloseModal" OnOk="SaveEnrollment">
-	<Form Model="@EnrollmentModel" Layout="vertical">
+	<Form Model="@EnrollmentModel" Layout="FormLayout.Vertical">
 		<FormItem Label="Fecha Desde">
 			<DatePicker @bind-Value="EnrollmentModel.StartDate" />
 		</FormItem>

@@ -11,7 +11,7 @@
 
 @attribute [Authorize (Roles = "Ematp")]
 
-<Flex Class="flex-container" Justify="center" Align="center" Style="height: 100%; width:100%;">
+<Flex Class="flex-container" Justify="FlexJustify.Center" Align="FlexAlign.Center" Style="height: 100%; width:100%;">
     <div class="template">
         <Table TItem="ComputerViewModel"
                DataSource="@devices"
@@ -22,7 +22,7 @@
             <TitleTemplate>
                 <Space>
                     <SpaceItem>
-                        <Button Type="primary"
+                        <Button Type="ButtonType.Primary"
                                 OnClick="() => {visAdd = true;}">
                             <Icon Type="plus" /> Agregar
                         </Button>
@@ -48,7 +48,7 @@
                 <ActionColumn Title="Acciones" Align="ColumnAlign.Center">
                     <Space>
                         <SpaceItem>
-                            <Button Type="primary" OnClick="() => openDetails(context.ID)">
+                            <Button Type="ButtonType.Primary" OnClick="() => openDetails(context.ID)">
                                 <Icon Type="desktop" /> Detalles
                             </Button>
                             <Button OnClick="() => openEdit(context.ID)">
@@ -68,7 +68,7 @@
                 </ActionColumn>
                 @* Logo del Ordenador. Va a haber uno diferente si es una Computadora o Netbook *@
                 <Column TData="ComputerViewModel" Width="100">
-                    <Avatar Src="@context.Logo" Size="68" />
+                    <Avatar Src="@context.Logo" Size="AvatarSize.Small" />
                 </Column>
             </ColumnDefinitions>
         </Table>

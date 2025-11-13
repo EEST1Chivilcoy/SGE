@@ -37,7 +37,7 @@
 }
 </style>
 
-<Flex Justify="center" Align="center" Style="height: 100%; width:100%;">
+<Flex Justify="FlexJustify.Center" Align="FlexAlign.Center" Style="height: 100%; width:100%;">
     <div class="template">
         <div class="header-content">
             <div class="square">
@@ -60,7 +60,7 @@
                    PageSize="6"
                    Responsive>
                 <TitleTemplate>
-                    <Flex Justify="space-between" Align="center" Style="width:100%;">
+                    <Flex Justify="FlexJustify.SpaceBetween" Align="FlexAlign.Center" Style="width:100%;">
                         <h3 style="font-family: Arial;">Lista de prestamos</h3>
                         <div class="type-square @(selectedType == TypeLoan.ItemLoan ? "selected" : "")" @onclick="() => FilterLoans(TypeLoan.ItemLoan)">
                             <h4>Netbooks</h4>
@@ -70,7 +70,7 @@
                             <h4>Deposito</h4>
                             <img src="/Images/Logo_Items.png" alt="Netbook" />
                         </div>
-                        <Button Type="primary"
+                        <Button Type="ButtonType.Primary"
                                 OnClick="() => {visAdd = true;}"
                                 Disabled="@(selectedType == null)">
                             <Icon Type="plus" /> Solicitar un Prestamo
@@ -98,11 +98,11 @@
                         <Authorized Context="auth_context">
                             <ActionColumn>
                                 <Popover Title="Marcar como entregado" Trigger="new Trigger[] { Trigger.Hover }">
-                                    <Icon Type="check-circle" Theme="outline" Class="card-button return-button"
+                                    <Icon Type="check-circle" Theme="IconThemeType.Outline" Class="card-button return-button"
                                         OnClick="() => updateStatus(context.Id)" />
                                 </Popover>
                                 <Popover Title="Ver detalles" Trigger="new Trigger[] { Trigger.Hover }">
-                                    <Icon Type="question-circle" Theme="outline" Class="card-button details-button"
+                                    <Icon Type="question-circle" Theme="IconThemeType.Outline" Class="card-button details-button"
                                         OnClick="() => {idDetails = context.Id; visDetails = true;}" />
                                 </Popover>
                                 <Popconfirm Title="¿Caneclar esta Solicitud?"
@@ -111,7 +111,7 @@
                                         CancelText="No"
                                     >
                                     <Popover Title="Cancelar" Trigger="new Trigger[] { Trigger.Hover }">
-                                        <Icon Type="close-circle" Theme="outline" Class="card-button cancel-button"/>
+                                        <Icon Type="close-circle" Theme="IconThemeType.Outline" Class="card-button cancel-button" />
                                     </Popover>
                                 </Popconfirm>
                             </ActionColumn>
@@ -218,7 +218,7 @@
                 </Menu>
             </Overlay>
             <ChildContent>
-                <Button Type="link" Class="ant-dropdown-link">
+                <Button Type="ButtonType.Link" Class="ant-dropdown-link">
                     Netbooks (@(context.Assets?.Count ?? 0)) <Icon Type="down" />
                 </Button>
             </ChildContent>
@@ -237,7 +237,7 @@
                             <MenuItem>
                                 <Space>
                                     <SpaceItem>
-                                        <Icon Type="tool" Theme="outline" />
+                                        <Icon Type="tool" Theme="IconThemeType.Outline" />
                                     </SpaceItem>
                                     <SpaceItem>
                                         @item
@@ -255,7 +255,7 @@
                 </Menu>
             </Overlay>
             <ChildContent>
-                <Button Type="link" Class="ant-dropdown-link">
+                <Button Type="ButtonType.Link" Class="ant-dropdown-link">
                     Items (@(context.Assets?.Count ?? 0)) <Icon Type="down" />
                 </Button>
             </ChildContent>

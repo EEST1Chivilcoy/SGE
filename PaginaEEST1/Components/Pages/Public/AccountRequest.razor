@@ -10,7 +10,7 @@
     <title>Solicitud de Cuenta de Estudiante</title>
 </head>
 
-<Flex Vertical Align="center" Justify="space-between" Style="padding: 16px; width: 100%; max-width: 1200px; margin: auto;">
+<Flex Vertical Align="FlexAlign.Center" Justify="FlexJustify.SpaceBetween" Style="padding: 16px; width: 100%; max-width: 1200px; margin: auto;">
     <h1 class="top-intro"><b>Te damos la bienvenida. 👋</b></h1>
     <Paragraph Class="top-intro">A continuación comenzaras con la solicitud de tu cuenta estudiantil.</Paragraph>
     <Paragraph Class="top-intro">Esta cuenta te dara la posibilidad de contar con multiples beneficios en diversas paginas que lo ofrezcan.</Paragraph>
@@ -68,7 +68,7 @@
                     <p>Cargando . . .</p>
                     break;
             }
-            <Flex Align="center" Justify="space-between" Style="width: 100%; flex-wrap: wrap; gap: 10px;">
+            <Flex Align="FlexAlign.Center" Justify="FlexJustify.SpaceBetween" Style="width: 100%; flex-wrap: wrap; gap: 10px;">
                 @if (current > 0)
                 {
                     <Button OnClick="() => {current --;}">Anterior</Button>
@@ -79,7 +79,7 @@
                 }
                 @if (current == 2)
                 {
-                    <Button Type="primary" HtmlType="submit">Confirmar</Button>
+                    <Button Type="ButtonType.Primary" HtmlType="submit">Confirmar</Button>
                 }
             </Flex>
         </Form>
@@ -89,7 +89,7 @@
 <Modal Footer="null" Title="@("Success")"
        Visible="@_visible"
        OnCancel="@(args => _visible = false)">
-    <Result Status="success"
+    <Result Status="ResultStatus.Success"
             Title="Se cargó tu solicitud correctamente."
             SubTitle="Ya puedes cerrar esta ventana.">
     </Result>

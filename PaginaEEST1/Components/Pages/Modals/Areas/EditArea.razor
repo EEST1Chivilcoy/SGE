@@ -28,7 +28,7 @@
                 <EnumSelect TEnum="EducationalGuidance" @bind-Value="@areaVM.AreaGuidance" />
             </FormItem>
             <FormItem>
-                <Button Type="primary" HtmlType="submit">Editar</Button>
+                <Button Type="ButtonType.Primary" HtmlType="submit">Editar</Button>
                 <Button OnClick="HandleClose">Cerrar</Button>
             </FormItem>
         </div>
@@ -66,11 +66,11 @@
             await AreaService.EditArea(area);
             await OnClose.InvokeAsync(true);
             StateHasChanged();
-            await message.Success("Ordenador editado con exito");
+            await message.SuccessAsync("Ordenador editado con exito");
         }
         catch
         {
-            await message.Warning("Error inesperado al editar el Ordenador.");
+            await message.WarningAsync("Error inesperado al editar el Ordenador.");
         }
     }
     protected override async Task OnInitializedAsync()
@@ -94,7 +94,7 @@
         }
         catch(Exception ex)
         {
-            await message.Error(ex.Message);
+            await message.ErrorAsync(ex.Message);
         }
         StateHasChanged();
     }

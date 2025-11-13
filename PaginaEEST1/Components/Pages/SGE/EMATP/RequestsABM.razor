@@ -47,7 +47,7 @@
                                                         OkText="Si"
                                                         CancelText="No">
                                                 <MenuItem>
-                                                    <Icon Type="delete" Theme="outline" />
+                                                    <Icon Type="delete" Theme="IconThemeType.Outline" />
                                                     Eliminar
                                                 </MenuItem>
                                             </Popconfirm>
@@ -55,7 +55,7 @@
                                     </Overlay>
                                     <ChildContent>
                                         <a class="ant-dropdown-link" @onclick:preventDefault style="position: absolute; top: 5px; right: 5px;">
-                                            <Icon Type="ellipsis" Theme="outline" />
+                                            <Icon Type="ellipsis" Theme="IconThemeType.Outline" />
                                         </a>
                                     </ChildContent>
                                 </Dropdown>
@@ -85,7 +85,7 @@
            Footer="null">
         <DatePicker @bind-Value="@_estimatedCompletionDate" />
         <br><br>
-        <Button Type="primary" OnClick="@HandleDateModalOk">Guardar</Button>
+        <Button Type="ButtonType.Primary" OnClick="@HandleDateModalOk">Guardar</Button>
     </Modal>
 }
 
@@ -190,7 +190,7 @@
         }
         else
         {
-            await message.Error("Error inesperado al actualizar el estado");
+            await message.ErrorAsync("Error inesperado al actualizar el estado");
         }
     }
     // Init

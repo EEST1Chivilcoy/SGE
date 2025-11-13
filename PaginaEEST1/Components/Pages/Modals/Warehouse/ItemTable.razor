@@ -31,7 +31,7 @@
             <Space>
                 <SpaceItem>
 
-                    <Button Type="primary" OnClick="() => {VisAdd = true;}">
+                    <Button Type="ButtonType.Primary" OnClick="() => {VisAdd = true;}">
                         <Icon Type="plus" /> Agregar
                     </Button>
 
@@ -52,7 +52,7 @@
             </Column>
 
             <Column Title="Categoria" TData="string">
-                <Tag Color="blue">@context.Category</Tag>
+                <Tag Color="TagColor.Blue">@context.Category</Tag>
             </Column>
 
             <PropertyColumn Title="Codigo"
@@ -62,8 +62,8 @@
             <ActionColumn Title="Acciones" Align="ColumnAlign.Center">
                 <Space>
                     <SpaceItem>
-                        <Button Type="primary" OnClick="() => OpenDetails(context.ID)">
-                            <Icon Type="info-circle" Theme="fill" /> Detalles
+                        <Button Type="ButtonType.Primary" OnClick="() => OpenDetails(context.ID)">
+                            <Icon Type="info-circle" Theme="IconThemeType.Fill" /> Detalles
                         </Button>
                         <Popconfirm Title="¿Remover este Item?"
                                     OnConfirm="() => DelItem(context.ID)"

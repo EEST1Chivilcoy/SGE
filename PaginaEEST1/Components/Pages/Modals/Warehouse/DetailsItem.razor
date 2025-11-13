@@ -9,10 +9,10 @@
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
 
-<Flex Align="left" Justify="left" Vertical Style="height: 100%; width:100%">
+<Flex Justify="FlexJustify.Left" Vertical Style="height: 100%; width:100%">
     @if (item != null)
     {
-        <Flex Align="center" Justify="center">
+        <Flex Align="FlexAlign.Center" Justify="FlexJustify.Center">
             <Image Width="200px" Src="@item.ImageUrl" />
         </Flex>
         <p><b>Nombre del Objeto</b>: @item.Name</p>

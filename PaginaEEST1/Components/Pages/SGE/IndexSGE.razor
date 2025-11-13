@@ -14,12 +14,12 @@
 	<div class="sge-layout__profile">
 		<div class="sge-profile-card">
 			<div class="sge-profile-card__avatar">
-				<Avatar Size="80" Icon="user" />
+				<Avatar Size="AvatarSize.Large" Icon="user" />
 			</div>
 			<div class="sge-profile-card__info">
 				<h3 class="sge-profile-card__name word-wrap">@userName, @userSurname</h3>
 				<p class="sge-profile-card__email word-wrap">@userEmail</p>
-				<Tag Color="blue" Class="sge-profile-card__role">@userRoleName</Tag>
+				<Tag Color="TagColor.Blue" Class="sge-profile-card__role">@userRoleName</Tag>
 			</div>
 		</div>
 	</div>
@@ -27,27 +27,27 @@
 		<div class="sge-actions-card">
 			<div class="sge-actions-card__row">
 				@*General*@
-				<Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Prestamos"))">
-					<Icon Type="tags" Theme="fill" />
+				<Button Type="ButtonType.Primary" Block OnClick="@(() => NavigateTo("/SGE/Prestamos"))">
+					<Icon Type="tags" Theme="IconThemeType.Fill" />
 					Prestamos
 				</Button>
-				<Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Mis_Peticiones"))">
-					<Icon Type="contacts" Theme="outline" />
+				<Button Type="ButtonType.Primary" Block OnClick="@(() => NavigateTo("/SGE/Mis_Peticiones"))">
+					<Icon Type="contacts" Theme="IconThemeType.Outline" />
 					Mis Peticiones
 				</Button>
 				@*EMATP*@
 				<AuthorizeView Roles="Ematp">
 					<Authorized>
-						<Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionOrdenadores"))">
-							<Icon Type="desktop" Theme="outline" />
+						<Button Type="ButtonType.Primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionOrdenadores"))">
+							<Icon Type="desktop" Theme="IconThemeType.Outline" />
 							Gestión de Ordenadores
 						</Button>
-						<Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionSolicitudes"))">
-							<Icon Type="schedule" Theme="fill" />
+						<Button Type="ButtonType.Primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/GestionSolicitudes"))">
+							<Icon Type="schedule" Theme="IconThemeType.Fill" />
 							Gestión de Peticiones
 						</Button>
-						<Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/DepositoInformatica"))">
-							<Icon Type="dropbox-square" Theme="fill" />
+						<Button Type="ButtonType.Primary" Block OnClick="@(() => NavigateTo("/SGE/EMATP/DepositoInformatica"))">
+							<Icon Type="dropbox-square" Theme="IconThemeType.Fill" />
 							Deposito
 						</Button>
 						<QRAccountRequest />
@@ -56,12 +56,12 @@
 				@*Directivo*@ 
 				<AuthorizeView Roles="Directivo">
 					<Authorized>
-						<Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Directivo/GestionSalones"))">
-							<Icon Type="home" Theme="fill" />
+						<Button Type="ButtonType.Primary" Block OnClick="@(() => NavigateTo("/SGE/Directivo/GestionSalones"))">
+							<Icon Type="home" Theme="IconThemeType.Fill" />
 							Gestión de Salones
 						</Button>
-						<Button Type="primary" Block OnClick="@(() => NavigateTo("/SGE/Directivo/GestionInscripciones"))">
-							<Icon Type="form" Theme="Outline" />
+						<Button Type="ButtonType.Primary" Block OnClick="@(() => NavigateTo("/SGE/Directivo/GestionInscripciones"))">
+							<Icon Type="form" Theme="IconThemeType.Outline" />
 							Administrar Inscripción
 						</Button>
 					</Authorized>

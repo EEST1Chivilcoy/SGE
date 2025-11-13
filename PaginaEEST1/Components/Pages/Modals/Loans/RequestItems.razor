@@ -25,7 +25,7 @@
     </FormItem>
 
     <FormItem Label="Seleccione los objetos para solicitar">
-        <Select Mode="multiple"
+        <Select Mode="SelectMode.Multiple"
                 Placeholder="Selecciona los objetos requeridos"
                 @bind-Values="@itemLoanVM.ItemsIds"
                 TItemValue="int"
@@ -42,7 +42,7 @@
     </FormItem>
     
     <FormItem>
-        <Button Type="primary" HtmlType="submit">Solicitar</Button>
+        <Button Type="ButtonType.Primary" HtmlType="submit">Solicitar</Button>
     </FormItem>
 </Form>
 
@@ -93,7 +93,7 @@
 
         if (!itemLoanVM.ItemsIds.Any())
         {
-            await message.Error("No se solicitaron objetos");
+            await message.ErrorAsync("No se solicitaron objetos");
             return;
         }
 
@@ -110,6 +110,6 @@
         };
         await LoanService.SaveLoan(newLoan);
         await OnClose.InvokeAsync(true);
-        await message.Success("Solicitud registrada");
+        await message.SuccessAsync("Solicitud registrada");
     }
 }

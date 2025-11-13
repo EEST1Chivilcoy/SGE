@@ -69,7 +69,7 @@ else if (RequestSelect is StudentAccountRequest account)
         <p>Fecha estimada de terminación: </p> <DatePicker @bind-Value="@_estimatedCompletionDate" />
     }
     <br><br>
-    <Button Type="primary" OnClick="() => UpdateRequestStatus(RequestSelect, ManualStatus)">Actualizar</Button>
+    <Button Type="ButtonType.Primary" OnClick="() => UpdateRequestStatus(RequestSelect, ManualStatus)">Actualizar</Button>
 </div>
 
 @code {
@@ -92,11 +92,11 @@ else if (RequestSelect is StudentAccountRequest account)
         if (success)
         {
             request.Status = newStatus;
-            await message.Success("Estado actualizado correctamente");
+            await message.SuccessAsync("Estado actualizado correctamente");
         }
         else
         {
-            await message.Error("Error inesperado al actualizar el estado");
+            await message.ErrorAsync("Error inesperado al actualizar el estado");
         }
         await OnClose.InvokeAsync();
         StateHasChanged();

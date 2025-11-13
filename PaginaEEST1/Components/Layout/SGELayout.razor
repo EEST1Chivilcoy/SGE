@@ -76,22 +76,22 @@
 		</div>
 		<Menu Theme="MenuTheme.Light" DefaultSelectedKeys=@(new[]{"1"}) Mode="MenuMode.Inline">
 			<MenuItem Key="1" RouterLink="/SGE/index" RouterMatch="NavLinkMatch.All">
-				<Icon Type="user" Theme="outline" />
+				<Icon Type="user" Theme="IconThemeType.Outline" />
 				<span>Inicio</span>
 			</MenuItem>
 			<MenuItem Key="2" RouterLink="/SGE/Prestamos" RouterMatch="NavLinkMatch.Prefix">
-				<Icon Type="account-book" Theme="outline" />
+				<Icon Type="account-book" Theme="IconThemeType.Outline" />
 				<span>Prestamos</span>
 			</MenuItem>
 			<MenuItem Key="3" RouterLink="/SGE/Mis_Peticiones" RouterMatch="NavLinkMatch.Prefix">
-				<Icon Type="form" Theme="outline" />
+				<Icon Type="form" Theme="IconThemeType.Outline" />
 				<span>Mis peticiones</span>
 			</MenuItem>
 			<AuthorizeView Roles="Ematp">
 				<Authorized>
 					<SubMenu Key="sub1">
 						<TitleTemplate>
-							<Icon Type="desktop" Theme="outline" />
+							<Icon Type="desktop" Theme="IconThemeType.Outline" />
 							<span>EMATP</span>
 						</TitleTemplate>
 						<ChildContent>
@@ -106,7 +106,7 @@
 				<Authorized>
 					<SubMenu Key="sub2">
 						<TitleTemplate>
-							<Icon Type="team" Theme="outline" />
+							<Icon Type="team" Theme="IconThemeType.Outline" />
 							<span>Director</span>
 						</TitleTemplate>
 						<ChildContent>
@@ -118,7 +118,7 @@
 			<AuthorizeView>
 				<Authorized>
 					<MenuItem Key="8" OnClick="() => Logout()" RouterMatch="NavLinkMatch.Prefix" Class="logout-button">
-						<Icon Type="logout" Theme="outline" />
+						<Icon Type="logout" Theme="IconThemeType.Outline" />
 						<span>Cerrar sesión</span>
 					</MenuItem>
 				</Authorized>

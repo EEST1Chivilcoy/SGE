@@ -14,13 +14,13 @@
     <img src="@imageSrc" alt="Foto del Salón" class="card-image" />
     <div class="card-content">@area.Name</div>
     <div class="card-buttons">
-        <Icon Type="eye" Theme="outline" Class="card-button" OnClick="() => {visDetails = true;}" />
-        <Icon Type="edit" Theme="outline" Class="card-button" OnClick="() => {visEdit = true;}" />
+        <Icon Type="eye" Theme="IconThemeType.Outline" Class="card-button" OnClick="() => {visDetails = true;}" />
+        <Icon Type="edit" Theme="IconThemeType.Outline" Class="card-button" OnClick="() => {visEdit = true;}" />
         <Popconfirm Title="¿Remover este Salón?"
                     OnConfirm="() => delArea(area.Id)"
                     OkText="Si"
                     CancelText="No">
-            <Icon Type="delete" Theme="outline" Class="card-button" />
+            <Icon Type="delete" Theme="IconThemeType.Outline" Class="card-button" />
         </Popconfirm>
     </div>
 </Card>
@@ -65,7 +65,7 @@
         await AreaService.DelArea(ID);
         await OnClose.InvokeAsync(true);
         StateHasChanged();
-        await message.Success("Se removio el salón");
+        await message.SuccessAsync("Se removio el salón");
     }
 
     // Init

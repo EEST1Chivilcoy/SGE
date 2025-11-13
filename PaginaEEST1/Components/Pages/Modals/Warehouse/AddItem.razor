@@ -37,7 +37,7 @@
             </FormItem>
 
             <FormItem>
-                <Button Type="primary" HtmlType="submit">Guardar</Button>
+                <Button Type="ButtonType.Primary" HtmlType="submit">Guardar</Button>
                 <Button OnClick="HandleClose">Cerrar</Button>
             </FormItem>
         </div>
@@ -110,10 +110,10 @@
                 await ImageUpload.SaveImage(ItemSave.Id);
             ItemVM = new();
             await OnClose.InvokeAsync(true);
-            await message.Success("Se registro el Item");
+            await message.SuccessAsync("Se registro el Item");
             StateHasChanged();
         }
         else
-            await message.Error("Error inesperado al guardar el Item");
+            await message.ErrorAsync("Error inesperado al guardar el Item");
     }
 }

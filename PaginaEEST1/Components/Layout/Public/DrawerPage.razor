@@ -4,7 +4,7 @@
 
 <header>
     <nav class="navbar-mobile">
-        <Flex Align="center" Justify="space-between" Style="margin: 10px; max-height: 250px; width: 100%">
+        <Flex Align="FlexAlign.Center" Justify="FlexJustify.SpaceBetween" Style="margin: 10px; max-height: 250px; width: 100%">
             <div class="logo">
                 <a>
                     <img src="Images/School_Logo.webp" alt="Logo Escuela" />
@@ -18,7 +18,7 @@
         </Flex>
     </nav>
 </header>
-<Drawer @bind-Visible="_Visible" Placement="right"
+<Drawer @bind-Visible="_Visible" Placement="DrawerPlacement.Right"
         BodyStyle="display: flex; flex-direction: column; min-height: 100vh; justify-content: flex-start; border-radius: 0.6vw; background: linear-gradient(135deg, #A2C1DD 0%, #096dd9 100%);"
         HeaderStyle="display: none;">
     <div class="drawer-content">
